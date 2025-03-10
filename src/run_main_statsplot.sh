@@ -6,12 +6,13 @@
 #SBATCH --chdir=/ec/res4/scratch/smf/tmp/log_stats
 #SBATCH --error=%x-%j.error 
 #SBATCH --output=%x-%j.out
-###SBATCH --gpus=1
-#SBATCH --qos=nf
+#SBATCH --gpus=1
+#SBATCH --qos=ng
 ###SBATCH --mem-per-cpu=2G
 #SBATCH --mem=64G
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+###SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=32
+#SBATCH --cpus-per-task=1
 
 current_date_time="`date`";
 echo The run starts from $current_date_time

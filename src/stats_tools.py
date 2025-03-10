@@ -69,6 +69,11 @@ def calculate_99th_percentile(data):
 def calculate_mean_value(data):
     return np.mean(data, axis=0)
 
+# Define function to calculate Absolute Value
+def calculate_abs_value(data):
+    time_step = 108  # Fixed time step
+    return data[time_step, :, :]
+
 # Upscale function
 def upsample_2d_array(low_res_array, upscale_factor):
     # Initialize high-resolution array

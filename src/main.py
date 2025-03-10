@@ -10,7 +10,10 @@ def main():
     var_name = 'tas' #'mrsol' #'tas' #pr
     abs_value_max_scale = {'pr':0.5, 'tas':1.0, 'mrsol':1.0}
     unit_convert = {'pr': 86400.0, 'tas': 1.0, 'mrsol': 1.0,}
-    selected_statistics = ['rmse', 'abs_value']
+    selected_statistics = [ \
+            'rmse', 'correlation', 'mean_bias', \
+            'variance_ratio', 'wasserstein', 'percentile_99', \
+            'mean_value', 'abs_value']
 
     # Load reference and comparison data
     #base_dir = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/'
