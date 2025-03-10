@@ -27,9 +27,8 @@ source /perm/smf/venvs/climulator2/bin/activate
 
 set -exu 
 
-cd $HOME/Scripts/EmulatorScore/src
-#python main.py -c config_main.ini 
-python stats_plot_emulator_atos.py
+cd $HOME/Scripts/ClimulatorScore/src
+python main.py
 
 #cd $HOME/Script/HCLIMAI
 #python -m pytest
