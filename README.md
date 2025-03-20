@@ -21,7 +21,11 @@ It provides tools to load experimental data, calculate statistics, and generate 
 - **stats_tools.py** — Contains helper functions for statistical calculations.  
 
 ## How to Run  
-1. Modify paths in `main.py` for `base_dir` and `output_dir`.  
-2. Run using:  
+1. Modify paths in `main.py` for `base_dir` and `output_dir`.
+2. Modify paths and files in `get_experiments.py` for
+   - `reference_highres_folder`, `reference_highres_file`:
+   - `reference_lowres_folder`, `predictor.nc` :
+   - `comparison_files`: 
+4. Run using:  
 ```bash
 bash run_main_statsplot.sh
