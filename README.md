@@ -2,7 +2,8 @@
 **Machine Learning-Based Climate Emulator Evaluation Score**  
 
 ## Overview  
-**ClimulatorScore** is a toolkit for evaluating machine learning-based climate emulators. It provides tools to load experimental data, calculate statistics, and generate diagnostic plots for emulator performance assessment.  
+**ClimulatorScore** is a toolkit for evaluating machine learning-based climate emulators for HCLIM. 
+It provides tools to load experimental data, calculate statistics, and generate diagnostic plots for emulator performance assessment.  
 
 ## Repository Structure  
 
