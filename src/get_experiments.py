@@ -41,10 +41,10 @@ def get_experiments(base_dir, var_name):
 
     elif var_name == 'tas':
 
-        reference_highres_folder = str(base_dir) + f'/SG/SRGAN_OUT/EPOCH100_{var_name}_earlystop'
+        reference_highres_folder = str(base_dir) + f'/SG/SRGAN_OUT/EPOCH100_{var_name}_no_pr'
         reference_highres_file = "predictant_ytest.nc"
 
-        reference_lowres_folder = str(base_dir) + f'/SG/SRGAN_OUT/EPOCH1_{var_name}_with_tas_earlystop'
+        reference_lowres_folder = str(base_dir) + f'/SG/SRGAN_OUT/EPOCH1_{var_name}_with_tas'
         reference_lowres_file = "predictor.nc"
 
         """
@@ -57,8 +57,8 @@ def get_experiments(base_dir, var_name):
 
         experiment_files = { \
                 'HCLIM 3km': reference_highres_folder + '/' + reference_highres_file, \
-                'SG': str(base_dir) + f"/SG/SRGAN_OUT/EPOCH100_{var_name}_earlystop/predictant_ypred.nc", \
-                'SG_tas': str(base_dir) + f"/SG/SRGAN_OUT/EPOCH100_{var_name}_with_{var_name}_earlystop/predictant_ypred.nc", \
+                'SG': str(base_dir) + f"/SG/SRGAN_OUT/EPOCH100_{var_name}_no_pr/predictant_ypred.nc", \
+                #'SG_tas': str(base_dir) + f"/SG/SRGAN_OUT/EPOCH100_{var_name}_with_{var_name}_earlystop/predictant_ypred.nc", \
                 'HCLIM 12km': reference_lowres_folder + '/' + reference_lowres_file, \
                 }
 

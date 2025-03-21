@@ -16,9 +16,9 @@ def main():
             'mean_value', 'abs_value']
 
     # Load reference and comparison data
-    #base_dir = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/'
+    base_dir = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/'
     #base_dir = '/perm/smf/HCLIMAI/Test_Domain/'
-    base_dir = '/perm/smf/HCLIMAI/Emilia_Romagna/'
+    #base_dir = '/perm/smf/HCLIMAI/Emilia_Romagna/'
     output_dir = str(base_dir) + "/statistic_figs"  # Update to desired output folder
     os.makedirs(output_dir, exist_ok=True)
 
