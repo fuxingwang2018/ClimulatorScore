@@ -4,26 +4,28 @@ import get_experiments
 import get_data
 import get_statistics
 import plot_tools
+import get_config
+import argparse
 
 def main():
-    experiment = 'test_algorithm'
-    var_name = 'tas' #'mrsol' #'tas' #pr
-    abs_value_max_scale = {'pr':0.5, 'tas':1.0, 'mrsol':1.0}
-    unit_convert = {'pr': 86400.0, 'tas': 1.0, 'mrsol': 1.0,}
-    selected_statistics = [ \
-            'rmse', 'correlation', 'mean_bias', \
-            'variance_ratio', 'wasserstein', 'percentile_99', \
-            'mean_value', 'abs_value']
 
-    # Load reference and comparison data
-    base_dir = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/'
-    #base_dir = '/perm/smf/HCLIMAI/Test_Domain/'
-    #base_dir = '/perm/smf/HCLIMAI/Emilia_Romagna/'
-    output_dir = str(base_dir) + "/statistic_figs"  # Update to desired output folder
+    # Set up argument parser to accept config file as a command-line argument
+    parser = argparse.ArgumentParser(description="Run statistical analysis with a given config file.")
+    parser.add_argument("-c", "--config", required=True, help="Path to the YAML config file")
+    args = parser.parse_args()
+
+    # get config
+    config = get_config.get_config(args.config)
+    experiment = config['experiment']
+    var_name = config['variables']
+    abs_value_max_scale = config['abs_value_max_scale']
+    unit_convert = config['unit_convert']
+    selected_statistics = config['statistics']
+    output_dir = config['output_dir']
+    experiment_files = config['data_path']
+
     os.makedirs(output_dir, exist_ok=True)
 
-    experiment_files = \
-        get_experiments.get_experiments(base_dir, var_name)
 
     experiment_val = \
         get_data.get_data(experiment_files, var_name, unit_convert)

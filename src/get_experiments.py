@@ -52,7 +52,6 @@ def get_experiments(base_dir, var_name):
                     str(base_dir) + f"/SG/SRGAN_OUT/EPOCH100_{var_name}_earlystop/predictant_ypred.nc", \
                     str(base_dir) + f"/SG/SRGAN_OUT/EPOCH100_{var_name}_with_{var_name}_earlystop/predictant_ypred.nc", \
                    ]
-        comp_experiment_list = [ 'SG', 'SG_tas', 'HCLIM 12km']
         """
 
         experiment_files = { \
