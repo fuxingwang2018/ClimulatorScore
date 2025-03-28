@@ -16,6 +16,7 @@ module load netCDF-HDF5-utils/4.9.2-1.12.2-hpc1-intel-2023a-eb
 module load Mambaforge/23.3.1-1-hpc1
 
 DOMAIN='EmiliaRomagna'
+#DOMAIN='TestDomain'
 
 current_date_time="`date`";
 echo The run starts from $current_date_time

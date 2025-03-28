@@ -1,7 +1,7 @@
 import numpy as np
 import stats_tools
 
-def get_statistics(experiment_val, abs_value_max_scale, var_name, selected_statistics=None):
+def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, var_name, selected_statistics=None):
     """
     Compute selected statistics between reference (HCLIM 3km) and other experiments.
     
@@ -50,6 +50,9 @@ def get_statistics(experiment_val, abs_value_max_scale, var_name, selected_stati
 
     # Compute global color scale ranges
     vmin_vmax = {stat: (np.min(vals), np.max(vals)) for stat, vals in statistics.items()}
+    #print('vmin_vmax 1', type(vmin_vmax), vmin_vmax)
+    vmin_vmax = {k: tuple(v) if v else vmin_vmax[k] for k, v in min_max_scale.items()}
+    #print('vmin_vmax 2', type(vmin_vmax), vmin_vmax)
     #if 'abs_value' in vmin_vmax:
     #    vmin_vmax['abs_value'] = (vmin_vmax['abs_value'][0], vmin_vmax['abs_value'][1] * abs_value_max_scale[var_name])
 

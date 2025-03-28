@@ -12,7 +12,10 @@ def get_config(config_path):
 
     # Resolve environment variables or placeholders like ${base_dir}
     for key, value in config["data_path"].items():
-        config["data_path"][key] = value.replace("${base_dir}", config["base_dir"])
-    config["output_dir"] = config["output_dir"].replace("${base_dir}", config["base_dir"])
+        config["data_path"][key] = \
+            value.replace("${base_dir}", config["base_dir"]).\
+            replace("${variables}", config["variables"])
+    config["output_dir"] = config["output_dir"].\
+            replace("${base_dir}", config["base_dir"])
 
     return config

@@ -19,6 +19,7 @@ def main():
     experiment = config['experiment']
     var_name = config['variables']
     abs_value_max_scale = config['abs_value_max_scale']
+    min_max_scale = config['min_max_scale']
     unit_convert = config['unit_convert']
     selected_statistics = config['statistics']
     output_dir = config['output_dir']
@@ -31,7 +32,7 @@ def main():
         get_data.get_data(experiment_files, var_name, unit_convert)
 
     all_statistics = get_statistics.get_statistics(experiment_val, \
-        abs_value_max_scale, var_name, selected_statistics)
+        min_max_scale, abs_value_max_scale, var_name, selected_statistics)
 
     # Plot and save each statistics set
     for stats, title, filename, vmin, vmax, cmap, exp_name in all_statistics:
