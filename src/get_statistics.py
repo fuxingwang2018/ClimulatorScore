@@ -59,13 +59,13 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, var_name,
     # Metadata for visualization
     stat_meta = {
         'rmse': ('RMSE Maps', 'rmse_maps', 'viridis'),
-        'correlation': ('Correlation Maps', 'correlation_maps', 'coolwarm'),
+        'correlation': ('Correlation Maps', 'correlation_maps', 'Reds'),
         'mean_bias': ('Mean Bias Maps', 'mean_bias_maps', 'seismic'),
-        'variance_ratio': ('Ratio of Variance Maps', 'variance_ratio_maps', 'RdBu'),
+        'variance_ratio': ('Ratio of Variance Maps', 'variance_ratio_maps', 'Blues'),
         'wasserstein': ('Wasserstein Distance Maps', 'wasserstein_maps', 'plasma'),
         'percentile_99': ('99th Percentile Maps', 'percentile_99_maps', 'inferno'),
         'mean_value': ('Mean Value Maps', 'mean_value_maps', 'cividis'),
-        'abs_value': ('Abs Value Maps', 'abs_value_maps', 'Blues'),
+        'abs_value': ('Abs Value Maps', 'abs_value_maps', 'Reds'),
     }
 
     #all_statistics = [(statistics[stat], *stat_meta[stat], vmin_vmax[stat][0], vmin_vmax[stat][1])

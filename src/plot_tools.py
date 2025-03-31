@@ -42,8 +42,11 @@ def plot_and_save_maps(statistics, titles, output_file, vmin=None, vmax=None, cm
 
 def plot_and_save_maps_latlon(statistics, lat2d,lon2d, titles, output_file, vmin=None, vmax=None, cmap='coolwarm'):
     # Get global vmin/vmax across all stat arrays
-    vmin = min([np.nanmin(stat) for stat in statistics])
-    vmax = max([np.nanmax(stat) for stat in statistics])
+    if vmin is None:
+        vmin = min([np.nanmin(stat) for stat in statistics])
+    if vmax is None:
+        vmax = max([np.nanmax(stat) for stat in statistics])
+
     levels = np.linspace(vmin, vmax, 7)
 
     fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 20),
