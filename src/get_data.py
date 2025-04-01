@@ -23,6 +23,9 @@ def get_data(experiment_dict, var_name, unit_convert):
     for experiment_name, file_name in experiment_dict.items():
         ds = xr.open_dataset(file_name, decode_cf=False)
 
+        lat= ds['lat'].values
+        lon= ds['lon'].values
+
         if experiment_name == 'CNN 3km':
             experiment_val[experiment_name] = ds[var_name_modify[var_name]['CNN']].values * unit_convert[var_name]  # Convert to mm/day for pr
             experiment_val[experiment_name] = experiment_val[experiment_name][index_range['CNN'][0]:index_range['CNN'][1]]
@@ -54,4 +57,4 @@ def get_data(experiment_dict, var_name, unit_convert):
             if i == 2 and residue_geo[i] == 2:
                 experiment_val['HCLIM 3km'] = experiment_val['HCLIM 3km'][:, :, 1:-1] # remove the 1st and last elements
 
-    return experiment_val
+    return experiment_val,lat,lon

@@ -28,7 +28,7 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
 
-    experiment_val = \
+    [experiment_val, lat, lon] = \
         get_data.get_data(experiment_files, var_name, unit_convert)
 
     all_statistics = get_statistics.get_statistics(experiment_val, \
@@ -37,7 +37,10 @@ def main():
     # Plot and save each statistics set
     for stats, title, filename, vmin, vmax, cmap, exp_name in all_statistics:
         output_path = os.path.join(output_dir, f'{filename}_{experiment}_{var_name}.png')
-        plot_tools.plot_and_save_maps(stats, \
+        #plot_tools.plot_and_save_maps(stats, \
+        #    [f'{title} {exp_name[i]}' for i in range(len(stats))], \
+        #    output_path, vmin=vmin, vmax=vmax, cmap=cmap)
+        plot_tools.plot_and_save_maps_latlon(stats, lat, lon,\
             [f'{title} {exp_name[i]}' for i in range(len(stats))], \
             output_path, vmin=vmin, vmax=vmax, cmap=cmap)
 
