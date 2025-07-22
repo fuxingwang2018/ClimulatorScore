@@ -7,9 +7,9 @@ def get_data(experiment_dict, var_name, unit_convert):
 
     # common period for GAN and CNN: 2009-01-01 to 2009-12-28
     index_range = {\
-        'CNN':   [0, 1448], \
-        'SRGAN': [1552, 3000], \
-        'HCLIM': [13152, 14600], \
+        'CNN':   [0, 1460], \
+        'SRGAN': [0, 1460], \
+        'HCLIM': [13152, 14612], \
         }
     
     var_name_modify = {\

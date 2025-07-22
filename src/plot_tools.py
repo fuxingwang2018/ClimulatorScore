@@ -49,7 +49,7 @@ def plot_and_save_maps_latlon(statistics, lat2d,lon2d, titles, output_file, vmin
 
     levels = np.linspace(vmin, vmax, 7)
 
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 20),
+    fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(20, 20),
              subplot_kw={'projection': ccrs.PlateCarree()},
              constrained_layout=True)
     axes = axes.flatten()

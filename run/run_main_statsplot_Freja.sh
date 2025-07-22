@@ -4,8 +4,8 @@
 ###SBATCH -n 1  ##ntasks 
 ###SBATCH --mem=16G
 #SBATCH -J stats 
-##SBATCH --chdir=/nobackup/rossby26/users/sm_fuxwa/AI/log_stats
-#SBATCH --chdir=/nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore
+#SBATCH --chdir=/nobackup/rossby26/users/sm_fuxwa/AI/log_stats
+###SBATCH --chdir=/nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore
 #SBATCH --error=%x-%j.error 
 #SBATCH --output=%x-%j.out
 ###SBATCH --ntasks=1
@@ -18,6 +18,7 @@ module load Mambaforge/23.3.1-1-hpc1
 
 DOMAIN='EmiliaRomagna'
 #DOMAIN='TestDomain'
+VARIABLE='tas' #'pr' #tas
 
 current_date_time="`date`";
 echo The run starts from $current_date_time
@@ -29,9 +30,10 @@ mamba activate climulatorscore
 
 set -exu 
 
-#cd $HOME/Script/ClimulatorScore/src
-cd /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/src
-python main.py -c /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/config/config_${DOMAIN}_Freja.yml
+cd $HOME/Script/ClimulatorScore/src
+#cd /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/src
+#python main.py -c /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/config/config_${DOMAIN}_Freja.yml
+python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_Freja.yml
 
 current_date_time="`date`";
 echo The run ends at $current_date_time

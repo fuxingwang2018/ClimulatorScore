@@ -1,0 +1,54 @@
+base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Test_Domain"
+
+variables: "pr"
+
+experiment: "test_SRGAN"
+
+data_path:
+  HCLIM 3km: "${base_dir}/3km/6hr/${variables}/${variables}_3km_6hr_200001010300-200912312100.nc"
+  HCLIM 12km: "${base_dir}/12km/6hr/${variables}/${variables}_12km_6hr_200001010300-200912312100.nc"
+  SRGAN 3km atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_atos/predictant_ypred.nc"
+  SRGAN 3km atos two channels: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_${variables}_atos/predictant_ypred.nc"
+  SRGAN 3km withpr Freja: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_with_${variables}/predictant_ypred.nc"
+  SRGAN 3km nopr Freja: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_no_${variables}/predictant_ypred.nc"
+
+  #HCLIM 3km: "${base_dir}/3km/6hr/${variables}/${variables}_3km_6hr_200001010000-200912311800.nc"
+  #HCLIM 12km: "${base_dir}/12km/6hr/${variables}/${variables}_12km_6hr_200001010000-200912311800.nc"
+  #SRGAN 3km def: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_no_pr/predictant_ypred.nc"
+  #SRGAN 3km droplr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_dropout0.3_lr1e-5_discdrop_genalldrop/predictant_ypred.nc"
+  #CNN 3km: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_${variables}_2009.nc"
+
+output_dir: "${base_dir}/statistic_figs" 
+
+statistics:
+  - rmse
+  - correlation
+  - mean_bias
+  - variance_ratio
+  - wasserstein
+  - percentile_99
+  - mean_value
+  - abs_value
+
+min_max_scale:
+  'rmse': 
+  'correlation': 
+  'mean_bias':
+  'variance_ratio':
+  'wasserstein':
+  'percentile_99': 
+  'mean_value':
+  'abs_value':
+
+abs_value_max_scale:
+  'pr': 0.5
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+unit_convert:
+  'pr': 86400.0
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
