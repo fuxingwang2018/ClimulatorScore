@@ -23,7 +23,8 @@ def plot_and_save_maps(statistics, titles, output_file, vmin=None, vmax=None, cm
         #cbar_height = axes[i].get_position().height  # Get the height of the axis
         #cbar.ax.set_aspect(cbar_height / cbar.ax.get_position().height)
 
-        stat_domain_ave = np.mean(stat)
+        stat_masked = stat[(stat >= -1e10) & (stat <= 1e10)]
+        stat_domain_ave = np.nanmean(stat_masked)
         # Add the statistics value to the lower right
         text_x = stat.shape[1] - 2  # Right-most position
         text_y = stat.shape[0] - 1  # Bottom position (because origin='lower')
@@ -47,6 +48,7 @@ def plot_and_save_maps_latlon(statistics, lat2d,lon2d, titles, output_file, vmin
     if vmax is None:
         vmax = max([np.nanmax(stat) for stat in statistics])
 
+    #print('vmin, vmax', vmin, vmax)
     levels = np.linspace(vmin, vmax, 7)
 
     fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(20, 20),
@@ -80,12 +82,16 @@ def plot_and_save_maps_latlon(statistics, lat2d,lon2d, titles, output_file, vmin
         #cbar = plt.colorbar(contour, cax=cax)
         #fig.colorbar(contour, ax=axes[i], orientation="horizontal", shrink=0.7, pad=0.1)
 
-        stat_domain_ave = np.mean(stat)
+        #stat_domain_ave = np.mean(stat)
+        stat = np.where((stat > 1e10) | (stat < -1e10), np.nan, stat)
+        stat_domain_ave = np.nanmean(stat)
         # Add the statistics value to the lower right
         #text_x = stat.shape[1] - 2  # Right-most position
         #text_y = stat.shape[0] - 1  # Bottom position (because origin='lower')
-        text_x = lon2d[-1, -2]  # near bottom-right
-        text_y = lat2d[-1, -1]
+        text_x = lon2d[10, -2]  # near bottom-right
+        text_y = lat2d[5, -2]
+        #text_x = lon2d[-1, -2]  # near bottom-right
+        #text_y = lat2d[-1, -1]
         #text_y = 0  # Bottom position
         axes[i].text(text_x, text_y, f"{stat_domain_ave:.2f}",
             color='white', fontsize=24, ha='right', va='bottom',

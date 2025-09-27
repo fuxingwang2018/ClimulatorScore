@@ -27,6 +27,8 @@ def calculate_correlation(reference, comparison):
     for i in range(reference.shape[1]):
         for j in range(reference.shape[2]):
             cor_map[i, j], _ = pearsonr(reference[:, i, j], comparison[:, i, j])
+    #cor_map = np.ma.masked_invalid(cor_map)
+    cor_map = np.nan_to_num(cor_map, nan=0.0, posinf=0.0, neginf=0.0)
     return cor_map
 
 # Define function to calculate Wasserstein Distance

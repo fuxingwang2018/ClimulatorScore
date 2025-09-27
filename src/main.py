@@ -17,7 +17,7 @@ def main():
     # get config
     config = get_config.get_config(args.config)
     experiment = config['experiment']
-    var_name = config['variables']
+    variables = config['variables']
     abs_value_max_scale = config['abs_value_max_scale']
     min_max_scale = config['min_max_scale']
     unit_convert = config['unit_convert']
@@ -29,14 +29,15 @@ def main():
 
 
     [experiment_val, lat, lon] = \
-        get_data.get_data(experiment_files, var_name, unit_convert)
+        get_data.get_data(experiment_files, variables, unit_convert)
 
     all_statistics = get_statistics.get_statistics(experiment_val, \
-        min_max_scale, abs_value_max_scale, var_name, selected_statistics)
+        min_max_scale, abs_value_max_scale, variables, selected_statistics)
+
 
     # Plot and save each statistics set
     for stats, title, filename, vmin, vmax, cmap, exp_name in all_statistics:
-        output_path = os.path.join(output_dir, f'{filename}_{experiment}_{var_name}.png')
+        output_path = os.path.join(output_dir, f"{filename}_{experiment}_{'_'.join(variables)}.png")
         #plot_tools.plot_and_save_maps(stats, \
         #    [f'{title} {exp_name[i]}' for i in range(len(stats))], \
         #    output_path, vmin=vmin, vmax=vmax, cmap=cmap)

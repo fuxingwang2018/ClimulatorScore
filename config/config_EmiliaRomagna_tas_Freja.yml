@@ -1,6 +1,8 @@
 base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna"
 
-variables: "tas"
+variables: 
+  - "mrsol"
+  - "tas"
 #"tas" "hfls" "mrsol"
 
 experiment: "test_SRGAN"
@@ -9,17 +11,19 @@ data_path:
   #tas
   #HCLIM 3km: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_no_pr/predictant_ytest.nc"
   #HCLIM 12km: "${base_dir}/SG/SRGAN_OUT/EPOCH1_${variables}_with_${variables}/predictor.nc"
-  HCLIM 3km: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/${variables}/${variables}_3km_6hr_200001010000-200912311800.nc"
-  HCLIM 12km: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/${variables}/${variables}_12km_6hr_200001010000-200912311800.nc"
-  #SRGAN 3km Freja: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_no_pr/predictant_ypred.nc"
-  #SRGAN 3km lr1e-5: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_lr1e-5/predictant_ypred.nc"
-  SRGAN 3km val0.1 no tas atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_no_${variables}_val0.1_atos/predictant_ypred.nc"
-  SRGAN 3km val0.1 with tas atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_with_${variables}_val0.1_atos/predictant_ypred.nc"
-  SRGAN 3km val0.1 tas mrsol atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_mrsol_val0.1_atos/predictant_ypred.nc"
-  SRGAN 3km val0.1 tas mrsol b20 atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_mrsol_val0.1_batch20_atos/predictant_ypred.nc"
-  SRGAN 3km val0.1 tas mrsol with tm b20 atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_mrsol_with_tm_val0.1_batch20_atos/predictant_ypred.nc"
+  HCLIM 3km mrsol: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/mrsol/mrsol_3km_6hr_200001010000-200912311800.nc"
+  HCLIM 3km tas: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/tas/tas_3km_6hr_200001010000-200912311800.nc"
+  HCLIM 12km mrsol: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/mrsol/mrsol_12km_6hr_200001010000-200912311800.nc"
+  HCLIM 12km tas: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/tas/tas_12km_6hr_200001010000-200912311800.nc"
+  #SRGAN 3km val0.1 no tas atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_no_tas_val0.1_atos/predictant_ypred.nc"
+  #SRGAN 3km val0.1 with tas atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_with_tas_val0.1_atos/predictant_ypred.nc"
+  SRGAN 3km val0.1 tas mrsol atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_val0.1_atos/predictant_ypred.nc"
+  SRGAN 3km val0.1 tas mrsol b20 atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_val0.1_batch20_atos/predictant_ypred.nc"
+  SRGAN 3km val0.1 tas mrsol with tm b20 atos: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_with_tm_val0.1_batch20_atos/predictant_ypred.nc"
   #SRGAN 3km val0.1 LUMI: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_no_${variables}_val0.1_LUMI/predictant_ypred.nc"
   #CNN 3km: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_${variables}_2009.nc"
+  #SRGAN 3km Freja: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_no_pr/predictant_ypred.nc"
+  #SRGAN 3km lr1e-5: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}_lr1e-5/predictant_ypred.nc"
 
   # mrsol
   #HCLIM 3km: "${base_dir}/cropped/3km/6hr/${variables}/${variables}_3km_6hr_200001010000-200912311800.nc"
@@ -36,25 +40,27 @@ data_path:
 output_dir: "${base_dir}/statistic_figs" 
 
 statistics:
-  - rmse
-  - correlation
-  - mean_bias
-  - variance_ratio
-  - wasserstein
-  - percentile_99
-  - mean_value
-  - abs_value
+  #- rmse
+  - cpl_corr
+  #- correlation
+  #- mean_bias
+  #- variance_ratio
+  #- wasserstein
+  #- percentile_99
+  #- mean_value
+  #- abs_value
 
 min_max_scale:
-  'rmse': 
-  #'correlation': [0.88, 1.00]
-  'correlation':
-  'mean_bias':
-  'variance_ratio':
-  'wasserstein':
-  'percentile_99': 
-  'mean_value':
-  'abs_value':
+  #'rmse': 
+  ##'correlation': [0.88, 1.00]
+  'cpl_corr':
+  #'correlation':
+  #'mean_bias':
+  #'variance_ratio':
+  #'wasserstein':
+  #'percentile_99': 
+  #'mean_value':
+  #'abs_value':
 
 abs_value_max_scale:
   'pr': 0.5
