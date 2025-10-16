@@ -21,61 +21,47 @@ def get_data(experiment_dict, variables, unit_convert):
 
     experiment_val = {}
     for experiment_name_origin, file_name in experiment_dict.items():
+        method = experiment_name_origin.strip().split()[0]
         ds = xr.open_dataset(file_name, decode_cf=False)
-        if 'HCLIM' not in experiment_name_origin:
+        print('len variables', len(variables))
+        if len(variables) > 1 and all(var in experiment_name_origin for var in variables):
             experiment_name = experiment_name_origin
-            experiment_val[experiment_name] = {}
         else:
             experiment_name = " ".join(experiment_name_origin.split()[:2])
-            experiment_val.setdefault(experiment_name, {})
-
+            #experiment_val.setdefault(experiment_name, {})
+        #experiment_val[experiment_name] = {}
+        experiment_val.setdefault(experiment_name, {})
+        
         lat= ds['lat'].values
         lon= ds['lon'].values
 
-        """
-        if experiment_name == 'CNN 3km':
-            experiment_val[experiment_name] = ds[var_name_modify[var_name]['CNN']].values * unit_convert[var_name]  # Convert to mm/day for pr
-            experiment_val[experiment_name] = experiment_val[experiment_name][index_range['CNN'][0]:index_range['CNN'][1]]
-        elif 'SRGAN 3km' in experiment_name:
-            experiment_val[experiment_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
-            experiment_val[experiment_name] = experiment_val[experiment_name][index_range['SRGAN'][0]:index_range['SRGAN'][1]]
-        elif experiment_name == 'HCLIM 3km' or experiment_name == 'HCLIM 12km':
-            experiment_val[experiment_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
-            experiment_val[experiment_name] = experiment_val[experiment_name][index_range['HCLIM'][0]:index_range['HCLIM'][1]]
-        
-        if experiment_name == 'HCLIM 12km':
-            experiment_val['HCLIM 12km'] = stats_tools.upsample_2d_array(experiment_val['HCLIM 12km'], upscale_factor = 4)
-
-        #print('experiment_name:', experiment_name, experiment_val[experiment_name].shape, experiment_val[experiment_name])
-        #print('experiment_name index:', experiment_val[experiment_name][0].shape)
-
-        experiment_val[experiment_name] = np.array(experiment_val[experiment_name]) 
-        """
-
-        if experiment_name == 'CNN 3km':
-            for var_name in variables:
-                experiment_val[experiment_name][var_name] = ds[var_name_modify[var_name]['CNN']].values * unit_convert[var_name]  # Convert to mm/day for pr
-                experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][index_range['CNN'][0]:index_range['CNN'][1]]
-        elif 'SRGAN 3km' in experiment_name:
+        #if experiment_name == 'CNN 3km':
+        #    for var_name in variables:
+        #        experiment_val[experiment_name][var_name] = ds[var_name_modify[var_name]['CNN']].values * unit_convert[var_name]  # Convert to mm/day for pr
+        #        experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][index_range['CNN'][0]:index_range['CNN'][1]]
+        #elif 'HCLIM 3km' in experiment_name_origin or 'HCLIM 12km' in experiment_name_origin:
+        if len(variables) > 1 and all(var in experiment_name_origin for var in variables):
             for var_name in variables:
                 experiment_val[experiment_name][var_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
-                experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][index_range['SRGAN'][0]:index_range['SRGAN'][1]]
-        elif 'HCLIM 3km' in experiment_name_origin or 'HCLIM 12km' in experiment_name_origin:
+                experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][index_range[str(method)][0]:index_range[str(method)][1]]
+        else:
             var_name = experiment_name_origin.strip().split()[-1]
             print('var_name, experiment_name_origin, experiment_name', var_name, experiment_name_origin, experiment_name)
             experiment_val[experiment_name][var_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
-            experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][index_range['HCLIM'][0]:index_range['HCLIM'][1]]
-            #print('experiment_val:', experiment_val[experiment_name].keys())
+            experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][index_range[str(method)][0]:index_range[str(method)][1]]
+            print('experiment_val:', experiment_val[experiment_name].keys())
         
             if 'HCLIM 12km' in experiment_name:
                 experiment_val[experiment_name][var_name] = stats_tools.upsample_2d_array(experiment_val[experiment_name][var_name], upscale_factor = 4)
 
-            #print('experiment_name:', experiment_name, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
-            #print('experiment_name index:', experiment_val[experiment_name][var_name][0].shape)
 
-            experiment_val[experiment_name][var_name] = np.array(experiment_val[experiment_name][var_name]) 
+        experiment_val[experiment_name][var_name] = np.array(experiment_val[experiment_name][var_name]) 
 
-        #if experiment_name == 'HCLIM 3km':
+        print('experiment_name:', experiment_name, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
+        #print('experiment_name index:', experiment_val[experiment_name][var_name][0].shape)
+
+    print('experiment_val 12:', experiment_val['HCLIM 12km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
+    print('experiment_val 3:', experiment_val['HCLIM 3km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
     low_res_shape, high_res_shape = experiment_val['HCLIM 12km'][variables[0]].shape, experiment_val['HCLIM 3km'][variables[0]].shape
 
     #for key_hr, values_hr in var_high_res_adjusted_dict.items():

@@ -18,7 +18,7 @@ module load Mambaforge/23.3.1-1-hpc1
 
 DOMAIN='EmiliaRomagna'
 #DOMAIN='TestDomain'
-VARIABLE='tas' #'pr' #tas
+VARIABLE='pr' #'pr' #tas
 
 current_date_time="`date`";
 echo The run starts from $current_date_time
