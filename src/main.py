@@ -6,6 +6,7 @@ import get_statistics
 import plot_tools
 import get_config
 import argparse
+import get_time_index
 
 def main():
 
@@ -24,12 +25,16 @@ def main():
     selected_statistics = config['statistics']
     output_dir = config['output_dir']
     experiment_files = config['data_path']
+    time_range = config['time_range']
+    fig_parameters = config['fig_parameters']
+    print('fig_parameters', fig_parameters)
+    print('time_range', time_range)
 
+    time_idx_range = get_time_index.get_time_index(time_range)
     os.makedirs(output_dir, exist_ok=True)
 
-
     [experiment_val, lat, lon] = \
-        get_data.get_data(experiment_files, variables, unit_convert)
+        get_data.get_data(experiment_files, variables, unit_convert, time_idx_range)
 
     all_statistics = get_statistics.get_statistics(experiment_val, \
         min_max_scale, abs_value_max_scale, variables, selected_statistics)
@@ -42,8 +47,9 @@ def main():
         #    [f'{title} {exp_name[i]}' for i in range(len(stats))], \
         #    output_path, vmin=vmin, vmax=vmax, cmap=cmap)
         plot_tools.plot_and_save_maps_latlon(stats, lat, lon,\
-            [f'{title} {exp_name[i]}' for i in range(len(stats))], \
-            output_path, vmin=vmin, vmax=vmax, cmap=cmap)
+            [f'{title} {exp_name[i]}' for i in range(len(stats))],\
+            output_path, vmin=vmin, vmax=vmax, cmap=cmap, \
+            fig_parameters=fig_parameters)
 
 if __name__ == "__main__":
     main()

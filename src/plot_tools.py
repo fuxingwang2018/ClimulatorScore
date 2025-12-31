@@ -4,6 +4,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import math
 
 # Define function to plot and save maps
 def plot_and_save_maps(statistics, titles, output_file, vmin=None, vmax=None, cmap='coolwarm'):
@@ -41,17 +42,28 @@ def plot_and_save_maps(statistics, titles, output_file, vmin=None, vmax=None, cm
     plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.close()
 
-def plot_and_save_maps_latlon(statistics, lat2d,lon2d, titles, output_file, vmin=None, vmax=None, cmap='coolwarm'):
+
+def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
+    vmin=None, vmax=None, cmap='coolwarm', fig_parameters=None):
+
+    nrows_def = fig_parameters['nrows_def']
+    ncols_def = fig_parameters['ncols_def']
+    figsize_def = fig_parameters['figsize_def']
+    nlevels_def = fig_parameters['nlevels_def']
     # Get global vmin/vmax across all stat arrays
+    print('0 vmin, vmax', vmin, vmax)
     if vmin is None:
         vmin = min([np.nanmin(stat) for stat in statistics])
     if vmax is None:
         vmax = max([np.nanmax(stat) for stat in statistics])
+    vmin = math.floor(vmin)
+    vmax = math.ceil(vmax)
 
-    #print('vmin, vmax', vmin, vmax)
-    levels = np.linspace(vmin, vmax, 7)
+    print('1 vmin, vmax', vmin, vmax)
+    levels = np.linspace(vmin, vmax, nlevels_def)
 
-    fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(20, 20),
+    fig, axes = plt.subplots(nrows=nrows_def, ncols=ncols_def, 
+             figsize=(figsize_def[0], figsize_def[1]),
              subplot_kw={'projection': ccrs.PlateCarree()},
              constrained_layout=True)
     axes = axes.flatten()
@@ -59,9 +71,17 @@ def plot_and_save_maps_latlon(statistics, lat2d,lon2d, titles, output_file, vmin
     lon_flat = lon2d.flatten()
     lat_flat = lat2d.flatten()
 
+
     for i, (stat, title) in enumerate(zip(statistics, titles)):
         #im = axes[i].imshow(stat, cmap=cmap, vmin=vmin, vmax=vmax)
         stat_flat= stat.flatten()  # Flattened to match the irregular structure
+        print("lat_flat:", len(lat_flat))
+        print("lon_flat:", len(lon_flat))
+        print("stat_flat:", len(stat_flat))
+        print("stat shape:", stat.shape)
+        print("lat2d shape:", lat2d.shape)
+        print("lon2d shape:", lon2d.shape)
+
         contour = axes[i].tricontourf(lon_flat, lat_flat, stat_flat,
                     transform=ccrs.PlateCarree(),
                     cmap=cmap, levels=levels,
@@ -100,6 +120,12 @@ def plot_and_save_maps_latlon(statistics, lat2d,lon2d, titles, output_file, vmin
     cbar = fig.colorbar(contour, ax=axes, orientation="horizontal", shrink=0.7, pad=0.02)
     #cbar.set_label("Metric Name", fontsize=14)
     cbar.ax.tick_params(labelsize=20)
+
+    # Remove all spacing between subplots
+    fig.subplots_adjust(wspace=0, hspace=0)
+
+    # Make axes fill the figure more tightly
+    #plt.tight_layout(pad=0, w_pad=0, h_pad=0)
 
     # Hide unused subplots if there are any
     for i in range(len(statistics), len(axes)):

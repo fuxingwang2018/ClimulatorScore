@@ -23,10 +23,29 @@ def calculate_ratio_of_variance(reference, comparison):
 
 # Define function to calculate Pearson Correlation Coefficient
 def calculate_correlation(reference, comparison):
+
+    reference[reference > 1e5] = np.nan
+    comparison[comparison > 1e5] = np.nan
     cor_map = np.zeros(reference.shape[1:])
     for i in range(reference.shape[1]):
         for j in range(reference.shape[2]):
-            cor_map[i, j], _ = pearsonr(reference[:, i, j], comparison[:, i, j])
+            ref_pixel = reference[:, i, j]
+            cmp_pixel = comparison[:, i, j]
+
+            mask = (
+                np.isfinite(ref_pixel) &
+                np.isfinite(cmp_pixel)
+            )
+
+            if np.sum(mask) < 2:
+                cor_map[i, j] = np.nan
+                continue
+            try:
+                cor_map[i, j], _ = pearsonr(ref_pixel[mask], cmp_pixel[mask])
+            except Exception:
+                cor_map[i, j] = np.nan
+
+            #cor_map[i, j], _ = pearsonr(reference[:, i, j], comparison[:, i, j])
     #cor_map = np.ma.masked_invalid(cor_map)
     cor_map = np.nan_to_num(cor_map, nan=0.0, posinf=0.0, neginf=0.0)
     return cor_map
@@ -76,6 +95,9 @@ def calculate_abs_value(data):
     time_step = 108  # Fixed time step
     return data[time_step, :, :]
 
+def calculate_std(data):
+    return np.std(data, axis=0)
+
 # Upscale function
 def upsample_2d_array(low_res_array, upscale_factor):
     # Initialize high-resolution array
@@ -88,6 +110,46 @@ def upsample_2d_array(low_res_array, upscale_factor):
     for t in range(time_records):
         high_res_array[t] = zoom(low_res_array[t], zoom=(upscale_factor, upscale_factor), order=1)
     
+    return high_res_array
+
+
+import numpy as np
+from scipy.ndimage import zoom
+
+def upsample_2d_array_new(low_res_array, upscale_factor):
+    time_records = low_res_array.shape[0]
+    high_res_array = np.empty((time_records,
+                               low_res_array.shape[1] * upscale_factor,
+                               low_res_array.shape[2] * upscale_factor))
+
+    for t in range(time_records):
+        # Extract slice
+        arr_t = low_res_array[t]
+
+        # 1. Create NaN mask (1 = valid, 0 = NaN)
+        mask = ~np.isnan(arr_t)
+
+        # 2. Upscale data (replace NaN with 0 temporarily)
+        arr_filled = np.nan_to_num(arr_t, nan=0.0)
+        up_arr = zoom(arr_filled, (upscale_factor, upscale_factor), order=1)
+
+        # 3. Upscale mask using nearest neighbor (order=0)
+        up_mask = zoom(mask.astype(float), (upscale_factor, upscale_factor), order=0)
+
+        # 4. Apply mask: set values where mask = 0 to NaN
+        up_arr[up_mask == 0] = np.nan
+
+        high_res_array[t] = up_arr
+        # Step 1: Create a boolean mask (True where NaN)
+
+    nan_mask_high = np.isnan(high_res_array)
+    nan_count_high = np.sum(nan_mask_high)
+    nan_mask_low = np.isnan(low_res_array)
+    nan_count_low = np.sum(nan_mask_low)
+    print('nan_count', nan_count_low, nan_count_high)
+    print('min max high_res_array', np.min(high_res_array), np.max(high_res_array))
+    print('min max low_res_array', np.min(low_res_array), np.max(low_res_array))
+
     return high_res_array
 
 

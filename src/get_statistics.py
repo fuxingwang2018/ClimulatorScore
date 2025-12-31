@@ -17,7 +17,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     """
 
     # Default to all available statistics
-    all_stats = ['rmse', 'mean_bias', 'variance_ratio', 'correlation', 'wasserstein', 'percentile_99', 'mean_value', 'abs_value']
+    all_stats = ['rmse', 'mean_bias', 'variance_ratio', 'correlation', 'wasserstein', 'percentile_99', 'mean_value', 'abs_value', 'std']
     selected_statistics = selected_statistics or all_stats
 
     experiment_name_with_ref = list(experiment_val.keys())
@@ -80,7 +80,8 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
             # Compute single-input statistics
             for stat, func in {'percentile_99': stats_tools.calculate_99th_percentile,
                        'mean_value': stats_tools.calculate_mean_value,
-                       'abs_value': stats_tools.calculate_abs_value}.items():
+                       'abs_value': stats_tools.calculate_abs_value,
+                       'std': stats_tools.calculate_std}.items():
                 if stat in selected_statistics:
                     statistics[stat] = [func(data) for data in [reference] + list(comparisons.values())]
 
@@ -107,6 +108,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'percentile_99': ('99th Percentile Maps', 'percentile_99_maps', 'inferno'),
         'mean_value': ('Mean Value Maps', 'mean_value_maps', 'cividis'),
         'abs_value': ('Abs Value Maps', 'abs_value_maps', 'Reds'),
+        'std': ('Standard Deviation Maps', 'standard_deviation_maps', 'Reds'),
     }
 
     #all_statistics = [(statistics[stat], *stat_meta[stat], vmin_vmax[stat][0], vmin_vmax[stat][1])
@@ -114,7 +116,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
 
     all_statistics = [
         (statistics[stat], title, filename, *vmin_vmax[stat], cmap, 
-         experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value'} or len(variables) > 1 else experiment_name_without_ref)
+         experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std'} or len(variables) > 1 else experiment_name_without_ref)
         for stat, (title, filename, cmap) in stat_meta.items() if stat in statistics
     ]
     #print('all_statistics', all_statistics)

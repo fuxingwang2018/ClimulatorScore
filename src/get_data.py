@@ -3,15 +3,20 @@ import stats_tools
 import numpy as np
 import sys
 
-def get_data(experiment_dict, variables, unit_convert):
+def get_data(experiment_dict, variables, unit_convert, time_idx_range):
 
     # common period for GAN and CNN: 2009-01-01 to 2009-12-28
+    """
     index_range = {\
         'CNN':   [0, 1460], \
         'SRGAN': [0, 1460], \
+        'SRGANCOR01': [0, 1460], \
+        'SRGANCOR05': [0, 1460], \
         'HCLIM': [13152, 14612], \
+        #'HCLIM': [14612, 16072], \
         }
-    
+    """
+
     var_name_modify = {\
         'tas': {'CNN': 'test'}, \
         'hfls': {'CNN': 'test'}, \
@@ -43,12 +48,15 @@ def get_data(experiment_dict, variables, unit_convert):
         if len(variables) > 1 and all(var in experiment_name_origin for var in variables):
             for var_name in variables:
                 experiment_val[experiment_name][var_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
-                experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][index_range[str(method)][0]:index_range[str(method)][1]]
+                experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][time_idx_range[str(experiment_name)][var_name]['start_idx'][0]:time_idx_range[str(experiment_name)][var_name]['end_idx'][0]]
         else:
             var_name = experiment_name_origin.strip().split()[-1]
             print('var_name, experiment_name_origin, experiment_name', var_name, experiment_name_origin, experiment_name)
-            experiment_val[experiment_name][var_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
-            experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][index_range[str(method)][0]:index_range[str(method)][1]]
+            if 'CNN' in experiment_name:
+                experiment_val[experiment_name][var_name] = ds[var_name_modify[var_name][method]].values * unit_convert[var_name]  # Convert to mm/day for pr
+            else:
+                experiment_val[experiment_name][var_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
+            experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][time_idx_range[str(experiment_name)][var_name]['start_idx'][0]:time_idx_range[str(experiment_name)][var_name]['end_idx'][0]]
             print('experiment_val:', experiment_val[experiment_name].keys())
         
             if 'HCLIM 12km' in experiment_name:
