@@ -37,6 +37,11 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         #'abs_value': stats_tools.calculate_abs_value,
     }
 
+
+    cmap_dict = {'tas': {'mean_value': 'cividis', 'percentile_99': 'inferno'}, \
+                 'mrsol': {'mean_value': 'Blues',    'percentile_99': 'Blues'}, \
+                 'pr': {'mean_value': 'Blues',    'percentile_99': 'Blues'} }
+
     if len(variables) > 1:
 
         variables_data = {
@@ -57,7 +62,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         for stat in selected_statistics
         if stat in stat_functions
         }
-
+     
         ## Compute global color scale ranges
         #vmin_vmax = {stat: (np.min(vals), np.max(vals)) for stat, vals in statistics.items()}
         ##print('vmin_vmax 1', type(vmin_vmax), vmin_vmax)
@@ -99,16 +104,18 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
 
     # Metadata for visualization
     stat_meta = {
-        'rmse': ('RMSE Maps', 'rmse_maps', 'viridis'),
-        'correlation': ('Correlation Maps', 'correlation_maps', 'Reds'),
-        'cpl_corr': ('Coupling Correlation Maps', 'coupling_correlation_maps', 'seismic'),
-        'mean_bias': ('Mean Bias Maps', 'mean_bias_maps', 'seismic'),
-        'variance_ratio': ('Ratio of Variance Maps', 'variance_ratio_maps', 'Blues'),
-        'wasserstein': ('Wasserstein Distance Maps', 'wasserstein_maps', 'plasma'),
-        'percentile_99': ('99th Percentile Maps', 'percentile_99_maps', 'inferno'),
-        'mean_value': ('Mean Value Maps', 'mean_value_maps', 'cividis'),
-        'abs_value': ('Abs Value Maps', 'abs_value_maps', 'Reds'),
-        'std': ('Standard Deviation Maps', 'standard_deviation_maps', 'Reds'),
+        'rmse': ('RMSE', 'rmse_maps', 'viridis'),
+        'correlation': ('Correlation', 'correlation_maps', 'Reds'),
+        'cpl_corr': ('Correlation', 'coupling_correlation_maps', 'seismic'),
+        'mean_bias': ('Mean Bias', 'mean_bias_maps', 'seismic'),
+        'variance_ratio': ('Ratio of Variance', 'variance_ratio_maps', 'Blues'),
+        'wasserstein': ('Wasserstein Distance', 'wasserstein_maps', 'plasma'),
+        #'percentile_99': ('99thP', 'percentile_99_maps', cmap_dict[variables[0]]['percentile_99']), #tas
+        'percentile_99': ('99th Percentile', 'percentile_99_maps', cmap_dict[variables[0]]['percentile_99']), #tas
+        #'mean_value': ('MeanV', 'mean_value_maps', cmap_dict[variables[0]]['mean_value']), #tas
+        'mean_value': ('Mean Value', 'mean_value_maps', cmap_dict[variables[0]]['mean_value']), #tas
+        'abs_value': ('Abs Value', 'abs_value_maps', 'Reds'),
+        'std': ('Standard Deviation', 'standard_deviation_maps', 'Reds'),
     }
 
     #all_statistics = [(statistics[stat], *stat_meta[stat], vmin_vmax[stat][0], vmin_vmax[stat][1])
@@ -119,7 +126,89 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
          experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std'} or len(variables) > 1 else experiment_name_without_ref)
         for stat, (title, filename, cmap) in stat_meta.items() if stat in statistics
     ]
-    #print('all_statistics', all_statistics)
+
+    """
+    plot_counter = 0 
+
+    active_stats = [(stat, meta) for stat, meta in stat_meta.items() if stat in statistics]
+
+    all_statistics = []
+    for stat, (title, filename, cmap) in active_stats:
+        # 2. Use the counter to get the letter
+        letter = chr(97 + plot_counter) 
+        
+        stat_entry = (
+            statistics[stat], 
+            f"({letter}) {title}", 
+            filename, 
+            *vmin_vmax[stat], 
+            cmap,
+            experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std'} or len(variables) > 1 
+            else experiment_name_without_ref
+        )
+        all_statistics.append(stat_entry)
+        
+        # 3. Increment the counter so the NEXT plot gets the next letter
+        plot_counter += 1
+    """
+
+
+    """
+    plot_counter = 0 
+    all_statistics = []
+    for stat, (title, filename, cmap) in stat_meta.items():
+        print ('plot_counter, title', plot_counter, title)
+        if stat in statistics:
+            # Use the counter to get the letter, then increment it
+            letter = chr(97 + plot_counter) 
+            new_title = f"({letter}) {title}"
+            
+            stat_tuple = (
+                statistics[stat], 
+                new_title, 
+                filename, 
+                *vmin_vmax[stat], 
+                cmap,
+                experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std'} or len(variables) > 1 
+                else experiment_name_without_ref
+            )
+            all_statistics.append(stat_tuple)
+            
+            # Increment ONLY when a plot is successfully added
+            plot_counter += 1 
+    """
+
+
+    """
+    active_stats = [(stat, meta) for stat, meta in stat_meta.items() if stat in statistics]
+
+    all_statistics = [
+    (
+        statistics[stat], 
+        f"({chr(97 + i)}) {title}",  # i will now go 0, 1, 2... for active plots
+        filename, 
+        *vmin_vmax[stat], 
+        cmap,
+        experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std'} or len(variables) > 1 
+        else experiment_name_without_ref
+    )
+    for i, (stat, (title, filename, cmap)) in enumerate(active_stats)
+    ]
+    """
+    #all_statistics = [
+    #    (
+    #    statistics[stat], 
+    #    f"({chr(97 + i)}) {title}",  # Adds (a), (b), (c)... to the title
+    #    filename, 
+    #    *vmin_vmax[stat], 
+    #    cmap,
+    #    experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std'} or len(variables) > 1 
+    #    else experiment_name_without_ref
+    #    )
+    #for i, (stat, (title, filename, cmap)) in enumerate(stat_meta.items()) 
+    #if stat in statistics
+    #]
+    print('all_statistics', all_statistics)
 
     return all_statistics
 

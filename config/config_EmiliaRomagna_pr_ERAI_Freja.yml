@@ -1,0 +1,166 @@
+base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna"
+#GCM: "ICHEC-EC-EARTH_HIST"
+#FIRST_YEAR: "1995"
+#LAST_YEAR: "2005"
+GCM: "ECMWF-ERAINT"
+FIRST_YEAR_12km: "2000"
+LAST_YEAR_12km: "2009"
+FIRST_YEAR_3km: "2000"
+LAST_YEAR_3km: "2009"
+
+variables: 
+  - "pr"
+#   - "mrsol"
+
+experiment: "SRGAN_CNN_ERAI_SCSTD"
+MLEXP: ''
+
+data_path:
+  # pr
+  #HCLIM 3km mrsol: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/mrsol/mrsol_3km_6hr_200001010000-200912311800.nc"
+  HCLIM 3km pr: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/pr/pr_3km_6hr_200001010300-200912312100.nc"
+  #HCLIM 12km mrsol: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/mrsol/mrsol_12km_6hr_200001010000-200912311800.nc"
+  HCLIM 12km pr: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/pr/pr_12km_6hr_200001010300-200912312100.nc"
+  #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_mrsol_with_mrsol_val0.1_atos/predictant_ypred.nc"
+  #SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_with_pr_val0.1_atos/predictant_ypred.nc"
+
+  #SRGANNPATOS 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_no_pr_val0.1_atos/predictant_ypred.nc"
+  SRGANWPATOS 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_with_pr_val0.1_atos/predictant_ypred.nc"
+  ##SRGANFREJA 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_no_pr/predictant_ypred.nc"
+  ##SRGANFREJA 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_no_pr_val0.1_Freja/predictant_ypred.nc"
+  ##SRGANWP 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_no_pr/predictant_ypred.nc"
+  SRGANSCSTDBS50 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH50_pr_scale_time_stdscaler_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50EP100 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_ep100_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPU 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPU2 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH50_pr_scale_time_stdscaler_gpufix2_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS100GPUDLR1E-5 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_dlr1e-5_bs100_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUDLR1E-5 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_dlr1e-5_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  SRGANSCSTDBS100GPU 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_ep100_bs100_ERAI_atos/predictant_ypred_1.nc"
+  #SRGANSCSTDBS50GPUNSTD0.03DLR1E-5 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_nstd0.03_dlr1e-5_bs50_ERAI_atos/predictant_ypred_1.nc"
+  #SRGANSCSTDBS50GPULNOISE0.1DLR1E-5 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_dlr1e-5_lnoise0.1_bs50_ERAI_atos/predictant_ypred_1.nc"
+  #SRGANSCSTDBS50GPUNSTD0.05 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_nstd0.05_bs50_ERAI_atos/predictant_ypred_1.nc"
+  #SRGANSCSTDBS50GPUNSTD0.05DLR1E-5 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_nstd0.05_dlr1e-5_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPULNOISE0.1 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_gpufix_lnoise0.1_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUWPWORO 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUWPWOROv2 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUNORO 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUNOROv2 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUNPWORO 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUNPWOROv2 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUWPNORO 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_norog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS50GPUWPNOROv2 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_norog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  CNN 3km pr: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_pr_2009.nc"
+
+  # mrsol
+  #HCLIM 3km: "${base_dir}/cropped/3km/6hr/${variables}/${variables}_3km_6hr_200001010000-200912311800.nc"
+  ##HCLIM 12km: "${base_dir}/cropped/12km/6hr/${variables}/${variables}_12km_6hr_200001010000-200912311800.nc"
+  #SRGAN 3km: "${base_dir}/SG/SRGAN_OUT/EPOCH100_${variables}/predictant_ypred.nc"
+
+time_range:
+  HCLIM 12km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  HCLIM 3km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+             'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGAN 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANNPATOS 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANWPATOS 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANFREJA 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANWP 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50EP100 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPU 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPU2 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS100GPUDLR1E-5 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUDLR1E-5 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS100GPU 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUNSTD0.03DLR1E-5 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPULNOISE0.1DLR1E-5 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUNSTD0.05 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUNSTD0.05DLR1E-5 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPULNOISE0.1 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUWPWORO 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUWPWOROv2 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUNORO 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUNOROv2 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUNPWORO 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUNPWOROv2 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUWPNORO 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS50GPUWPNOROv2 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  CNN 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+           'pr': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
+
+output_dir: "${base_dir}/statistic_figs/1var/pr_test/" 
+
+statistics:
+  - rmse
+  #- cpl_corr
+  #- correlation
+  - mean_bias
+  - variance_ratio
+  #- wasserstein
+  - percentile_99
+  - mean_value
+  - abs_value
+  #- std
+
+min_max_scale:
+  'rmse': 
+  #'correlation': [0.88, 1.00]
+  #'cpl_corr':
+  #'correlation':
+  'mean_bias':
+  'variance_ratio':
+  #'wasserstein':
+  'percentile_99': [0, 120] 
+  'mean_value':
+  'abs_value':
+  #'std':
+
+abs_value_max_scale:
+  'pr': 0.5
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+unit_convert:
+  'pr': 86400.0
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+fig_parameters:
+  'nrows_def': 4
+  'ncols_def': 5
+  'figsize_def': [50,35]
+  #'nrows_def': 2
+  #'ncols_def': 2
+  #'figsize_def': [22,15]
+  'fontsize_def': 24
+  'nlevels_def': 11
+  'extend_def': 'max'

@@ -1,0 +1,101 @@
+base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna"
+#GCM: "ICHEC-EC-EARTH_HIST"
+#FIRST_YEAR: "1995"
+#LAST_YEAR: "2005"
+GCM: "ECMWF-ERAINT"
+FIRST_YEAR_12km: "2000"
+LAST_YEAR_12km: "2009"
+FIRST_YEAR_3km: "2000"
+LAST_YEAR_3km: "2009"
+
+variables: 
+  - "pr"
+#   - "mrsol"
+
+experiment: "SRGAN_TOROGSENS_CNN_ERAI_SCSTD_GPU_paper"
+#experiment: "SRGAN_WTWOROG_CNN_ERAI_SCSTD_GPU_paper"
+MLEXP: ''
+
+data_path:
+  # pr
+  HCLIM 3km pr: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/pr/pr_3km_6hr_200001010300-200912312100.nc"
+  #HCLIM 12km pr: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/pr/pr_12km_6hr_200001010300-200912312100.nc"
+  # With P With OROG
+  #SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  #SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  # No P No OROG
+  ##SRGANNPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  SRGANNPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  SRGANNPWOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  SRGANWPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_norog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  #SRGANWPWOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  #CNN 3km pr: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_pr_2009.nc"
+
+time_range:
+  HCLIM 12km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  HCLIM 3km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+             'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGAN 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANWPWOROG 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANNPNOROG 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANNPWOROG 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANWPNOROG 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  CNN 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+           'pr': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
+
+output_dir: "${base_dir}/statistic_figs/1var/paper" 
+
+statistics:
+  - rmse
+  #- cpl_corr
+  #- correlation
+  - mean_bias
+  - variance_ratio
+  #- wasserstein
+  - percentile_99
+  - mean_value
+  - abs_value
+  #- std
+
+min_max_scale:
+  'rmse': 
+  #'correlation': [0.88, 1.00]
+  #'cpl_corr':
+  #'correlation':
+  'mean_bias':
+  'variance_ratio':
+  #'wasserstein':
+  'percentile_99': [0, 120] 
+  'mean_value':
+  'abs_value':
+  #'std':
+
+abs_value_max_scale:
+  'pr': 0.5
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+unit_convert:
+  'pr': 86400.0
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+fig_parameters:
+  #'nrows_def': 1
+  #'ncols_def': 4
+  #'figsize_def': [50,10]
+  'nrows_def': 2
+  'ncols_def': 2
+  'figsize_def': [22,15]
+  'fontsize_def': 24
+  'nlevels_def': 11
+  'extend_def': 'max'

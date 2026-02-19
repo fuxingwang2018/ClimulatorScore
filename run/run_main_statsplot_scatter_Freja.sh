@@ -3,7 +3,7 @@
 #SBATCH -t 01:00:00 
 ###SBATCH -n 1  ##ntasks 
 ###SBATCH --mem=16G
-#SBATCH -J corr2v 
+#SBATCH -J scatayl 
 #SBATCH --chdir=/nobackup/rossby26/users/sm_fuxwa/AI/log_stats
 ###SBATCH --chdir=/nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore
 #SBATCH --error=%x-%j.error 
@@ -18,10 +18,10 @@ module load Mambaforge/23.3.1-1-hpc1
 
 DOMAIN='EmiliaRomagna'
 #DOMAIN='TestDomain'
-VARIABLE='tas_mrsol' #'pr' #tas
-#VARIABLE='tas' #'pr' #tas
-GCM='ECE'
-#GCM='ERAI'
+#VARIABLE='tas_mrsol' #'pr' #tas
+VARIABLE='tas' #'pr' #tas
+#GCM='ECE'
+GCM='ERAI'
 
 current_date_time="`date`";
 echo The run starts from $current_date_time
@@ -37,10 +37,11 @@ cd $HOME/Script/ClimulatorScore/src
 #cd /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/src
 #python main.py -c /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/config/config_${DOMAIN}_Freja.yml
 
-#python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_Freja.yml
-python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
+#python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_paper_Freja.yml
+#python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
+#python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_2003_Freja.yml
 
-#python taylor_climulator.py
+python taylor_climulator.py
 #python plot_scatter.py
 
 current_date_time="`date`";

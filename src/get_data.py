@@ -2,6 +2,9 @@ import xarray as xr
 import stats_tools
 import numpy as np
 import sys
+import pandas as pd
+print("xarray:", xr.__version__)
+print("pandas:", pd.__version__)
 
 def get_data(experiment_dict, variables, unit_convert, time_idx_range):
 
@@ -27,7 +30,8 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
     experiment_val = {}
     for experiment_name_origin, file_name in experiment_dict.items():
         method = experiment_name_origin.strip().split()[0]
-        ds = xr.open_dataset(file_name, decode_cf=False)
+        #ds = xr.open_dataset(file_name, decode_cf=False)
+        ds = xr.open_dataset(file_name, decode_times=True, use_cftime=False)
         print('len variables', len(variables))
         if len(variables) > 1 and all(var in experiment_name_origin for var in variables):
             experiment_name = experiment_name_origin
@@ -39,6 +43,8 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
         
         lat= ds['lat'].values
         lon= ds['lon'].values
+        print(ds.time.dtype)
+        print(ds.time.attrs)
 
         #if experiment_name == 'CNN 3km':
         #    for var_name in variables:
@@ -47,14 +53,22 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
         #elif 'HCLIM 3km' in experiment_name_origin or 'HCLIM 12km' in experiment_name_origin:
         if len(variables) > 1 and all(var in experiment_name_origin for var in variables):
             for var_name in variables:
+                #daily_ds = ds[var_name].resample(time='1D').mean()
+                #experiment_val[experiment_name][var_name] = daily_ds.values * unit_convert[var_name]  # Convert to mm/day for pr
                 experiment_val[experiment_name][var_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
                 experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][time_idx_range[str(experiment_name)][var_name]['start_idx'][0]:time_idx_range[str(experiment_name)][var_name]['end_idx'][0]]
         else:
             var_name = experiment_name_origin.strip().split()[-1]
             print('var_name, experiment_name_origin, experiment_name', var_name, experiment_name_origin, experiment_name)
             if 'CNN' in experiment_name:
-                experiment_val[experiment_name][var_name] = ds[var_name_modify[var_name][method]].values * unit_convert[var_name]  # Convert to mm/day for pr
+                #daily_ds = ds[var_name_modify[var_name][method]].resample(time='1D').mean()
+                #experiment_val[experiment_name][var_name] = daily_ds.values #* unit_convert[var_name]  # Convert to mm/day for pr
+                experiment_val[experiment_name][var_name] = ds[var_name_modify[var_name][method]].values #* unit_convert[var_name]  # Convert to mm/day for pr
             else:
+                #print('type of ds[var_name]', type(ds[var_name]))
+                #print('type of ds[var_name].values', type(ds[var_name].values))
+                #daily_ds = ds[var_name].resample(time='1D').mean()
+                #experiment_val[experiment_name][var_name] = daily_ds.values * unit_convert[var_name]  # Convert to mm/day for pr
                 experiment_val[experiment_name][var_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
             experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][time_idx_range[str(experiment_name)][var_name]['start_idx'][0]:time_idx_range[str(experiment_name)][var_name]['end_idx'][0]]
             print('experiment_val:', experiment_val[experiment_name].keys())
@@ -68,14 +82,17 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
         print('experiment_name:', experiment_name, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
         #print('experiment_name index:', experiment_val[experiment_name][var_name][0].shape)
 
-    print('experiment_val 12:', experiment_val['HCLIM 12km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
-    print('experiment_val 3:', experiment_val['HCLIM 3km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
-    low_res_shape, high_res_shape = experiment_val['HCLIM 12km'][variables[0]].shape, experiment_val['HCLIM 3km'][variables[0]].shape
+    #print('experiment_val 12:', experiment_val['HCLIM 12km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
+    #print('experiment_val 3:', experiment_val['HCLIM 3km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
+    if 'HCLIM 12km' in experiment_name:
+        low_res_shape, high_res_shape = experiment_val['HCLIM 12km'][variables[0]].shape, experiment_val['HCLIM 3km'][variables[0]].shape
 
     #for key_hr, values_hr in var_high_res_adjusted_dict.items():
-    for var_name in variables:
+    if 'HCLIM 12km' in experiment_name:
+      for var_name in variables:
         residue_geo = []
         for i in range(len(low_res_shape)):
+            #print ('high_res_shape[i] % low_res_shape[i]', var_name, i, high_res_shape[i], low_res_shape[i])
             residue_geo.append(high_res_shape[i] % low_res_shape[i])
             if residue_geo[i] != 0:
                 print('Not divisible:', high_res_shape[i], low_res_shape[i], i, residue_geo[i])

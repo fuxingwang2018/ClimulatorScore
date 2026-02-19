@@ -14,7 +14,8 @@ variables:
   - "tas"
 #"tas" "hfls" "mrsol"
 
-experiment: "SRGAN_CNN_bs50_lamb0.1_wtm_ERAI"
+experiment: "SRGAN_CNN_bs50_stdscaler_gpufix_lnoise0.1_ERAI"
+MLEXP: ''
 
 data_path:
   #tas
@@ -24,6 +25,13 @@ data_path:
   HCLIM 3km tas: "${base_dir}/cropped/${GCM}/3km/6hr/tas/tas_3km_6hr_${FIRST_YEAR_3km}01010000-${LAST_YEAR_3km}12311800.nc"
   HCLIM 12km mrsol: "${base_dir}/cropped/${GCM}/12km/6hr/mrsol/mrsol_12km_6hr_${FIRST_YEAR_12km}01010000-${LAST_YEAR_12km}12311800.nc"
   HCLIM 12km tas: "${base_dir}/cropped/${GCM}/12km/6hr/tas/tas_12km_6hr_${FIRST_YEAR_12km}01010000-${LAST_YEAR_12km}12311800.nc"
+
+  ###OBS 3km mrsol: "/nobackup/rossby27/users/sm_fuxwa/ESA_CCI_SM/v7.1/2_daily_images/combined_cmorized_regrid/2009/mrsol_ESACCI-SOILMOISTURE-L3S-SSMV-COMBINED_regrid-20090101-20091231-fv07.1.nc"
+  #OBS 3km mrsol: "/nobackup/rossby27/users/sm_fuxwa/GLEAM/data/v3.6a/daily_cmorized_regrid/mrsol_GLEAM_regrid_v3.6a-20090101-20091231.nc"
+  #OBS 3km tas: "/nobackup/rossby27/users/sm_fuxwa/EOBS31/tas_ens_mean_0.1deg_reg_regrid_3km_1995-2010_v31.0e.nc"
+
+  ERA5 3km mrsol: "/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc"
+  ERA5 3km tas: "/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc"
 
   #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_mrsol_with_mrsol_val0.1_atos/predictant_ypred.nc"
   #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_with_tas_val0.1_atos/predictant_ypred.nc"
@@ -58,6 +66,9 @@ data_path:
   SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_scale_time_val0.1_batch50_lamb0.1_wtm_atos/predictant_ypred_1.nc"
   SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_scale_time_val0.1_batch50_lamb0.1_wtm_atos/predictant_ypred_1.nc"
 
+  #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_scale_time_stdscaler_gpufix_lnoise0.1_bs50_ERAI_atos/predictant_ypred_1.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_scale_time_stdscaler_gpufix_lnoise0.1_bs50_ERAI_atos/predictant_ypred_1.nc"
+
   #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_with_sm_ERAI_corrlamda0_val0.1_atos/predictant_ypred_1.nc"
   #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_with_sm_ERAI_corrlamda0_val0.1_atos/predictant_ypred_1.nc"
 
@@ -72,13 +83,17 @@ time_range:
               'tas': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   HCLIM 3km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
              'tas': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  #OBS 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 24}, 
+  #           'tas': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2010-12-31 24:00"], 'step_hours': 24}, }
+  ERA5 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+             'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   SRGAN 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
               'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   CNN 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
            'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
 
-output_dir: "${base_dir}/statistic_figs" 
+output_dir: "${base_dir}/statistic_figs/2var/" 
 
 statistics:
   #- rmse
@@ -119,6 +134,7 @@ unit_convert:
 
 fig_parameters:
   'nrows_def': 2
-  'ncols_def': 2
-  'figsize_def': [30,20]
+  'ncols_def': 3
+  'figsize_def': [30,15]
+  'fontsize_def': 24
   'nlevels_def': 11

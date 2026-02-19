@@ -82,9 +82,11 @@ class TaylorDiagram(object):
         ax.axis["top"].major_ticklabels.set_axis_direction("top")
         ax.axis["top"].label.set_axis_direction("top")
         ax.axis["top"].label.set_text("Correlation")
+        ax.axis["top"].label.set_fontsize(20)  # Set your desired size here
 
         ax.axis["left"].set_axis_direction("bottom")  # "X axis"
         ax.axis["left"].label.set_text("Standard deviation")
+        ax.axis["left"].label.set_fontsize(20)  # Set your desired size here
 
         ax.axis["right"].set_axis_direction("top")    # "Y-axis"
         ax.axis["right"].toggle(ticklabels=True)

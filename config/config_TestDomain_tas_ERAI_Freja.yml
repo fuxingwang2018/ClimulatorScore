@@ -37,6 +37,9 @@ data_path:
   SRGANDR0.3LR1E-5 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_dropout0.3_lr1e-5_discdrop_genalldrop/predictant_ypred.nc"
   SRGANBS100 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_bs100_atos/predictant_ypred_1.nc"
   SRGANBS100LAM01 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_bs100_lamb0.1_atos/predictant_ypred_1.nc"
+  SRGANSCSTDBS100 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_scale_time_stdscaler_bs100_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCRBSBS100 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_scale_time_rbsscaler_bs100_ERAI_atos/predictant_ypred_1.nc"
+  SRGANSCSTDGPUBS100 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH50_tas_scale_time_stdscaler_gpufix_bs100_ERAI_atos/predictant_ypred_1.nc"
 
   #CNN 3km: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_${variables}_2009.nc"
 
@@ -53,10 +56,13 @@ time_range:
   SRGANDR0.3LR1E-5 3km: {'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   SRGANBS100 3km: {'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   SRGANBS100LAM01 3km: {'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDBS100 3km: {'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCRBSBS100 3km: {'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANSCSTDGPUBS100 3km: {'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   CNN 3km: {'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
 
-output_dir: "${base_dir}/statistic_figs" 
+output_dir: "${base_dir}/statistic_figs/1var" 
 
 statistics:
   - rmse

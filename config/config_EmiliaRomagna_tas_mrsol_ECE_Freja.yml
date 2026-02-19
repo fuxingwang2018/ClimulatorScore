@@ -1,15 +1,19 @@
 base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna"
-#GCM: "ICHEC-EC-EARTH_HIST"
-#FIRST_YEAR: "1995"
-#LAST_YEAR: "2005"
+GCM: "ICHEC-EC-EARTH_HIST"
+FIRST_YEAR_12km: "1995"
+LAST_YEAR_12km: "2005"
+FIRST_YEAR_3km: "1995"
+LAST_YEAR_3km: "2005"
 #GCM: "ICHEC-EC-EARTH_RCP85_MC"
-#FIRST_YEAR: "2040"
-#LAST_YEAR: "2050"
-GCM: "ICHEC-EC-EARTH_RCP85_LC"
-FIRST_YEAR_12km: "2090"
-LAST_YEAR_12km: "2099"
-FIRST_YEAR_3km: "2089"
-LAST_YEAR_3km: "2099"
+#FIRST_YEAR_12km: "2040"
+#LAST_YEAR_12km: "2050"
+#FIRST_YEAR_3km: "2040"
+#LAST_YEAR_3km: "2050"
+#GCM: "ICHEC-EC-EARTH_RCP85_LC"
+#FIRST_YEAR_12km: "2090"
+#LAST_YEAR_12km: "2099"
+#FIRST_YEAR_3km: "2089"
+#LAST_YEAR_3km: "2099"
 #GCM: "ECMWF-ERAINT"
 
 variables: 
@@ -17,7 +21,10 @@ variables:
   - "tas"
 #"tas" "hfls" "mrsol"
 
-experiment: "SRGAN_CNN_ECELC"
+experiment: "SRGAN_CNN_WSMT_LMOISE0.1_ECEHist"
+MLEXP: "tas_mrsol_wsmt_lnoise0.1_ECEHist_atos"
+#experiment: "SRGAN_CNN_WSMT_LMOISE0.1_ECEFutMC"
+#MLEXP: "tas_mrsol_wsmt_lnoise0.1_ECEFutMC_atos"
 
 data_path:
   #tas
@@ -31,18 +38,18 @@ data_path:
   #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_mrsol_with_mrsol_val0.1_atos/predictant_ypred.nc"
   #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_with_tas_val0.1_atos/predictant_ypred.nc"
 
-  SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_mrsol_scale_space_val0.1_atos/predictant_ypred_1.nc"
-  SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_scale_space_val0.1_atos/predictant_ypred_1.nc"
+  #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/ECE/EPOCH100_tas_mrsol_lnoise0.1_ECEFutMC_atos/predictant_ypred_1.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/EPOCH100_tas_mrsol_lnoise0.1_ECEFutMC_atos/predictant_ypred_1.nc"
 
-  #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_val0.1_atos/predictant_ypred.nc"
-  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_val0.1_atos/predictant_ypred.nc"
+  #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/ECE/EPOCH100_tas_mrsol_lnoise0.1_ECEHis_atos/predictant_ypred_1.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/EPOCH100_tas_mrsol_lnoise0.1_ECEHis_atos/predictant_ypred_1.nc"
 
-  #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_scale_global_val0.1_batch20_atos/predictant_ypred_1.nc"
-  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_scale_global_val0.1_batch20_atos/predictant_ypred_1.nc"
+  #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/ECE/EPOCH100_tas_mrsol_wsmt_lnoise0.1_ECEFutMC_atos/predictant_ypred_1.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/EPOCH100_tas_mrsol_wsmt_lnoise0.1_ECEFutMC_atos/predictant_ypred_1.nc"
+ 
+  SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/ECE/EPOCH100_tas_mrsol_wsmt_lnoise0.1_ECEHis_atos/predictant_ypred_1.nc"
+  SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/EPOCH100_tas_mrsol_wsmt_lnoise0.1_ECEHis_atos/predictant_ypred_1.nc"
 
-  #SRGAN 3km tas mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_val0.1_atos/predictant_ypred.nc"
-  #SRGAN 3km tas mrsol b20: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_val0.1_batch20_atos/predictant_ypred.nc"
-  #SRGAN 3km tas mrsol with tm b20: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_with_tm_val0.1_batch20_atos/predictant_ypred.nc"
   #CNN 3km mrsol: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_mrsol_2009.nc"
   #CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc"
 
@@ -56,8 +63,26 @@ time_range:
   CNN 3km: {'mrsol': {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, 
            'tas': {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, }
   target: {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}
+  #HCLIM 12km: {'mrsol': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, 
+  #            'tas': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, }
+  #HCLIM 3km: {'mrsol': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, 
+  #           'tas': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, }
+  #SRGAN 3km: {'mrsol':{'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6, }, 
+  #            'tas':{'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, }
+  #CNN 3km: {'mrsol': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, 
+  #         'tas': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, }
+  #target: {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}
+  #HCLIM 12km: {'mrsol': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, 
+  #            'tas': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, }
+  #HCLIM 3km: {'mrsol': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, 
+  #           'tas': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, }
+  #SRGAN 3km: {'mrsol':{'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6, }, 
+  #            'tas':{'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, }
+  #CNN 3km: {'mrsol': {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, 
+  #         'tas': {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, }
+  #target: {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}
 
-output_dir: "${base_dir}/statistic_figs" 
+output_dir: "${base_dir}/statistic_figs/2var" 
 
 statistics:
   #- rmse
@@ -99,5 +124,6 @@ unit_convert:
 fig_parameters:
   'nrows_def': 2
   'ncols_def': 2
-  'figsize_def': [20,20]
+  'figsize_def': [30,20]
+  'fontsize_def': 24
   'nlevels_def': 11

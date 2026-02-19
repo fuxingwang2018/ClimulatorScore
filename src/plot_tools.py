@@ -48,8 +48,10 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
 
     nrows_def = fig_parameters['nrows_def']
     ncols_def = fig_parameters['ncols_def']
-    figsize_def = fig_parameters['figsize_def']
+    figsize_def  = fig_parameters['figsize_def']
+    fontsize_def = fig_parameters['fontsize_def']
     nlevels_def = fig_parameters['nlevels_def']
+    extend_def = fig_parameters['extend_def']
     # Get global vmin/vmax across all stat arrays
     print('0 vmin, vmax', vmin, vmax)
     if vmin is None:
@@ -72,6 +74,7 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
     lat_flat = lat2d.flatten()
 
 
+    plot_counter = 0 
     for i, (stat, title) in enumerate(zip(statistics, titles)):
         #im = axes[i].imshow(stat, cmap=cmap, vmin=vmin, vmax=vmax)
         stat_flat= stat.flatten()  # Flattened to match the irregular structure
@@ -85,10 +88,13 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
         contour = axes[i].tricontourf(lon_flat, lat_flat, stat_flat,
                     transform=ccrs.PlateCarree(),
                     cmap=cmap, levels=levels,
-                    vmin=vmin, vmax=vmax)
+                    vmin=vmin, vmax=vmax,
+                    extend=extend_def)
 
 
-        axes[i].set_title(title, fontsize=20)
+        letter = chr(97 + plot_counter) 
+        new_title = f"({letter}) {title}"
+        axes[i].set_title(new_title, fontsize=fontsize_def)
         # Add coastlines and other features
         axes[i].coastlines(resolution='10m',linewidth=1.2, color='black')
         #axes[i].gridlines(draw_labels=True, dms=True, x_inline=False, y_inline=False)
@@ -114,12 +120,21 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
         #text_y = lat2d[-1, -1]
         #text_y = 0  # Bottom position
         axes[i].text(text_x, text_y, f"{stat_domain_ave:.2f}",
-            color='white', fontsize=24, ha='right', va='bottom',
+            color='white', fontsize=fontsize_def, ha='right', va='bottom',
             bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
+        plot_counter += 1
 
-    cbar = fig.colorbar(contour, ax=axes, orientation="horizontal", shrink=0.7, pad=0.02)
+    #cbar = fig.colorbar(contour, ax=axes, orientation="horizontal", shrink=0.7, aspect=40, pad=0.02)
+    cbar = fig.colorbar(
+        contour, 
+        ax=axes, 
+        orientation="horizontal", 
+        shrink=0.7,   # Controls the length (left-to-right)
+        aspect=40,    # Controls the thickness (higher number = thinner bar)
+        pad=0.02      # Distance from the plot
+        )
     #cbar.set_label("Metric Name", fontsize=14)
-    cbar.ax.tick_params(labelsize=20)
+    cbar.ax.tick_params(labelsize=fontsize_def)
 
     # Remove all spacing between subplots
     fig.subplots_adjust(wspace=0, hspace=0)

@@ -48,6 +48,7 @@ def main():
         #    output_path, vmin=vmin, vmax=vmax, cmap=cmap)
         plot_tools.plot_and_save_maps_latlon(stats, lat, lon,\
             [f'{title} {exp_name[i]}' for i in range(len(stats))],\
+            #[f'{exp_name[i]}' for i in range(len(stats))],\
             output_path, vmin=vmin, vmax=vmax, cmap=cmap, \
             fig_parameters=fig_parameters)
 

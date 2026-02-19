@@ -1,0 +1,136 @@
+base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna"
+GCM: "ICHEC-EC-EARTH_HIST"
+FIRST_YEAR_12km: "1995"
+LAST_YEAR_12km: "2005"
+FIRST_YEAR_3km: "1995"
+LAST_YEAR_3km: "2005"
+#GCM: "ECMWF-ERAINT"
+#FIRST_YEAR_12km: "2000"
+#LAST_YEAR_12km: "2009"
+#FIRST_YEAR_3km: "2000"
+#LAST_YEAR_3km: "2009"
+
+variables: 
+  - "tas"
+#"tas" "hfls" "mrsol"
+
+#experiment: "SRGAN_tas_wsm_lnoise0.1_ECEFutMC_2050"
+#MLEXP: "EPOCH100_tas_ECEHistFutMC_withtas_atos"
+#MLEXP: "EPOCH100_tas_lnoise0.1_ECEHistFutMC_atos"
+#MLEXP: "EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos"
+
+#experiment: "SRGAN_tas_wt_worog_ECEHist_2005"
+#MLEXP: "EPOCH100_tas_wt_worog_ECEHist_atos"
+#experiment: "SRGAN_tas_wt_worog_ECEFutMC_2050"
+#MLEXP: "EPOCH100_tas_wt_worog_ECEFutMC_atos"
+#experiment: "SRGAN_tas_wt_worog_ECEHistFutMC_2005"
+#experiment: "SRGAN_tas_wt_worog_ECEHistFutMC_2050"
+#MLEXP: "EPOCH100_tas_wt_worog_ECEHistFutMC_atos"
+
+experiment: "SRGAN_tas_wt_worog_ECEHis_predFutMC_2050"
+MLEXP: "EPOCH100_EPOCH100_tas_wt_worog_ECEHis_predFutMC_atos"
+#experiment: "SRGAN_tas_wt_worog_ECEFutMC_predHist_2005"
+#MLEXP: "EPOCH100_EPOCH100_tas_wt_worog_ECEFutMC_predHist_atos"
+
+data_path:
+  #ECE, Hist + MC, 2001-2005
+  #HCLIM 3km tas: "${base_dir}/cropped/ICHEC-EC-EARTH_HIST/3km/6hr/tas/tas_3km_6hr_199501010000-200512311800.nc"
+  #HCLIM 12km tas: "${base_dir}/cropped/ICHEC-EC-EARTH_HIST/12km/6hr/tas/tas_12km_6hr_199501010000-200512311800.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/${MLEXP}/predictant_ytest_1.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/${MLEXP}/predictant_ypred_1.nc"
+  #ECE, Hist + MC, 2046-2050
+  #HCLIM 3km tas: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/3km/6hr/tas/tas_3km_6hr_204001010000-205012311800.nc"
+  #HCLIM 12km tas: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/12km/6hr/tas/tas_12km_6hr_204001010000-205012311800.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/${MLEXP}/predictant_ytest_2.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/${MLEXP}/predictant_ypred_2.nc"
+
+
+  #ECE, Hist 1996-2005
+  #HCLIM 3km tas: "${base_dir}/cropped/ICHEC-EC-EARTH_HIST/3km/6hr/tas/tas_3km_6hr_199501010000-200512311800.nc"
+  #HCLIM 12km tas: "${base_dir}/cropped/ICHEC-EC-EARTH_HIST/12km/6hr/tas/tas_12km_6hr_199501010000-200512311800.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/${MLEXP}/predictant_ytest_1.nc"
+  #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/${MLEXP}/predictant_ypred_1.nc"
+
+  #ECE, MC 2041-2050
+  HCLIM 3km tas: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/3km/6hr/tas/tas_3km_6hr_204001010000-205012311800.nc"
+  HCLIM 12km tas: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/12km/6hr/tas/tas_12km_6hr_204001010000-205012311800.nc"
+  SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/${MLEXP}/predictant_ytest_1.nc"
+  SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/ECE/${MLEXP}/predictant_ypred_1.nc"
+
+time_range:
+  #HCLIM 12km: {'mrsol': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, 
+  #            'tas': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, }
+  #HCLIM 3km: {'mrsol': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, 
+  #           'tas': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, }
+  #SRGAN 3km: {'mrsol':{'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6, }, 
+  #            'tas':{'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, }
+  #CNN 3km: {'mrsol': {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, 
+  #         'tas': {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, }
+  #target: {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}
+
+  HCLIM 12km: {'mrsol': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, 
+              'tas': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, }
+  HCLIM 3km: {'mrsol': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, 
+             'tas': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, }
+  SRGAN 3km: {'mrsol':{'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6, }, 
+              'tas':{'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, }
+  CNN 3km: {'mrsol': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, 
+           'tas': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}, }
+  target: {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 6}
+
+  #HCLIM 12km: {'mrsol': {'start_date': ["2090-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, 
+  #            'tas': {'start_date': ["2089-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, }
+  #HCLIM 3km: {'mrsol': {'start_date': ["2089-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, 
+  #           'tas': {'start_date': ["2089-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, }
+  #SRGAN 3km: {'mrsol':{'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6, }, 
+  #            'tas':{'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, }
+  #CNN 3km: {'mrsol': {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, 
+  #         'tas': {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}, }
+  #target: {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 6}
+
+output_dir: "${base_dir}/statistic_figs/ECE/tas/wt_worog" 
+
+statistics:
+  - rmse
+  ##- cpl_corr
+  - correlation
+  - mean_bias
+  - variance_ratio
+  #- wasserstein
+  - percentile_99
+  - mean_value
+  #- abs_value
+  - std
+
+min_max_scale:
+  'rmse': 
+  ##'correlation': [0.88, 1.00]
+  ##'cpl_corr':
+  'correlation':
+  'mean_bias':
+  'variance_ratio':
+  #'wasserstein':
+  'percentile_99': 
+  'mean_value':
+  #'abs_value':
+  'std':
+
+abs_value_max_scale:
+  'pr': 0.5
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+unit_convert:
+  'pr': 86400.0
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+fig_parameters:
+  'nrows_def': 5
+  'ncols_def': 5
+  'figsize_def': [30,20]
+  'fontsize_def': 24
+  'extend_def': 'max'
+  'nlevels_def': 11
