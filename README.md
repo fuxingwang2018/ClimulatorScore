@@ -5,6 +5,19 @@
 **ClimulatorScore** is a toolkit for evaluating machine learning-based climate emulators for HCLIM. 
 It provides tools to load experimental data, calculate statistics, and generate diagnostic plots for emulator performance assessment.  
 
+## Installation and Run
+### On ALVIS/NAISS
+
+```
+ mkdir $HOME/venvs
+ cd $HOME/venvs
+ module load virtualenv/20.23.1-GCCcore-12.3.0
+ virtualenv --system-site-packages climulatorscore
+ pip install cartopy
+ #pip install "numpy<2" #Solution for error: A module that was compiled using NumPy 1.x cannot be run in NumPy 2.4.2 as it may crash.
+
+```
+
 ## Repository Structure  
 
 ### Scripts and Main Program  
