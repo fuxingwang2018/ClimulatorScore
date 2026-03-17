@@ -18,7 +18,7 @@ import matplotlib.pyplot as PLT
 import sys
 
 outpath = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/TaylorDiagram/'
-variable = "tas"  #tas
+variable = "pr"  #tas
 outfile = 'TaylorDiagram_ECE_wt_worog_' + str(variable) + '.png'
 
 if variable == 'tas':
@@ -49,22 +49,22 @@ if variable == 'tas':
     #           )
     # WT WOROG
     samples = dict(ECEHI2HI=[[6.82, 0.98, "HCLIM12"],
-                       [6.50, 0.97, "CNN"],
+                       [6.54, 0.98, "CNN"],
                        [6.56, 0.99, "SRGAN"]],
                ECEMC2MC=[[6.84, 0.98, "HCLIM12"],
-                       [6.50, 0.97, "CNN"],
+                       [6.55, 0.97, "CNN"],
                        [6.71, 0.99, "SRGAN"]],
                ECEHM2HI=[[6.82, 0.98, "HCLIM12"],
-                       [6.50, 0.97, "CNN"],
+                       [6.32, 0.97, "CNN"],
                        [6.29, 0.98, "SRGAN"]],
                ECEHM2MC=[[6.84, 0.98, "HCLIM12"],
-                       [6.59, 0.97, "CNN"],
+                       [6.59, 0.98, "CNN"],
                        [6.25, 0.99, "SRGAN"]],
                ECEHI2MC=[[6.84, 0.98, "HCLIM12"],
-                       [0., 0., "CNN"],
+                       [6.59, 0.97, "CNN"],
                        [6.00, 0.90, "SRGAN"]],
                ECEMC2HI=[[6.82, 0.98, "HCLIM12"],
-                       [0.0, 0.0, "CNN"],
+                       [6.57, 0.98, "CNN"],
                        [6.84, 0.84, "SRGAN"]],
                )
 if variable == 'pr':
@@ -95,22 +95,16 @@ if variable == 'pr':
     #           )
     # LNOISE1.0 (default) WP WOROG
     samples = dict(ECEHI2HI=[[7.36, 0.53, "HCLIM12"],
-                       [0.0, 0.0, "CNN"],
                        [6.29, 0.56, "SRGAN"]],
                ECEMC2MC=[[8.41, 0.54, "HCLIM12"],
-                       [0.0, 0.0, "CNN"],
                        [8.23, 0.54, "SRGAN"]],
                ECEHM2HI=[[7.36, 0.45, "HCLIM12"],
-                       [0.0, 0.0, "CNN"],
                        [5.35, 0.58, "SRGAN"]],
                ECEHM2MC=[[8.41, 0.54, "HCLIM12"],
-                       [0.0, 0.0, "CNN"],
                        [5.75, 0.59, "SRGAN"]],
                ECEHI2MC=[[8.41, 0.54, "HCLIM12"],
-                       [0.0, 0.0, "CNN"],
                        [6.72, 0.57, "SRGAN"]],
                ECEMC2HI=[[7.36, 0.45, "HCLIM12"],
-                       [0.0, 0.0, "CNN"],
                        [7.09, 0.55, "SRGAN"]],
                )
 
@@ -177,7 +171,7 @@ for exp in rects.keys():
                        marker=symbols[i % len(symbols)],
                        ms=16, ls='',
                        mfc=colors[i], mec=colors[i], # Colors
-                       label='a-' + name)
+                       label='' + name)
 
     # Add RMS contours, and label them
     contours = dia.add_contours(levels=5, colors='0.5') # 5 levels

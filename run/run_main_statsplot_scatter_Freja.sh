@@ -41,8 +41,9 @@ cd $HOME/Script/ClimulatorScore/src
 #python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
 #python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_2003_Freja.yml
 
-python taylor_climulator.py
+#python taylor_climulator.py
 #python plot_scatter.py
+python plot_boxplot.py
 
 current_date_time="`date`";
 echo The run ends at $current_date_time

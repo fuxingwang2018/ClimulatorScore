@@ -27,6 +27,7 @@ def main():
     experiment_files = config['data_path']
     time_range = config['time_range']
     fig_parameters = config['fig_parameters']
+    GCM = config['GCM']
     print('fig_parameters', fig_parameters)
     print('time_range', time_range)
 
@@ -51,6 +52,12 @@ def main():
             #[f'{exp_name[i]}' for i in range(len(stats))],\
             output_path, vmin=vmin, vmax=vmax, cmap=cmap, \
             fig_parameters=fig_parameters)
+        if 'Correlation' in title:
+            output_path = os.path.join('/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/boxplot', f"Boxplot_{filename}_{GCM}_{'_'.join(variables)}.png")
+            plot_tools.plot_and_save_boxplot(stats, \
+                [f'{exp_name[i]}' for i in range(len(stats))],\
+                GCM, output_path, \
+                fig_parameters=fig_parameters)
 
 if __name__ == "__main__":
     main()

@@ -46,6 +46,8 @@ def plot_and_save_maps(statistics, titles, output_file, vmin=None, vmax=None, cm
 def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
     vmin=None, vmax=None, cmap='coolwarm', fig_parameters=None):
 
+    if np.isfinite(statistics).any():
+        statistics = np.nan_to_num(statistics, nan=0.0, posinf=0.0, neginf=0.0)
     nrows_def = fig_parameters['nrows_def']
     ncols_def = fig_parameters['ncols_def']
     figsize_def  = fig_parameters['figsize_def']
@@ -53,13 +55,14 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
     nlevels_def = fig_parameters['nlevels_def']
     extend_def = fig_parameters['extend_def']
     # Get global vmin/vmax across all stat arrays
-    print('0 vmin, vmax', vmin, vmax)
+    print('0 vmin, vmax, titles', vmin, vmax, titles)
     if vmin is None:
         vmin = min([np.nanmin(stat) for stat in statistics])
     if vmax is None:
         vmax = max([np.nanmax(stat) for stat in statistics])
-    vmin = math.floor(vmin)
-    vmax = math.ceil(vmax)
+    if any('correlation' in s for s in titles):
+        vmin = math.floor(vmin)
+        vmax = math.ceil(vmax)
 
     print('1 vmin, vmax', vmin, vmax)
     levels = np.linspace(vmin, vmax, nlevels_def)
@@ -92,7 +95,7 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
                     extend=extend_def)
 
 
-        letter = chr(97 + plot_counter) 
+        letter = chr(97 + plot_counter + 4 + 3) 
         new_title = f"({letter}) {title}"
         axes[i].set_title(new_title, fontsize=fontsize_def)
         # Add coastlines and other features
@@ -119,9 +122,11 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
         #text_x = lon2d[-1, -2]  # near bottom-right
         #text_y = lat2d[-1, -1]
         #text_y = 0  # Bottom position
-        axes[i].text(text_x, text_y, f"{stat_domain_ave:.2f}",
-            color='white', fontsize=fontsize_def, ha='right', va='bottom',
-            bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
+        # no texts for correlation coefficient
+        if any('correlation' in s for s in titles):
+            axes[i].text(text_x, text_y, f"{stat_domain_ave:.2f}",
+                color='white', fontsize=fontsize_def, ha='right', va='bottom',
+                bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
         plot_counter += 1
 
     #cbar = fig.colorbar(contour, ax=axes, orientation="horizontal", shrink=0.7, aspect=40, pad=0.02)
@@ -149,5 +154,51 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
     #plt.tight_layout()
     #plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.savefig(output_file, dpi=300)
+    plt.close()
+
+
+def plot_and_save_boxplot(statistics, titles, GCM, output_file, \
+    fig_parameters=None):
+
+    if GCM == 'ECMWF-ERAINT':
+        title_def = '(a) ERAI-HI2HI'
+    elif GCM == "ICHEC-EC-EARTH_HIST":
+        title_def = '(b) ECE-HI2HI'
+    elif GCM == "ICHEC-EC-EARTH_RCP85_MC":
+        title_def = '(c) ECE-MC2MC'
+    elif GCM == "ICHEC-EC-EARTH_RCP85_LC":
+        FIRST_YEAR_12km, LAST_YEAR_12km, FIRST_YEAR_3km, LAST_YEAR_3km = 2090, 2099, 2089, 2099
+        title_def = '(d) ECE-LC2LC'
+
+    all_stat_flat = []
+    experiment_names = []
+    for i, (stat, title) in enumerate(zip(statistics, titles)):
+        stat = stat[np.isfinite(stat)]
+        stat_flat = stat.flatten()  # Flattened to match the irregular structure
+        #stat_flat = stat_flat[~np.isnan(stat_flat)]
+        all_stat_flat.append(stat_flat)
+        experiment_names.append(title)
+
+    plt.figure(figsize=(10, 6))
+    # patch_artist=True allows us to fill the boxes with color
+    bp = plt.boxplot(all_stat_flat, labels=experiment_names, patch_artist=True,
+                     showmeans=True, meanline=True, 
+                     medianprops={'color': 'black', 'linewidth': 2},
+                     flierprops={'marker': 'o', 'markersize': 2, 'alpha': 0.3})
+
+    # Customize box colors
+    colors = ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f', '#9b59b6']
+    for patch, color in zip(bp['boxes'], colors):
+        patch.set_facecolor(color)
+        patch.set_alpha(0.7)
+
+    # Final Polish
+    plt.ylim(-1, 1)  # As requested, y-axis ranging from 0 to 1
+    plt.ylabel("Correlation ($r$)", fontsize=12)
+    #plt.xlabel("Experiment", fontsize=12)
+    plt.title(title_def, fontsize=14, fontweight='bold')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.savefig(f"{output_file}", dpi=300, bbox_inches='tight')
     plt.close()
 

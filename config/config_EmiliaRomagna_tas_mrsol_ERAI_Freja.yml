@@ -30,8 +30,6 @@ data_path:
   #OBS 3km mrsol: "/nobackup/rossby27/users/sm_fuxwa/GLEAM/data/v3.6a/daily_cmorized_regrid/mrsol_GLEAM_regrid_v3.6a-20090101-20091231.nc"
   #OBS 3km tas: "/nobackup/rossby27/users/sm_fuxwa/EOBS31/tas_ens_mean_0.1deg_reg_regrid_3km_1995-2010_v31.0e.nc"
 
-  ERA5 3km mrsol: "/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc"
-  ERA5 3km tas: "/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc"
 
   #SRGAN 3km mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_mrsol_with_mrsol_val0.1_atos/predictant_ypred.nc"
   #SRGAN 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_with_tas_val0.1_atos/predictant_ypred.nc"
@@ -75,8 +73,12 @@ data_path:
   #SRGAN 3km tas mrsol: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_val0.1_atos/predictant_ypred.nc"
   #SRGAN 3km tas mrsol b20: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_val0.1_batch20_atos/predictant_ypred.nc"
   #SRGAN 3km tas mrsol with tm b20: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_mrsol_with_tm_val0.1_batch20_atos/predictant_ypred.nc"
-  CNN 3km mrsol: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_mrsol_2009.nc"
-  CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc"
+
+  ERA5 3km mrsol: "/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc"
+  ERA5 3km tas: "/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc"
+
+  #CNN 3km mrsol: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_mrsol_2009.nc"
+  #CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc"
 
 time_range:
   HCLIM 12km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
@@ -110,7 +112,8 @@ statistics:
 min_max_scale:
   #'rmse': 
   ##'correlation': [0.88, 1.00]
-  'cpl_corr': [-1.0, 1.0]
+  #'cpl_corr': [-1.0, 1.0]
+  'cpl_corr': [-0.8, 0.8]
   #'correlation':
   #'mean_bias':
   #'variance_ratio':
@@ -133,8 +136,10 @@ unit_convert:
   'hfls': 1.0
 
 fig_parameters:
-  'nrows_def': 2
-  'ncols_def': 3
-  'figsize_def': [30,15]
+  'nrows_def': 1 #2
+  'ncols_def': 4 #3
+  #'figsize_def': [30,15]
+  'figsize_def': [55,10]
   'fontsize_def': 24
-  'nlevels_def': 11
+  'nlevels_def': 9 # 11
+  'extend_def': 'both' #'neither'
