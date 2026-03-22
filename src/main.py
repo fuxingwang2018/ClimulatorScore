@@ -53,7 +53,7 @@ def main():
             output_path, vmin=vmin, vmax=vmax, cmap=cmap, \
             fig_parameters=fig_parameters)
         if 'Correlation' in title:
-            output_path = os.path.join('/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/boxplot', f"Boxplot_{filename}_{GCM}_{'_'.join(variables)}.png")
+            output_path = os.path.join(str(output_dir), f"Boxplot_{filename}_{GCM}_{'_'.join(variables)}.png")
             plot_tools.plot_and_save_boxplot(stats, \
                 [f'{exp_name[i]}' for i in range(len(stats))],\
                 GCM, output_path, \

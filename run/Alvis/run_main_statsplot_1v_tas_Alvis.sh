@@ -2,10 +2,10 @@
 #SBATCH -A NAISS2025-1-11  
 #SBATCH -p alvis
 #SBATCH -N 1 
-###SBATCH --gpus-per-node=A40:1
-###SBATCH --cpus-per-task=16
-#SBATCH --gpus-per-node=T4:1
-#SBATCH --cpus-per-task=4
+#SBATCH --gpus-per-node=A40:1
+#SBATCH --cpus-per-task=16
+###SBATCH --gpus-per-node=T4:1
+###SBATCH --cpus-per-task=4
 #SBATCH -t 01:00:00 
 #SBATCH -J st1vtas 
 #SBATCH --chdir=/mimer/NOBACKUP/groups/naiss2025-6-138/HCLIMAI/log/log_stats/

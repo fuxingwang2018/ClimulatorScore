@@ -19,8 +19,12 @@ data_path:
   # pr
   HCLIM 3km pr: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/pr/pr_3km_6hr_200001010300-200912312100.nc"
   HCLIM 12km pr: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/pr/pr_12km_6hr_200001010300-200912312100.nc"
-  SRGANWORO 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_worog_bs60_ERAI_alvis/predictant_ypred_1.nc"
   SRGANNORO 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_norog_bs60_ERAI_alvis/predictant_ypred_1.nc"
+  SRGANNOROv2 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_norog_bs60_ERAI_alvis_v2/predictant_ypred_1.nc"
+  SRGANWORO 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_worog_bs60_ERAI_alvis/predictant_ypred_1.nc"
+  SRGANWOROv2 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_worog_bs60_ERAI_alvis_v2/predictant_ypred_1.nc"
+  SRGANWOROWP 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_worog_wp_bs60_ERAI_alvis/predictant_ypred_1.nc"
+  SRGANWOROWPv2 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_worog_wp_bs60_ERAI_alvis_v2/predictant_ypred_1.nc"
   #CNN 3km pr: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_pr_2009.nc"
 
 time_range:
@@ -28,9 +32,17 @@ time_range:
               'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   HCLIM 3km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
              'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANNORO 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANNOROv2 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   SRGANWORO 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
               'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
-  SRGANNORO 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+  SRGANWOROv2 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANWOROWP 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  SRGANWOROWPv2 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
               'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
   CNN 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
            'pr': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
