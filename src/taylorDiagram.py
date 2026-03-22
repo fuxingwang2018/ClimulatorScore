@@ -82,16 +82,21 @@ class TaylorDiagram(object):
         ax.axis["top"].major_ticklabels.set_axis_direction("top")
         ax.axis["top"].label.set_axis_direction("top")
         ax.axis["top"].label.set_text("Correlation")
-        ax.axis["top"].label.set_fontsize(20)  # Set your desired size here
+        ax.axis["top"].label.set_fontsize(24)  # Set your desired size here
 
         ax.axis["left"].set_axis_direction("bottom")  # "X axis"
         ax.axis["left"].label.set_text("Standard deviation")
-        ax.axis["left"].label.set_fontsize(20)  # Set your desired size here
+        ax.axis["left"].label.set_fontsize(24)  # Set your desired size here
 
         ax.axis["right"].set_axis_direction("top")    # "Y-axis"
         ax.axis["right"].toggle(ticklabels=True)
         ax.axis["right"].major_ticklabels.set_axis_direction(
             "bottom" if extend else "left")
+
+        ax.axis["left"].major_ticklabels.set_fontsize(20)
+        ax.axis["right"].major_ticklabels.set_fontsize(20)
+        ax.axis["top"].major_ticklabels.set_fontsize(20)
+        ax.axis["bottom"].major_ticklabels.set_fontsize(20)
 
         if self.smin:
             ax.axis["bottom"].toggle(ticklabels=False, label=False)
@@ -103,10 +108,11 @@ class TaylorDiagram(object):
 
         # Add reference point and stddev contour
         l, = self.ax.plot([0], self.refstd, 'k*',
-                          ls='', ms=10, label=label)
+                          ls='', ms=20, label=label)
         t = NP.linspace(0, self.tmax)
         r = NP.zeros_like(t) + self.refstd
         self.ax.plot(t, r, 'k--', label='_')
+        #self.ax.legend(fontsize=24)  # Set specific size
 
         # Collect sample points for latter use (e.g. legend)
         self.samplePoints = [l]

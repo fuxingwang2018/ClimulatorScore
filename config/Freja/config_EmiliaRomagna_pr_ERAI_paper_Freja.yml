@@ -12,24 +12,24 @@ variables:
   - "pr"
 #   - "mrsol"
 
-experiment: "SRGAN_TOROGSENS_CNN_ERAI_SCSTD_GPU_paper"
-#experiment: "SRGAN_WTWOROG_CNN_ERAI_SCSTD_GPU_paper"
+#experiment: "SRGAN_TOROGSENS_CNN_ERAI_SCSTD_GPU_paper"
+experiment: "SRGAN_WTWOROG_CNN_ERAI_SCSTD_GPU_paper"
 MLEXP: ''
 
 data_path:
   # pr
   HCLIM 3km pr: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/pr/pr_3km_6hr_200001010300-200912312100.nc"
-  #HCLIM 12km pr: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/pr/pr_12km_6hr_200001010300-200912312100.nc"
+  HCLIM 12km pr: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/pr/pr_12km_6hr_200001010300-200912312100.nc"
   # With P With OROG
-  #SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
-  #SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  CNN 3km pr: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_pr_2009.nc"
+  ###SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
   # No P No OROG
+  #SRGANNPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  #SRGANNPWOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
+  #SRGANWPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_norog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
   ##SRGANNPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
-  SRGANNPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
-  SRGANNPWOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
-  SRGANWPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_norog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
-  #SRGANWPWOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
-  #CNN 3km pr: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_pr_2009.nc"
+  ##SRGANWPWOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
 
 time_range:
   HCLIM 12km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
@@ -96,6 +96,6 @@ fig_parameters:
   'nrows_def': 2
   'ncols_def': 2
   'figsize_def': [22,15]
-  'fontsize_def': 24
+  'fontsize_def': 26
   'nlevels_def': 11
   'extend_def': 'max'

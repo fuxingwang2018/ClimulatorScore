@@ -18,11 +18,11 @@ import matplotlib.pyplot as PLT
 import sys
 
 outpath = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/TaylorDiagram/'
-variable = "pr"  #tas
+variable = 'tas' #"pr"  #tas
 outfile = 'TaylorDiagram_ECE_wt_worog_' + str(variable) + '.png'
 
 if variable == 'tas':
-    fig_suptitle = '2-m air temperature'
+    fig_suptitle = '' #'2-m air temperature'
     # Reference std
     stdrefs = dict(ECEHI2HI=6.71,
                ECEMC2MC=6.89,
@@ -68,7 +68,7 @@ if variable == 'tas':
                        [6.84, 0.84, "SRGAN"]],
                )
 if variable == 'pr':
-    fig_suptitle = 'precipitation'
+    fig_suptitle = '' #precipitation'
     # Reference std
     stdrefs = dict(ECEHI2HI=9.02,
                ECEMC2MC=9.88,
@@ -149,14 +149,17 @@ rects = {'ECEHI2HI':231,
          'ECEMC2HI':236,
         }
 
-fig = PLT.figure(figsize=(27,20))
-fig.suptitle(str(fig_suptitle), fontsize = 24 ) #size='x-large')
+fontsize_def = 26
+fig = PLT.figure(figsize=(27, 21))
+fig.suptitle(str(fig_suptitle), fontsize = fontsize_def ) #size='x-large')
 symbols = ['^', 'o', 's', 'D', 'v', '*', 'p']
 
-i = 0
+iexp = 0
 for exp in rects.keys():
-    i+=1
+    letter = chr(97 + iexp) 
+    iexp+=1
     print('exp', exp)
+    #print('iexp, letter', iexp, letter)
     dia = TaylorDiagram(stdrefs[exp], fig=fig, rect=rects[exp],
                         label='Ref-HCLIM3')
 
@@ -171,15 +174,15 @@ for exp in rects.keys():
                        marker=symbols[i % len(symbols)],
                        ms=16, ls='',
                        mfc=colors[i], mec=colors[i], # Colors
-                       label='' + name)
+                       label = f"{name}") 
 
     # Add RMS contours, and label them
     contours = dia.add_contours(levels=5, colors='0.5') # 5 levels
-    dia.ax.clabel(contours, inline=1, fontsize=18, fmt='%.1f')
+    dia.ax.clabel(contours, inline=1, fontsize= fontsize_def, fmt='%.1f')
     # Tricky: ax is the polar ax (used for plots), _ax is the
     # container (used for layout)
     #dia._ax.set_title(exp.capitalize())
-    dia._ax.set_title(exp, fontsize = 24)
+    dia._ax.set_title(f"({letter}) {exp}" , fontsize = fontsize_def)
 
 # Add a figure legend and title. For loc option, place x,y tuple inside [ ].
 # Can also use special options here:
@@ -190,7 +193,10 @@ for p in dia.samplePoints:
 
 fig.legend(dia.samplePoints,
            [ p.get_label() for p in dia.samplePoints ],
-           numpoints=1,  loc='upper right', fontsize=24)
+           numpoints=1,  loc='center right', 
+           bbox_to_anchor=(0.35, 0.93), # The position on the figure
+           fontsize= fontsize_def, framealpha=0.2)
+           #numpoints=1,  loc='upper right', fontsize= fontsize_def)
            #numpoints=1, prop=dict(size='small'), loc='center')
 
 fig.tight_layout()

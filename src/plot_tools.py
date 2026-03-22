@@ -60,7 +60,7 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
         vmin = min([np.nanmin(stat) for stat in statistics])
     if vmax is None:
         vmax = max([np.nanmax(stat) for stat in statistics])
-    if any('correlation' in s for s in titles):
+    if not any('correlation' in s for s in titles):
         vmin = math.floor(vmin)
         vmax = math.ceil(vmax)
 
@@ -95,7 +95,9 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
                     extend=extend_def)
 
 
-        letter = chr(97 + plot_counter + 4 + 3) 
+        letter = chr(97 + plot_counter) 
+        if '99th Percentile' in title:
+            letter = chr(97 + plot_counter + 4) 
         new_title = f"({letter}) {title}"
         axes[i].set_title(new_title, fontsize=fontsize_def)
         # Add coastlines and other features
@@ -123,7 +125,7 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
         #text_y = lat2d[-1, -1]
         #text_y = 0  # Bottom position
         # no texts for correlation coefficient
-        if any('correlation' in s for s in titles):
+        if not any('correlation' in s for s in titles):
             axes[i].text(text_x, text_y, f"{stat_domain_ave:.2f}",
                 color='white', fontsize=fontsize_def, ha='right', va='bottom',
                 bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
