@@ -114,7 +114,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'percentile_99': ('99th Percentile', 'percentile_99_maps', cmap_dict[variables[0]]['percentile_99']), #tas
         #'mean_value': ('MeanV', 'mean_value_maps', cmap_dict[variables[0]]['mean_value']), #tas
         'mean_value': ('Mean Value', 'mean_value_maps', cmap_dict[variables[0]]['mean_value']), #tas
-        'abs_value': ('Abs Value', 'abs_value_maps', 'Reds'),
+        'abs_value': ('Abs Value', 'abs_value_maps', cmap_dict[variables[0]]['mean_value']),
         'std': ('Standard Deviation', 'standard_deviation_maps', 'Reds'),
     }
 

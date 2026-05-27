@@ -106,7 +106,8 @@ def calculate_mean_value(data):
 
 # Define function to calculate Absolute Value
 def calculate_abs_value(data):
-    time_step = 108  # Fixed time step
+    time_step = 1423 # DEODE, 2009-12-22 extreme precipitation #1423 #1424  # Fixed time step
+    #time_step = 906 # DEODE, 2003-08-15 heatwave  # Fixed time step
     return data[time_step, :, :]
 
 def calculate_std(data):

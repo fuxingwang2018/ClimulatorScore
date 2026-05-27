@@ -63,6 +63,8 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
     if not any('correlation' in s for s in titles):
         vmin = math.floor(vmin)
         vmax = math.ceil(vmax)
+    #if any('Abs Value' in s for s in titles):
+    #    vmin = 0.0
 
     print('1 vmin, vmax', vmin, vmax)
     levels = np.linspace(vmin, vmax, nlevels_def)
