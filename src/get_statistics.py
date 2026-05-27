@@ -208,7 +208,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     #for i, (stat, (title, filename, cmap)) in enumerate(stat_meta.items()) 
     #if stat in statistics
     #]
-    print('all_statistics', all_statistics)
+    #print('all_statistics', all_statistics)
 
     return all_statistics
 
