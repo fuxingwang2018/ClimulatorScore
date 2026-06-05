@@ -17,7 +17,8 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     """
 
     # Default to all available statistics
-    all_stats = ['rmse', 'mean_bias', 'variance_ratio', 'correlation', 'wasserstein', 'percentile_99', 'mean_value', 'abs_value', 'std']
+    all_stats = ['rmse', 'mean_bias', 'variance_ratio', 'correlation', 'wasserstein', \
+            'percentile_99', 'mean_value', 'abs_value', 'std', 'detection_metrics']
     selected_statistics = selected_statistics or all_stats
 
     experiment_name_with_ref = list(experiment_val.keys())
@@ -32,6 +33,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'correlation': stats_tools.calculate_correlation,
         'cpl_corr': stats_tools.calculate_correlation,
         'wasserstein': stats_tools.calculate_wasserstein_distance_rel,
+        'detection_metrics': stats_tools.compute_metrics,
         #'percentile_99': stats_tools.calculate_99th_percentile,
         #'mean_value': stats_tools.calculate_mean_value,
         #'abs_value': stats_tools.calculate_abs_value,
@@ -110,6 +112,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'mean_bias': ('Mean Bias', 'mean_bias_maps', 'seismic'),
         'variance_ratio': ('Ratio of Variance', 'variance_ratio_maps', 'Blues'),
         'wasserstein': ('Wasserstein Distance', 'wasserstein_maps', 'plasma'),
+        'detection_metrics': ('Detection Metrics', 'detection_maps', 'plasma'),
         #'percentile_99': ('99thP', 'percentile_99_maps', cmap_dict[variables[0]]['percentile_99']), #tas
         'percentile_99': ('99th Percentile', 'percentile_99_maps', cmap_dict[variables[0]]['percentile_99']), #tas
         #'mean_value': ('MeanV', 'mean_value_maps', cmap_dict[variables[0]]['mean_value']), #tas
