@@ -79,25 +79,25 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
 
         experiment_val[experiment_name][var_name] = np.array(experiment_val[experiment_name][var_name]) 
 
-        print('experiment_name:', experiment_name, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
+        print('experiment_name:', experiment_name, var_name, experiment_val[experiment_name][var_name].shape) #, experiment_val[experiment_name][var_name])
         #print('experiment_name index:', experiment_val[experiment_name][var_name][0].shape)
 
-    #print('experiment_val 12:', experiment_val['HCLIM 12km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
-    #print('experiment_val 3:', experiment_val['HCLIM 3km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
-    if 'HCLIM 12km' in experiment_name:
-        low_res_shape, high_res_shape = experiment_val['HCLIM 12km'][variables[0]].shape, experiment_val['HCLIM 3km'][variables[0]].shape
+        #print('experiment_val 12:', experiment_val['HCLIM 12km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
+        #print('experiment_val 3:', experiment_val['HCLIM 3km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
+        if 'HCLIM 12km' in experiment_name:
+            low_res_shape, high_res_shape = experiment_val['HCLIM 12km'][variables[0]].shape, experiment_val['HCLIM 3km'][variables[0]].shape
 
-    #for key_hr, values_hr in var_high_res_adjusted_dict.items():
-    if 'HCLIM 12km' in experiment_name:
-      for var_name in variables:
-        residue_geo = []
-        for i in range(len(low_res_shape)):
-            #print ('high_res_shape[i] % low_res_shape[i]', var_name, i, high_res_shape[i], low_res_shape[i])
-            residue_geo.append(high_res_shape[i] % low_res_shape[i])
-            if residue_geo[i] != 0:
-                print('Not divisible:', high_res_shape[i], low_res_shape[i], i, residue_geo[i])
-                if i == 2 and residue_geo[i] == 2:
-                    experiment_val['HCLIM 3km'][var_name] = experiment_val['HCLIM 3km'][var_name][:, :, 1:-1] # remove the 1st and last elements
+        #for key_hr, values_hr in var_high_res_adjusted_dict.items():
+        if 'HCLIM 12km' in experiment_name:
+          for var_name in variables:
+            residue_geo = []
+            for i in range(len(low_res_shape)):
+                #print ('high_res_shape[i] % low_res_shape[i]', var_name, i, high_res_shape[i], low_res_shape[i])
+                residue_geo.append(high_res_shape[i] % low_res_shape[i])
+                if residue_geo[i] != 0:
+                    print('Not divisible:', high_res_shape[i], low_res_shape[i], i, residue_geo[i])
+                    if i == 2 and residue_geo[i] == 2:
+                        experiment_val['HCLIM 3km'][var_name] = experiment_val['HCLIM 3km'][var_name][:, :, 1:-1] # remove the 1st and last elements
 
     # Loop over nested dict
     #for experiment_name in experiment_val:

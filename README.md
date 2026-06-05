@@ -18,6 +18,17 @@ It provides tools to load experimental data, calculate statistics, and generate 
 
 ```
 
+### On ECMWF/Atos
+
+```
+ module load python3/new
+ mkdir -p $PERM/venvs
+ cd $PERM/venvs
+ python3 -m venv --system-site-packages climulatorscore
+ source $PERM/venvs/climulatorscore/bin/activate
+
+```
+
 ## Repository Structure  
 
 ### Scripts and Main Program  
@@ -34,12 +45,41 @@ It provides tools to load experimental data, calculate statistics, and generate 
 - **stats_tools.py** — Contains helper functions for statistical calculations.  
 
 ## How to Run  
-1. Modify paths in `main.py` for `base_dir` and `output_dir`.
-2. Modify configuration file in `config/` for
-   - `reference_highres_folder`, `reference_highres_file`:
-   - `reference_lowres_folder`, `predictor.nc` :
-   - `comparison_files`: 
-4. Run using:  
-```python src/main.py -c /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/config/config_EmiliaRomagna_Freja.yml```
-or
-```sbatch run/run_main_statsplot.sh```
+
+ 1. Copy run.sh and config file
+ 
+    ```
+    cd <path-to-climulatorscore>
+
+    cp config/ATOS/config_TestDomain_tas_ERAI_Atos.yml config/ATOS/<name-of-the-new-config-file>
+
+    cp run/ATOS/run_main_statsplot_1v_tas_Atos.sh run/ATOS/<name-of-the-new-run-file>
+    ```
+
+      For example, on ATOS, ```path-to-climulatorscore``` can be ```$HOME/Scripts/ClimulatorScore/``` where the repo is located.
+
+     If needed, change file names of config_TestDomain_tas_ERAI_Atos.yml and run_main_statsplot_1v_tas_Atos.sh.
+
+2. Modify configuration and run
+    
+    Modify configuration in config.yaml (e.g., config/ATOS/config_TestDomain_tas_ERAI_Atos.yml on Atos).
+
+    Modify run.sh (e.g., run/ATOS/run_main_statsplot_1v_tas_Atos.sh file).
+
+3. Run   
+
+    ```
+    cd <path-to-climulatorscore>
+    sbatch run/ATOS/run_main_statsplot_1v_tas_Atos.sh
+    ```
+    (path-to-climulatorscore can be $HOME/Scripts/ClimulatorScore/ where the repo is located)
+
+4. Output
+
+    Outputs are set by base_dir and output_dir in config_*.ini. e.g., in config/ATOS/config_TestDomain_tas_ERAI_Atos.yml
+
+    ```
+    base_dir: "/ec/res4/scratch/smf/HCLIMAI/Test_Domain"
+    output_dir: "${base_dir}/statistic_figs/1var"
+    ```
+
