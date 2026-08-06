@@ -18,7 +18,8 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
 
     # Default to all available statistics
     all_stats = ['rmse', 'mean_bias', 'variance_ratio', 'correlation', 'wasserstein', \
-            'percentile_99', 'mean_value', 'abs_value', 'std', 'detection_metrics']
+            'percentile_99', 'mean_value', 'abs_value', 'std', 'detection_metrics', \
+            'percentile_99_bias']
     selected_statistics = selected_statistics or all_stats
 
     experiment_name_with_ref = list(experiment_val.keys())
@@ -29,6 +30,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     stat_functions = {
         'rmse': stats_tools.calculate_rmse,
         'mean_bias': stats_tools.calculate_mean_bias,
+        'percentile_99_bias': stats_tools.calculate_99th_percentile_bias,
         'variance_ratio': stats_tools.calculate_ratio_of_variance,
         'correlation': stats_tools.calculate_correlation,
         'cpl_corr': stats_tools.calculate_correlation,
@@ -65,11 +67,6 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         if stat in stat_functions
         }
      
-        ## Compute global color scale ranges
-        #vmin_vmax = {stat: (np.min(vals), np.max(vals)) for stat, vals in statistics.items()}
-        ##print('vmin_vmax 1', type(vmin_vmax), vmin_vmax)
-        #vmin_vmax = {k: tuple(v) if v else vmin_vmax[k] for k, v in min_max_scale.items()}
-        ##print('vmin_vmax 2', type(vmin_vmax), vmin_vmax)
 
     elif len(variables) == 1:
   
@@ -94,10 +91,21 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
 
     # Compute global color scale ranges
     #vmin_vmax = {stat: (np.nanmin(vals), np.nanmax(vals)) for stat, vals in statistics.items()}
-    vmin_vmax = {stat: \
-        (np.nanmin(np.where((np.array(vals) > 1e10) | (np.array(vals) < -1e10), np.nan, np.array(vals))), \
-        np.nanmax(np.where((np.array(vals) > 1e10) | (np.array(vals) < -1e10), np.nan, np.array(vals)))) \
-        for stat, vals in statistics.items()}
+    #vmin_vmax = {stat: \
+    #    (np.nanmin(np.where((np.array(vals) > 1e10) | (np.array(vals) < -1e10), np.nan, np.array(vals))), \
+    #    np.nanmax(np.where((np.array(vals) > 1e10) | (np.array(vals) < -1e10), np.nan, np.array(vals)))) \
+    #    for stat, vals in statistics.items()}
+    vmin_vmax = {}
+    for stat, vals in statistics.items():
+        arr = np.array(vals)
+        arr_clean = np.where((arr > 1e10) | (arr < -1e10), np.nan, arr)
+        vmin = np.nanmin(arr_clean)
+        vmax = np.nanmax(arr_clean)
+        vmin_vmax[stat] = (vmin, vmax) 
+        if 'bias' in stat: 
+            abs_max = min(abs(vmin), abs(vmax))   
+            vmin_vmax[stat] = (-abs_max, abs_max) 
+
     #print('vmin_vmax 1', type(vmin_vmax), vmin_vmax)
     vmin_vmax = {k: tuple(v) if v else vmin_vmax[k] for k, v in min_max_scale.items()}
     #print('vmin_vmax 2', type(vmin_vmax), vmin_vmax)
@@ -110,6 +118,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'correlation': ('Correlation', 'correlation_maps', 'Reds'),
         'cpl_corr': ('Correlation', 'coupling_correlation_maps', 'seismic'),
         'mean_bias': ('Mean Bias', 'mean_bias_maps', 'seismic'),
+        'percentile_99_bias': ('99th Percentile Bias', 'percentile_99_bias_maps', 'seismic'),
         'variance_ratio': ('Ratio of Variance', 'variance_ratio_maps', 'Blues'),
         'wasserstein': ('Wasserstein Distance', 'wasserstein_maps', 'plasma'),
         'detection_metrics': ('Detection Metrics', 'detection_maps', 'plasma'),

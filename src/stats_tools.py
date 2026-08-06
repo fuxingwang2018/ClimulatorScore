@@ -15,6 +15,10 @@ def calculate_rmse(reference, comparison):
 def calculate_mean_bias(reference, comparison):
     return np.mean(comparison - reference, axis=0)
 
+# Define function to calculate 99th Percentile
+def calculate_99th_percentile_bias(reference, comparison):
+    return np.percentile(comparison, 99, axis=0) - np.percentile(reference, 99, axis=0)
+
 # Define function to calculate Ratio of Variance
 def calculate_ratio_of_variance(reference, comparison):
     reference_variance = np.var(reference, axis=0)
