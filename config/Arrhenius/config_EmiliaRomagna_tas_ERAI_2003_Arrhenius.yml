@@ -27,30 +27,32 @@ time_range:
   #SRGANtile 3km:  {'tas': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, }
   target: {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}
 
-output_dir: "${base_dir}/statistic_figs/1var/Paper_Revision1" 
+output_dir: "${base_dir}/statistic_figs/1var/paper_revision1" 
 
 statistics:
-  - rmse
-  - correlation
-  - mean_bias
-  - percentile_99_bias
-  - variance_ratio
-  - wasserstein
-  - percentile_99
-  - mean_value
-  - abs_value
+  #- rmse
+  #- correlation
+  #- mean_bias
+  #- percentile_99_bias
+  - significance_pvalue
+  #- variance_ratio
+  #- wasserstein
+  #- percentile_99
+  #- mean_value
+  #- abs_value
   #- std
 
 min_max_scale:
-  'rmse': 
-  'correlation': [0.88, 1.00]
-  'mean_bias':
-  'percentile_99_bias':
-  'variance_ratio':
-  'wasserstein':
-  'percentile_99': 
-  'mean_value':
-  'abs_value':
+  #'rmse': 
+  #'correlation': [0.88, 1.00]
+  #'mean_bias':
+  #'percentile_99_bias':
+  #'variance_ratio':
+  'significance_pvalue':
+  #'wasserstein':
+  #'percentile_99': 
+  #'mean_value':
+  #'abs_value':
   #'std':
 
 abs_value_max_scale:

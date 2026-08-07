@@ -1,6 +1,7 @@
 import numpy as np
 import stats_tools
 import sys
+import significance_test
 
 def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables, selected_statistics=None):
     """
@@ -19,11 +20,17 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     # Default to all available statistics
     all_stats = ['rmse', 'mean_bias', 'variance_ratio', 'correlation', 'wasserstein', \
             'percentile_99', 'mean_value', 'abs_value', 'std', 'detection_metrics', \
-            'percentile_99_bias']
+            'percentile_99_bias', 'significance_pvalue']
     selected_statistics = selected_statistics or all_stats
 
+    if 'significance_pvalue' in selected_statistics and len(selected_statistics) == 1:
+        ref_experiment = 'HCLIM 12km'
+    else:
+        ref_experiment = 'HCLIM 3km'
+    print('ref_experiment is:', ref_experiment)
+
     experiment_name_with_ref = list(experiment_val.keys())
-    experiment_name_without_ref = [name for name in experiment_val if name != 'HCLIM 3km']
+    experiment_name_without_ref = [name for name in experiment_val if name != ref_experiment]
 
     
     # Function mapping for statistics calculations
@@ -35,16 +42,17 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'correlation': stats_tools.calculate_correlation,
         'cpl_corr': stats_tools.calculate_correlation,
         'wasserstein': stats_tools.calculate_wasserstein_distance_rel,
+        'significance_pvalue': significance_test.get_pvalue_of_significance_test,
         'detection_metrics': stats_tools.compute_metrics,
-        #'percentile_99': stats_tools.calculate_99th_percentile,
+        'percentile_99': stats_tools.calculate_99th_percentile,
         #'mean_value': stats_tools.calculate_mean_value,
         #'abs_value': stats_tools.calculate_abs_value,
     }
 
 
     cmap_dict = {'tas': {'mean_value': 'cividis', 'percentile_99': 'inferno'}, \
-                 'mrsol': {'mean_value': 'Blues',    'percentile_99': 'Blues'}, \
-                 'pr': {'mean_value': 'Blues',    'percentile_99': 'Blues'} }
+                 'mrsol': {'mean_value': 'Blues', 'percentile_99': 'Blues'}, \
+                 'pr': {'mean_value': 'Blues',    'percentile_99': 'BuPu'} }
 
     if len(variables) > 1:
 
@@ -72,10 +80,8 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
   
         for var_name in variables:
 
-            reference = experiment_val['HCLIM 3km'][var_name]
-            #comparisons = {k: v for k, v in experiment_val.items() if k != 'HCLIM 3km'}
-            comparisons = {exp: vals[var_name] for exp, vals in experiment_val.items() if exp != "HCLIM 3km"}
-
+            reference = experiment_val[ref_experiment][var_name]
+            comparisons = {exp: vals[var_name] for exp, vals in experiment_val.items() if exp != ref_experiment}
 
             # Compute statistics dynamically
             statistics = {stat: [stat_functions[stat](reference, val) for val in comparisons.values()]
@@ -121,10 +127,9 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'percentile_99_bias': ('99th Percentile Bias', 'percentile_99_bias_maps', 'seismic'),
         'variance_ratio': ('Ratio of Variance', 'variance_ratio_maps', 'Blues'),
         'wasserstein': ('Wasserstein Distance', 'wasserstein_maps', 'plasma'),
+        'significance_pvalue': ('Significance P-value', 'significance_pvalue_maps', 'plasma'),
         'detection_metrics': ('Detection Metrics', 'detection_maps', 'plasma'),
-        #'percentile_99': ('99thP', 'percentile_99_maps', cmap_dict[variables[0]]['percentile_99']), #tas
         'percentile_99': ('99th Percentile', 'percentile_99_maps', cmap_dict[variables[0]]['percentile_99']), #tas
-        #'mean_value': ('MeanV', 'mean_value_maps', cmap_dict[variables[0]]['mean_value']), #tas
         'mean_value': ('Mean Value', 'mean_value_maps', cmap_dict[variables[0]]['mean_value']), #tas
         'abs_value': ('Abs Value', 'abs_value_maps', cmap_dict[variables[0]]['mean_value']),
         'std': ('Standard Deviation', 'standard_deviation_maps', 'Reds'),

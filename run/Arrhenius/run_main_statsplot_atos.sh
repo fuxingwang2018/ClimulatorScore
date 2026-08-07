@@ -42,7 +42,8 @@ set -exu
 
 cd $HOME/ClimulatorScore/src
 
-python main.py -c $HOME/ClimulatorScore/config/Arrhenius/config_${DOMAIN}_${VARIABLE}_${GCM}_${YEAR}_Arrhenius.yml
+#python main.py -c $HOME/ClimulatorScore/config/Arrhenius/config_${DOMAIN}_${VARIABLE}_${GCM}_${YEAR}_Arrhenius.yml
+python bootstrap_confidence_interval.py
 
 #cd $HOME/Script/HCLIMAI
 #python -m pytest
