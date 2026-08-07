@@ -44,9 +44,6 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'wasserstein': stats_tools.calculate_wasserstein_distance_rel,
         'significance_pvalue': significance_test.get_pvalue_of_significance_test,
         'detection_metrics': stats_tools.compute_metrics,
-        'percentile_99': stats_tools.calculate_99th_percentile,
-        #'mean_value': stats_tools.calculate_mean_value,
-        #'abs_value': stats_tools.calculate_abs_value,
     }
 
 

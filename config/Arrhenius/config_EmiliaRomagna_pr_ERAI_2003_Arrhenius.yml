@@ -1,0 +1,78 @@
+base_dir: "/nobackup/proj/disk/hclimai/shared/Emilia_Romagna/"
+GCM: "ECMWF-ERAINT"
+FIRST_YEAR_12km: "2000"
+LAST_YEAR_12km: "2009"
+FIRST_YEAR_3km: "2000"
+LAST_YEAR_3km: "2009"
+
+variables: 
+  - "pr"
+
+experiment: "SRGAN_WTWOROG_ERAI_2003"
+MLEXP: ''
+
+data_path:
+  #HCLIM 3km: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_bs100_ERAI_atos/predictant_ytest.nc"
+  #HCLIM 12km: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_bs100_ERAI_atos/predictor.nc"
+  HCLIM 3km pr: "/nobackup/proj/disk/hclimai/shared/Emilia_Romagna/cropped/${GCM}/3km/6hr/pr/pr_3km_6hr_${FIRST_YEAR_3km}01010300-${LAST_YEAR_3km}12312100.nc"
+  HCLIM 12km pr: "/nobackup/proj/disk/hclimai/shared/Emilia_Romagna/cropped/${GCM}/12km/6hr/pr/pr_12km_6hr_${FIRST_YEAR_12km}01010300-${LAST_YEAR_12km}12312100.nc"
+  #SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_wsmpo_ERAI_2003_arrhenius/predictant_ypred_1.nc"
+  SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_wsmpo_tile_ERAI_2003_arrhenius/predictant_ypred_1.nc"
+
+time_range:
+  HCLIM 12km: {'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  HCLIM 3km:  {'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+  #SRGAN 3km:  {'pr': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, }
+  SRGAN 3km:  {'pr': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, }
+  target: {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}
+
+output_dir: "${base_dir}/statistic_figs/1var/paper_revision1" 
+
+statistics:
+  - rmse
+  - correlation
+  - mean_bias
+  - percentile_99_bias
+  #- significance_pvalue
+  - variance_ratio
+  - wasserstein
+  - percentile_99
+  - mean_value
+  - abs_value
+  #- std
+
+min_max_scale:
+  'rmse': 
+  'correlation': [0.88, 1.00]
+  'mean_bias':
+  'percentile_99_bias':
+  'variance_ratio':
+  #'significance_pvalue':
+  'wasserstein':
+  'percentile_99': 
+  'mean_value':
+  'abs_value':
+  #'std':
+
+abs_value_max_scale:
+  'pr': 0.5
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+unit_convert:
+  'pr': 86400.0
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+fig_parameters:
+  #'nrows_def': 3
+  #'ncols_def': 2
+  #'figsize_def': [35,20]
+  'nrows_def': 2
+  'ncols_def': 2
+  'figsize_def': [22,15]
+  'fontsize_def': 18
+  'nlevels_def': 11
+  'extend_def': 'neither'

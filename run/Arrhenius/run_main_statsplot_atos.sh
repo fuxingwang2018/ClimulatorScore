@@ -17,7 +17,7 @@
 DOMAIN='EmiliaRomagna'
 #DOMAIN='TestDomain'
 #VARIABLE='tas_mrsol' #'pr' #tas
-VARIABLE='tas' #'pr' #tas
+VARIABLE='pr' #'pr' #tas
 #GCM='ECE'
 GCM='ERAI'
 YEAR='2003'
@@ -42,8 +42,8 @@ set -exu
 
 cd $HOME/ClimulatorScore/src
 
-#python main.py -c $HOME/ClimulatorScore/config/Arrhenius/config_${DOMAIN}_${VARIABLE}_${GCM}_${YEAR}_Arrhenius.yml
-python bootstrap_confidence_interval.py
+python main.py -c $HOME/ClimulatorScore/config/Arrhenius/config_${DOMAIN}_${VARIABLE}_${GCM}_${YEAR}_Arrhenius.yml
+#python bootstrap_confidence_interval.py
 
 #cd $HOME/Script/HCLIMAI
 #python -m pytest
