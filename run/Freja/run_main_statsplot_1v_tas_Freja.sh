@@ -15,8 +15,8 @@ module load netCDF-HDF5-utils/4.9.2-1.12.2-hpc1-intel-2023a-eb
 #module load Mambaforge
 module load Mambaforge/23.3.1-1-hpc1
 
-#DOMAIN='EmiliaRomagna'
-DOMAIN='TestDomain'
+DOMAIN='EmiliaRomagna'
+#DOMAIN='TestDomain'
 #VARIABLE='tas_mrsol' #'pr' #tas
 VARIABLE='tas' #'pr' #tas
 #GCM='ECE'
@@ -36,10 +36,11 @@ cd $HOME/Script/ClimulatorScore/src
 #cd /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/src
 #python main.py -c /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/config/config_${DOMAIN}_Freja.yml
 
-python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_test_Freja.yml
+#python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_test_Freja.yml
 #python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_paper_Freja.yml
 #python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
 #python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_2003_Freja.yml
+python get_hpc_name.py
 
 #python taylor_climulator.py
 #python plot_scatter.py

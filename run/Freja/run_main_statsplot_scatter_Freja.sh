@@ -1,9 +1,10 @@
 #!/bin/bash 
 #SBATCH -N 1 
-#SBATCH -t 01:00:00 
+#SBATCH -t 10:00:00 
 ###SBATCH -n 1  ##ntasks 
 ###SBATCH --mem=16G
-#SBATCH -J scatayl 
+###SBATCH -J scatayl 
+#SBATCH -J bootstrap 
 #SBATCH --chdir=/nobackup/rossby26/users/sm_fuxwa/AI/log_stats
 ###SBATCH --chdir=/nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore
 #SBATCH --error=%x-%j.error 
@@ -35,9 +36,10 @@ set -exu
 
 cd $HOME/Script/ClimulatorScore/src
 
-python taylor_climulator.py
+#python taylor_climulator.py
 #python plot_scatter.py
 #python plot_boxplot.py
+python bootstrap_confidence_interval.py
 
 current_date_time="`date`";
 echo The run ends at $current_date_time

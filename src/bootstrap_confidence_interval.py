@@ -6,6 +6,7 @@ from matplotlib.patches import Patch
 import xarray as xr
 import os
 import get_time_index
+import hpc
 
 # https://medium.com/data-science/calculating-confidence-interval-with-bootstrapping-872c657c058d
 
@@ -82,7 +83,6 @@ def plot_2d_metric_comparison(srgan_obs, cnn_obs,
     def _add_stippling_old(ax, mask, lon, lat, color='black', label='Significant'):
         """Add stippling dots where mask is True."""
         nx_, ny_ = mask.shape
-        print('mask.shape', mask.shape)
         if lon is not None and lat is not None:
             yy, xx = lat[mask], lon[mask]
         else:
@@ -211,20 +211,18 @@ def main():
     #srgan_out = reference + np.random.normal(0.2, 0.5, (time, nx, ny))
     #cnn_out   = reference + np.random.normal(0.4, 0.7, (time, nx, ny))
 
-    outdir_fig = f"/nobackup/proj/disk/hclimai/shared/Emilia_Romagna/statistic_figs/bootstrap/"
-
-    reference, srgan_out, cnn_out, lon_ref, lat_ref = get_data()
+    n_bootstrap = 1000
+    hpc_name = hpc.get_hpc_name()
+    reference, srgan_out, cnn_out, lon_ref, lat_ref, outdir_fig = get_data(hpc_name)
     time, nx, ny = reference.shape
     print('time, nx, ny:', time, nx, ny)
-    print('reference.shape:', reference.shape)
-    print('srgan_out.shape:', srgan_out.shape)
-    print('lon_ref.shape:', lon_ref.shape)
+    #print('reference.shape:', reference.shape)
+    #print('srgan_out.shape:', srgan_out.shape)
+    #print('lon_ref.shape:', lon_ref.shape)
 
     # Optional: provide lon/lat for axis labels; set to None to use array indices
     lon = lon_ref #None  # e.g. np.linspace(-10, 30, ny)
     lat = lat_ref #None  # e.g. np.linspace(40, 70, nx)
-
-    n_bootstrap = 10 #00
 
     for metric_fn, metric_name, save_path in [
         (metric_annual_mean_bias, 'Annual Mean Bias',       f'{outdir_fig}/srgan_cnn_bootstrap_mean_bias.png'),
@@ -236,7 +234,7 @@ def main():
         # Bootstrap for SRGAN
         srgan_obs, srgan_lo, srgan_hi, boot_srgan = bootstrap_metric(
             reference, srgan_out, metric_fn, n_bootstrap=n_bootstrap, seed=42)
-        print('srgan_lo.shape:', srgan_lo.shape)
+        #print('srgan_lo.shape:', srgan_lo.shape)
 
         # Bootstrap for CNN
         cnn_obs, cnn_lo, cnn_hi, boot_cnn = bootstrap_metric(
@@ -271,12 +269,20 @@ def main():
         )
 
 
-def get_data():
+def get_data(hpc_name):
+
     # --- Configuration ---
-    # Update these names to match your actual experiment folders or identifiers
-    #base_path = "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/"  # Path where your NetCDF files are stored
-    #outdir_fig = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/boxplot/"
-    base_path = "/nobackup/proj/disk/hclimai/shared/Emilia_Romagna/"  # Path where your NetCDF files are stored
+    if hpc_name == 'freja':
+        base_path = "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/"  # Path where your NetCDF files are stored
+        outdir_fig = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/bootstrap/"
+    elif hpc_name == 'arrhenius':
+        base_path = "/nobackup/proj/disk/hclimai/shared/Emilia_Romagna/"  # Path where your NetCDF files are stored
+        outdir_fig = f"/nobackup/proj/disk/hclimai/shared/Emilia_Romagna/statistic_figs/bootstrap/"
+    else:
+        sys.exit(f'HPC configuration not defined for {hpc_name}')
+
+    os.makedirs(outdir_fig, exist_ok=True)
+
     var_names = {'var1':'tas'}
     var_names_to_read = {'var1':'tas'}
 
@@ -286,7 +292,8 @@ def get_data():
     #GCM = "ICHEC-EC-EARTH_RCP85_LC"
     if GCM == 'ECMWF-ERAINT':
         FIRST_YEAR_12km, LAST_YEAR_12km, FIRST_YEAR_3km, LAST_YEAR_3km = 2000, 2009, 2000, 2009
-        EXP_SRGAN = 'EPOCH100_tas_wsmto_ERAI_2009_arrhenius'
+        #EXP_SRGAN = 'EPOCH100_tas_wsmto_ERAI_2009_arrhenius'
+        EXP_SRGAN = 'EPOCH100_tas_scale_time_stdscaler_wt_worog_gpufix_bs50_ERAI_atos'
         title_def = '(k) ERAI-HI2HI'
     elif GCM == "ICHEC-EC-EARTH_HIST":
         FIRST_YEAR_12km, LAST_YEAR_12km, FIRST_YEAR_3km, LAST_YEAR_3km = 1995, 2005, 1995, 2005
@@ -303,8 +310,8 @@ def get_data():
         'HCLIM3':  {'tas': f'{base_path}/cropped/{GCM}/3km/6hr/tas/tas_3km_6hr_{FIRST_YEAR_3km}01010000-{LAST_YEAR_3km}12311800.nc' },
         #'HCLIM12': {'tas': f'{base_path}/cropped/{GCM}/12km/6hr/tas/tas_12km_6hr_{FIRST_YEAR_12km}01010000-{LAST_YEAR_12km}12311800.nc' },
         'SRGAN':   {'tas': f'{base_path}SG/SRGAN_OUT/{EXP_SRGAN}/predictant_ypred_1.nc' }, 
-        'CNN':   {'tas': f'{base_path}SG/SRGAN_OUT/EPOCH100_tas_wsmto_tile_ERAI_2009_arrhenius/predictant_ypred_1.nc' }, 
-        #'CNN':     {'tas': f'/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc' }, 
+        #'CNN':   {'tas': f'{base_path}SG/SRGAN_OUT/EPOCH100_tas_wsmto_tile_ERAI_2009_arrhenius/predictant_ypred_1.nc' }, 
+        'CNN':     {'tas': f'/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc' }, 
         # ERAI
         #'ERA5':  {'mrsol': f'/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc',
         #          'tas': f'/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc' },
@@ -312,7 +319,6 @@ def get_data():
         # ECE Hist
         #'CNN':  {'mrsol': f'/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_mrsol_2009.nc',
         #          'tas': f'/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc' }, 
-
     }
 
     reference_experiment, model1_experiment, model2_experiment  = 'HCLIM3', 'SRGAN', 'CNN'
@@ -326,14 +332,13 @@ def get_data():
     var_dict = {}
     # --- Data Processing ---
     for exp in experiment_names:
-        #if 'CNN' in exp:
-        #    var_names_to_read = {'var1':'test', 'var2':'test'}
+        if 'CNN' in exp:
+            var_names_to_read = {'var1':'test'}
         print(f"Processing {exp}...")
-        print (file_dict[exp][var_names['var1']]) 
+        #print (file_dict[exp][var_names['var1']]) 
         # 1. Open the files 
         # Assuming file naming like: Exp1_tas.nc and Exp1_mrsol.nc
         #ds_tas = xr.open_dataset(os.path.join(base_path, f"{exp}_tas.nc"))
-        #ds_mrsol = xr.open_dataset(os.path.join(base_path, f"{exp}_mrsol.nc"))
         ds_var = xr.open_dataset(file_dict[exp][var_names['var1']])
         
         # 2. Extract DataArrays
@@ -342,21 +347,12 @@ def get_data():
         if exp == reference_experiment:
             lon_ref, lat_ref = ds_var['lon'].to_numpy(), ds_var['lat'].to_numpy()
 
-        # 3. Calculate Pearson Correlation per grid point along the 'time' dimension
-        # xr.corr automatically aligns coordinates and computes correlation over the specified dim
-        #cor_map = xr.corr(tas, mrsol, dim='time')
-        
-        # 4. Flatten the map into a 1D array of values and remove NaNs (e.g., over oceans or missing data)
-        #cor_values = cor_map.values.flatten()
-        #cor_values = cor_values[~np.isnan(cor_values)]
-        
-        #all_correlations.append(cor_values)
-
     reference = var_dict[reference_experiment]
     srgan_out = var_dict[model1_experiment]
     cnn_out   = var_dict[model2_experiment]
 
-    return reference, srgan_out, cnn_out, lon_ref, lat_ref
+    return reference, srgan_out, cnn_out, lon_ref, lat_ref, outdir_fig
+
 
 def def_time_range(GCM):
 
