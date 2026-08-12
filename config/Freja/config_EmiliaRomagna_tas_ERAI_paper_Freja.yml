@@ -61,13 +61,14 @@ time_range:
   target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
 
 #output_dir: "${base_dir}/statistic_figs/1var/paper" 
-output_dir: "${base_dir}/statistic_figs/1var/paper_revision1" 
+output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/2009" 
 #output_dir: "/nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/statistic_figs"
 
 statistics:
   - rmse
   #- correlation
   - mean_bias
+  - percentile_99_bias
   - variance_ratio
   #- wasserstein
   - percentile_99
@@ -79,6 +80,7 @@ min_max_scale:
   'rmse': 
   #'correlation': [0.88, 1.00]
   'mean_bias':
+  'percentile_99_bias':
   'variance_ratio':
   #'wasserstein':
   'percentile_99': 

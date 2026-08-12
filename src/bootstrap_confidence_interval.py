@@ -211,9 +211,10 @@ def main():
     #srgan_out = reference + np.random.normal(0.2, 0.5, (time, nx, ny))
     #cnn_out   = reference + np.random.normal(0.4, 0.7, (time, nx, ny))
 
-    n_bootstrap = 1000
+    n_bootstrap = 500
+    var_name = 'pr' #'tas'
     hpc_name = hpc.get_hpc_name()
-    reference, srgan_out, cnn_out, lon_ref, lat_ref, outdir_fig = get_data(hpc_name)
+    reference, srgan_out, cnn_out, lon_ref, lat_ref, outdir_fig = get_data(hpc_name, var_name)
     time, nx, ny = reference.shape
     print('time, nx, ny:', time, nx, ny)
     #print('reference.shape:', reference.shape)
@@ -225,9 +226,9 @@ def main():
     lat = lat_ref #None  # e.g. np.linspace(40, 70, nx)
 
     for metric_fn, metric_name, save_path in [
-        (metric_annual_mean_bias, 'Annual Mean Bias',       f'{outdir_fig}/srgan_cnn_bootstrap_mean_bias.png'),
-        (metric_rmse,             'RMSE',                   f'{outdir_fig}/srgan_cnn_bootstrap_rmse.png'),
-        (metric_p99_bias,         '99th Percentile Bias',   f'{outdir_fig}/srgan_cnn_bootstrap_p99_bias.png'),
+        (metric_annual_mean_bias, 'Annual Mean Bias',       f'{outdir_fig}/srgan_cnn_bootstrap_{var_name}_mean_bias.png'),
+        (metric_rmse,             'RMSE',                   f'{outdir_fig}/srgan_cnn_bootstrap_{var_name}_rmse.png'),
+        (metric_p99_bias,         '99th Percentile Bias',   f'{outdir_fig}/srgan_cnn_bootstrap_{var_name}_p99_bias.png'),
     ]:
         print(f'\n=== {metric_name} ===')
 
@@ -269,7 +270,7 @@ def main():
         )
 
 
-def get_data(hpc_name):
+def get_data(hpc_name, var_name):
 
     # --- Configuration ---
     if hpc_name == 'freja':
@@ -283,8 +284,8 @@ def get_data(hpc_name):
 
     os.makedirs(outdir_fig, exist_ok=True)
 
-    var_names = {'var1':'tas'}
-    var_names_to_read = {'var1':'tas'}
+    var_names = {'var1': var_name}
+    var_names_to_read = {'var1': var_name}
 
     GCM = 'ECMWF-ERAINT'
     #GCM = "ICHEC-EC-EARTH_HIST"
@@ -293,7 +294,11 @@ def get_data(hpc_name):
     if GCM == 'ECMWF-ERAINT':
         FIRST_YEAR_12km, LAST_YEAR_12km, FIRST_YEAR_3km, LAST_YEAR_3km = 2000, 2009, 2000, 2009
         #EXP_SRGAN = 'EPOCH100_tas_wsmto_ERAI_2009_arrhenius'
-        EXP_SRGAN = 'EPOCH100_tas_scale_time_stdscaler_wt_worog_gpufix_bs50_ERAI_atos'
+        if  var_names['var1'] == 'tas':
+            EXP_SRGAN = 'EPOCH100_tas_scale_time_stdscaler_wt_worog_gpufix_bs50_ERAI_atos'
+        elif var_names['var1'] == 'pr':
+            EXP_SRGAN = 'EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos'
+
         title_def = '(k) ERAI-HI2HI'
     elif GCM == "ICHEC-EC-EARTH_HIST":
         FIRST_YEAR_12km, LAST_YEAR_12km, FIRST_YEAR_3km, LAST_YEAR_3km = 1995, 2005, 1995, 2005
@@ -307,11 +312,14 @@ def get_data(hpc_name):
         FIRST_YEAR_12km, LAST_YEAR_12km, FIRST_YEAR_3km, LAST_YEAR_3km = 2090, 2099, 2089, 2099
 
     file_dict = {
-        'HCLIM3':  {'tas': f'{base_path}/cropped/{GCM}/3km/6hr/tas/tas_3km_6hr_{FIRST_YEAR_3km}01010000-{LAST_YEAR_3km}12311800.nc' },
+        'HCLIM3':  { 'pr': f'{base_path}/cropped/{GCM}/3km/6hr/pr/pr_3km_6hr_{FIRST_YEAR_3km}01010300-{LAST_YEAR_3km}12312100.nc', \
+                    'tas': f'{base_path}/cropped/{GCM}/3km/6hr/tas/tas_3km_6hr_{FIRST_YEAR_3km}01010000-{LAST_YEAR_3km}12311800.nc' },
         #'HCLIM12': {'tas': f'{base_path}/cropped/{GCM}/12km/6hr/tas/tas_12km_6hr_{FIRST_YEAR_12km}01010000-{LAST_YEAR_12km}12311800.nc' },
-        'SRGAN':   {'tas': f'{base_path}SG/SRGAN_OUT/{EXP_SRGAN}/predictant_ypred_1.nc' }, 
+        'SRGAN':   {'pr': f'{base_path}SG/SRGAN_OUT/{EXP_SRGAN}/predictant_ypred_1.nc', \
+                   'tas': f'{base_path}SG/SRGAN_OUT/{EXP_SRGAN}/predictant_ypred_1.nc' }, 
         #'CNN':   {'tas': f'{base_path}SG/SRGAN_OUT/EPOCH100_tas_wsmto_tile_ERAI_2009_arrhenius/predictant_ypred_1.nc' }, 
-        'CNN':     {'tas': f'/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc' }, 
+        'CNN':     {'tas': f'/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc', \
+                     'pr':  f'/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_pr_2009.nc'}, 
         # ERAI
         #'ERA5':  {'mrsol': f'/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc',
         #          'tas': f'/nobackup/rossby27/users/sm_fuxwa/ERA5/2009/tas_mrsol_ERA5_regrid_3km_2009_2009_timestd_dim.nc' },
@@ -357,47 +365,47 @@ def get_data(hpc_name):
 def def_time_range(GCM):
 
     time_range_erai = {'HCLIM12': 
-        {'mrsol': {'start_date': ['2000-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2000-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2000-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}}, 
         'HCLIM3': 
-        {'mrsol': {'start_date': ['2000-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2000-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2000-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}}, 
         'ERA5': 
-        {'mrsol': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}}, 
         'SRGAN': 
-        {'mrsol': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}}, 
          'CNN': 
-        {'mrsol': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}}, 
         'target': {'start_date': ['2009-01-01 00:00'], 'end_date': ['2009-12-31 24:00'], 'step_hours': 6}}
 
     time_range_ecehi2hi = {'HCLIM12': 
-        {'mrsol': {'start_date': ['1995-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['1995-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['1995-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}}, 
         'HCLIM3': 
-        {'mrsol': {'start_date': ['1995-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['1995-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['1995-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}}, 
         'SRGAN': 
-        {'mrsol': {'start_date': ['2005-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2005-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2005-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}}, 
          'CNN': 
-        {'mrsol': {'start_date': ['2005-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2005-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2005-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}}, 
         'target': {'start_date': ['2005-01-01 00:00'], 'end_date': ['2005-12-31 24:00'], 'step_hours': 6}}
 
     time_range_ecemc2mc = {'HCLIM12': 
-        {'mrsol': {'start_date': ['2040-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2040-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2040-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}}, 
         'HCLIM3': 
-        {'mrsol': {'start_date': ['2040-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2040-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2040-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}}, 
         'SRGAN': 
-        {'mrsol': {'start_date': ['2050-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2050-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2050-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}}, 
          'CNN': 
-        {'mrsol': {'start_date': ['2050-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}, 
+        {'pr': {'start_date': ['2050-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}, 
            'tas': {'start_date': ['2050-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}}, 
         'target': {'start_date': ['2050-01-01 00:00'], 'end_date': ['2050-12-31 24:00'], 'step_hours': 6}}
 

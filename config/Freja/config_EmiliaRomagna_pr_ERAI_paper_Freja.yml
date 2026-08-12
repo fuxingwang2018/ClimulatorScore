@@ -51,13 +51,14 @@ time_range:
   target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
 
 #output_dir: "${base_dir}/statistic_figs/1var/paper" 
-output_dir: "${base_dir}/statistic_figs/1var/paper_revision1" 
+output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/2009" 
 
 statistics:
   - rmse
   #- cpl_corr
   #- correlation
   - mean_bias
+  - percentile_99_bias
   - variance_ratio
   #- wasserstein
   - percentile_99
@@ -69,8 +70,8 @@ min_max_scale:
   'rmse': 
   #'correlation': [0.88, 1.00]
   #'cpl_corr':
-  #'correlation':
   'mean_bias':
+  'percentile_99_bias':
   'variance_ratio':
   #'wasserstein':
   'percentile_99': [0, 120] 

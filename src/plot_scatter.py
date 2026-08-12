@@ -16,22 +16,22 @@ def main():
     #test_date = 'JJA 2005'
     test_date = 'JJA 2003'
     #test_date = '20030815T1200' 
-    experiment = 'HCLIM'
-    #experiment = 'CNN'
-    #experiment = 'SRGAN'
-    #experiment = 'SRGAN_TAS_WSM_SCALETIME_GPUFIX_NSTD0.03_BS50_ERAI'
-    #experiment = 'SRGAN_TAS_WSM_SCALETIMESAVED_GPUFIX_BS50_DLR1E-5_ERAI'
-    #experiment = 'SRGAN_T_WSMT_SCALETIME_BS50_LAMB01_ERAI_pred_2009_v2'
+    model = 'HCLIM'
+    #model = 'CNN'
+    #model = 'SRGAN'
+    #model = 'SRGAN_TAS_WSM_SCALETIME_GPUFIX_NSTD0.03_BS50_ERAI'
+    #model = 'SRGAN_TAS_WSM_SCALETIMESAVED_GPUFIX_BS50_DLR1E-5_ERAI'
+    #model = 'SRGAN_T_WSMT_SCALETIME_BS50_LAMB01_ERAI_pred_2009_v2'
 
-    basedir, x_file, y_file = get_file(experiment, test_date)
-    lat_min, lat_max, lon_min, lon_max, outdir_fig, label_def, title_def, var_names = get_parameters(experiment, test_date)
-    if 'HCLIM' in experiment and '20030815' in test_date:
+    basedir, x_file, y_file = get_file(model, test_date)
+    lat_min, lat_max, lon_min, lon_max, outdir_fig, label_def, title_def, var_names = get_parameters(model, test_date)
+    if 'HCLIM' in model and '20030815' in test_date:
         var1_flat, var2_flat = get_data_predefined()
     else:
-        var1_flat, var2_flat = get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_min, lon_max, experiment, test_date)
-    plot_scat(var1_flat, var2_flat, experiment, test_date, label_def, title_def, outdir_fig, var_names)
+        var1_flat, var2_flat = get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_min, lon_max, model, test_date)
+    plot_scat(var1_flat, var2_flat, model, test_date, label_def, title_def, outdir_fig, var_names)
 
-def get_file(experiment, test_date):
+def get_file(model, test_date):
 
     # for paper
     ##basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_scale_time_stdscaler_gpufix_bs50_ERAI_atos/"
@@ -119,22 +119,25 @@ def get_file(experiment, test_date):
     #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_nstd0.03_bs50_2003_ERAI_atos/"
     #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_nstd0.03_bs50_ERAI_pred_atos/"
 
-    if 'HCLIM' in experiment:
-        x_file = f"predictant_ytest_1.nc"
-    elif 'SRGAN' in experiment:
-        x_file = f"predictant_ypred_1.nc"
-    y_file = f"predictor_1.nc"
+    if 'HCLIM12' in model:
+        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmto_ERAI_2003_arrhenius/"
+        y_file = f"predictor_1.nc"
+    elif 'HCLIM3' in model:
+        y_file = f"predictant_ytest_1.nc"
+    elif 'SRGAN' in model:
+        y_file = f"predictant_ypred_1.nc"
+    x_file = f"predictor_1.nc"
 
     # CNN
-    if 'CNN' in experiment:
+    if 'CNN' in model:
         basedir = f"/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_withSM_whus/"
         if 'JJA' in test_date:
-            #x_file = f"{basedir}simple_cnn_prediction_normalized_normal2009.nc"
-            x_file = f"{basedir}simple_cnn_prediction_normalized.nc"
-            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_nstd0.03_bs50_2003_ERAI_atos/predictor_1.nc"
+            #y_file = f"{basedir}simple_cnn_prediction_normalized_normal2009.nc"
+            y_file = f"{basedir}simple_cnn_prediction_normalized.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_nstd0.03_bs50_2003_ERAI_atos/predictor_1.nc"
         else:
-            x_file = f"{basedir}simple_cnn_prediction_normalized_20030815T1200.nc"
-            y_file = f"{basedir}training_singleday/JJA2003_20030815T1200_mrsol_whus_time.nc"
+            y_file = f"{basedir}simple_cnn_prediction_normalized_20030815T1200.nc"
+            x_file = f"{basedir}training_singleday/JJA2003_20030815T1200_mrsol_whus_time.nc"
 
     #dir_fuxing_org = f'/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/ICHEC-EC-EARTH/3km/6hr/mrsol/'
     #y_file = f"mrsol_3km_6hr_199501010000-200512311800.nc"
@@ -142,33 +145,33 @@ def get_file(experiment, test_date):
     return basedir, x_file, y_file
 
 
-def get_parameters(experiment, test_date):
+def get_parameters(model, test_date):
 
-    if 'SRGAN' in experiment or 'HCLIM' in experiment:
+    if 'SRGAN' in model or 'HCLIM' in model:
         var_names = {'var1':'mrsol', 'var2':'tas'}
-    elif 'CNN' in experiment:
+    elif 'CNN' in model:
         var_names = {'var1':'mrsol', 'var2':'test'}
 
     if 'JJA' in test_date:
-        if 'HCLIM' in experiment:
+        if 'HCLIM' in model:
             number_def = '(a)'
-        elif 'SRGAN' in experiment:
+        elif 'SRGAN' in model:
             number_def = '(b)'
-        elif 'CNN' in experiment:
+        elif 'CNN' in model:
             number_def = '(c)'
     else:
-        if 'HCLIM' in experiment:
+        if 'HCLIM' in model:
             number_def = '(d)'
-        elif 'SRGAN' in experiment:
+        elif 'SRGAN' in model:
             number_def = '(e)'
-        elif 'CNN' in experiment:
+        elif 'CNN' in model:
             number_def = '(f)'
 
     outdir_fig = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/scatter/"
     outdir_fig = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/scatter/"
     label_def = {'xlabel': "Soil Moisture at Top 1cm (m3/m3)", 'ylabel': "2-m Air Temperature (K)"}
-    #title_def = f"{number_def} {experiment} {var_names['var2']} vs. {var_names['var1']} ({test_date})"
-    title_def = f"{number_def} {experiment}"
+    #title_def = f"{number_def} {model} {var_names['var2']} vs. {var_names['var1']} ({test_date})"
+    title_def = f"{number_def} {model}"
 
     # --- Define the bounding box for Northern Italy ---
     lat_min = 44.0
@@ -200,15 +203,15 @@ def get_data_predefined():
     return var1_flat, var2_flat
 
 
-def get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_min, lon_max, experiment, test_date):
+def get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_min, lon_max, model, test_date):
 
     # --------------------
-    if 'CNN' in experiment:
-        var2_ds = xr.open_dataset(x_file) 
-        var1_ds = xr.open_dataset(y_file)
+    if 'CNN' in model:
+        var1_ds = xr.open_dataset(x_file) 
+        var2_ds = xr.open_dataset(y_file)
     else:
-        var2_ds = xr.open_dataset(basedir + x_file) 
-        var1_ds = xr.open_dataset(basedir + y_file)
+        var1_ds = xr.open_dataset(basedir + x_file) 
+        var2_ds = xr.open_dataset(basedir + y_file)
     print("-1 var2_ds=", var2_ds)
     print("-1 var1_ds=", var1_ds)
 
@@ -216,8 +219,11 @@ def get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_m
     var1_ds = var1_ds.where(var1_ds != 0 and var1_ds < 1e20 )
 
     # --- regrid variable from coarse to fine resolution ---
-    var1_np = var1_ds[var_names['var1']].values 
-    var1_np_refined = stats_tools.upsample_2d_array(var1_np, upscale_factor = 4)
+    var1_np = var1_ds[var_names['var1']].values
+    if var1_ds.sizes != var2_ds.sizes:
+        var1_np_refined = stats_tools.upsample_2d_array(var1_np, upscale_factor = 4)
+    else:
+        var1_np_refined = np.copy(var1_np)
 
     var1_ds = xr.Dataset(
         data_vars={
@@ -289,7 +295,7 @@ def get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_m
     if 'JJA' in test_date:
         var2 = var2.where(var2['time'].dt.season == "JJA", drop=True)
         var1 = var1.where(var1['time'].dt.season == "JJA", drop=True)
-        if 'CNN' not in experiment:
+        if 'CNN' not in model:
             var2, var1 = xr.align(var2, var1, join='inner')
 
     print('var1 3d', var1.shape, np.max(var1), np.min(var1))
@@ -314,7 +320,7 @@ def get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_m
 
     return var1_flat, var2_flat
 
-def plot_scat(var1_flat, var2_flat, experiment, test_date, label_def, title_def, outdir_fig, var_names):
+def plot_scat(var1_flat, var2_flat, model, test_date, label_def, title_def, outdir_fig, var_names):
 
     unit_convert = 0.1 # from kg/m2 to m3/m3
     var1_flat = var1_flat * unit_convert
@@ -345,7 +351,7 @@ def plot_scat(var1_flat, var2_flat, experiment, test_date, label_def, title_def,
     #if 'JJA' in test_date:
     #    n = 907 # 15 Aug 2003, 12 UTC
     #else:
-    if 'HCLIM' in experiment and '20030815' in test_date:
+    if 'HCLIM' in model and '20030815' in test_date:
         n = 0 # 15 Aug 2003, 12 UTC
     else:
         n = 303 - 1 # 15 Aug 2003, 12 UTC
@@ -372,7 +378,7 @@ def plot_scat(var1_flat, var2_flat, experiment, test_date, label_def, title_def,
     #plt.show()
 
     combined_test_date = '_'.join(test_date.split()) if " " in test_date else test_date
-    plt.savefig(f"{outdir_fig}/Scatter_{experiment}_{var_names['var1']}_{var_names['var2']}_{combined_test_date}.png", dpi=300, bbox_inches='tight')
+    plt.savefig(f"{outdir_fig}/Scatter_{model}_{var_names['var1']}_{var_names['var2']}_{combined_test_date}.png", dpi=300, bbox_inches='tight')
 
 if __name__ == "__main__":
     main()

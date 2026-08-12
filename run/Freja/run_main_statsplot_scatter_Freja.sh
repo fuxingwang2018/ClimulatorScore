@@ -39,7 +39,8 @@ cd $HOME/Script/ClimulatorScore/src
 #python taylor_climulator.py
 #python plot_scatter.py
 #python plot_boxplot.py
-python bootstrap_confidence_interval.py
+#python bootstrap_confidence_interval.py
+python bootstrap_slopes.py
 
 current_date_time="`date`";
 echo The run ends at $current_date_time
