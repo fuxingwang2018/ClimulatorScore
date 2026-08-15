@@ -2,8 +2,14 @@ import numpy as np
 import stats_tools
 import sys
 import significance_test
+from matplotlib.colors import LinearSegmentedColormap
 
-def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables, selected_statistics=None):
+
+
+
+def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables, \
+    reference_experiment, selected_statistics=None):
+
     """
     Compute selected statistics between reference (HCLIM 3km) and other experiments.
     
@@ -17,21 +23,25 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     - List of computed statistics with metadata.
     """
 
+    # Define hex colors: Dry Brown -> Tan -> Light Green -> Cyan -> Deep Blue
+    soil_colors = ['#543005', '#8c510a', '#dfc27d', '#80cdc1', '#01665e', '#003c30']
+    custom_soil_cmap = LinearSegmentedColormap.from_list('SoilMoisture', soil_colors)
+
     # Default to all available statistics
     all_stats = ['rmse', 'mean_bias', 'variance_ratio', 'correlation', 'wasserstein', \
             'percentile_99', 'mean_value', 'abs_value', 'std', 'detection_metrics', \
             'percentile_99_bias', 'significance_pvalue']
     selected_statistics = selected_statistics or all_stats
 
-    if 'significance_pvalue' in selected_statistics and len(selected_statistics) == 1:
-        ref_experiment = 'HCLIM 12km'
-    else:
-        ref_experiment = 'HCLIM 3km'
-    print('ref_experiment is:', ref_experiment)
+    #if 'significance_pvalue' in selected_statistics and len(selected_statistics) == 1:
+    #    reference_experiment = 'HCLIM 12km'
+    #else:
+    #    reference_experiment = 'HCLIM 3km'
+    print('reference_experiment is:', reference_experiment)
 
     experiment_name_with_ref = list(experiment_val.keys())
-    experiment_name_without_ref = [name for name in experiment_val if name != ref_experiment]
-
+    #experiment_name_without_ref = [name for name in experiment_val if name != ref_experiment]
+    experiment_name_without_ref = [name for name in experiment_val if reference_experiment.get(name) is not None]
     
     # Function mapping for statistics calculations
     stat_functions = {
@@ -47,9 +57,19 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     }
 
 
-    cmap_dict = {'tas': {'mean_value': 'cividis', 'percentile_99': 'inferno'}, \
-                 'mrsol': {'mean_value': 'Blues', 'percentile_99': 'Blues'}, \
-                 'pr': {'mean_value': 'Blues',    'percentile_99': 'BuPu'} }
+    cmap_dict = {'tas': {'mean_value': 'cividis', 'percentile_99': 'inferno', 'mean_bias': 'seismic'}, \
+                 'mrsol': {'mean_value': 'BrBG', 'percentile_99': 'Blues', 'mean_bias': 'seismic'}, \
+                 'snc': {'mean_value': 'PuBu', 'percentile_99': 'YlGnBu', 'mean_bias': 'seismic'}, \
+                 'snd': {'mean_value': 'PuBu', 'percentile_99': 'YlGnBu', 'mean_bias': 'seismic'}, \
+                 'snw': {'mean_value': 'PuBu', 'percentile_99': 'YlGnBu', 'mean_bias': 'seismic'}, \
+                 'pr': {'mean_value': 'Blues',    'percentile_99': 'BuPu', 'mean_bias': 'seismic'} }
+
+    title_dict = {'snc': {'mean_bias': 'Difference'}, \
+        'snw': {'mean_bias': 'Difference'}, \
+        'snd': {'mean_bias': 'Difference'}, \
+        'mrsol': {'mean_bias': 'Difference'}, \
+        'tas': {'mean_bias': 'Mean Bias'}, \
+        'pr': {'mean_bias': 'Mean Bias'}, }
 
     if len(variables) > 1:
 
@@ -77,6 +97,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
   
         for var_name in variables:
 
+            """
             reference = experiment_val[ref_experiment][var_name]
             comparisons = {exp: vals[var_name] for exp, vals in experiment_val.items() if exp != ref_experiment}
 
@@ -91,6 +112,29 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
                        'std': stats_tools.calculate_std}.items():
                 if stat in selected_statistics:
                     statistics[stat] = [func(data) for data in [reference] + list(comparisons.values())]
+            """
+
+            # Experiments that have an assigned reference model
+            comparisons = {exp: vals[var_name] for exp, vals in experiment_val.items() if reference_experiment.get(exp) is not None}
+
+            # Compute statistics dynamically using each experiment's specific reference
+            statistics = {
+                stat: [
+                    stat_functions[stat](experiment_val[reference_experiment[exp]][var_name], val)
+                    for exp, val in comparisons.items()
+                ]
+                for stat in selected_statistics if stat in stat_functions
+            }
+
+            # Compute single-input statistics across all experiments
+            all_exp_data = [vals[var_name] for vals in experiment_val.values()]
+            
+            for stat, func in {'percentile_99': stats_tools.calculate_99th_percentile,
+                               'mean_value': stats_tools.calculate_mean_value,
+                               'abs_value': stats_tools.calculate_abs_value,
+                               'std': stats_tools.calculate_std}.items():
+                if stat in selected_statistics:
+                    statistics[stat] = [func(data) for data in all_exp_data]
 
     # Compute global color scale ranges
     #vmin_vmax = {stat: (np.nanmin(vals), np.nanmax(vals)) for stat, vals in statistics.items()}
@@ -109,18 +153,19 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
             abs_max = min(abs(vmin), abs(vmax))   
             vmin_vmax[stat] = (-abs_max, abs_max) 
 
-    #print('vmin_vmax 1', type(vmin_vmax), vmin_vmax)
+    print('vmin_vmax 1', type(vmin_vmax), vmin_vmax)
     vmin_vmax = {k: tuple(v) if v else vmin_vmax[k] for k, v in min_max_scale.items()}
-    #print('vmin_vmax 2', type(vmin_vmax), vmin_vmax)
+    print('vmin_vmax 2', type(vmin_vmax), vmin_vmax)
     #if 'abs_value' in vmin_vmax:
     #    vmin_vmax['abs_value'] = (vmin_vmax['abs_value'][0], vmin_vmax['abs_value'][1] * abs_value_max_scale[var_name])
 
+    
     # Metadata for visualization
     stat_meta = {
         'rmse': ('RMSE', 'rmse_maps', 'viridis'),
         'correlation': ('Correlation', 'correlation_maps', 'Reds'),
         'cpl_corr': ('Correlation', 'coupling_correlation_maps', 'seismic'),
-        'mean_bias': ('Mean Bias', 'mean_bias_maps', 'seismic'),
+        'mean_bias': (title_dict[variables[0]]['mean_bias'], 'mean_bias_maps', cmap_dict[variables[0]]['mean_bias']),
         'percentile_99_bias': ('99th Percentile Bias', 'percentile_99_bias_maps', 'seismic'),
         'variance_ratio': ('Ratio of Variance', 'variance_ratio_maps', 'Blues'),
         'wasserstein': ('Wasserstein Distance', 'wasserstein_maps', 'plasma'),

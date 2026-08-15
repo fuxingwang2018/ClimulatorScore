@@ -25,10 +25,18 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
         'hfls': {'CNN': 'test'}, \
         'mrsol': {'CNN': 'test'}, \
         'pr': {'CNN': 'test'}, \
+        'snc': {'CNN': 'test'}, \
         }
 
+    key_3km  =  " ".join(next(k for k in experiment_dict if '3km' in str(k)).split()[:2])
+    key_12km =  " ".join(next(k for k in experiment_dict if '12km' in str(k)).split()[:2])
+    print('key_3km:', key_3km) 
+    print('key_12km:', key_12km) 
+
     experiment_val = {}
+    lon_dict, lat_dict = {}, {}
     for experiment_name_origin, file_name in experiment_dict.items():
+        print('experiment_name_origin, file_name:', experiment_name_origin, file_name)
         method = experiment_name_origin.strip().split()[0]
         #ds = xr.open_dataset(file_name, decode_cf=False)
         ds = xr.open_dataset(file_name, decode_times=True, use_cftime=False)
@@ -41,8 +49,8 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
         #experiment_val[experiment_name] = {}
         experiment_val.setdefault(experiment_name, {})
         
-        lat= ds['lat'].values
-        lon= ds['lon'].values
+        lat_dict[experiment_name]= ds['lat'].values
+        lon_dict[experiment_name]= ds['lon'].values
         print(ds.time.dtype)
         print(ds.time.attrs)
 
@@ -70,10 +78,12 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
                 #daily_ds = ds[var_name].resample(time='1D').mean()
                 #experiment_val[experiment_name][var_name] = daily_ds.values * unit_convert[var_name]  # Convert to mm/day for pr
                 experiment_val[experiment_name][var_name] = ds[var_name].values * unit_convert[var_name]  # Convert to mm/day for pr
+                print('experiment_val before cut:', experiment_val[experiment_name][var_name].shape)
             experiment_val[experiment_name][var_name] = experiment_val[experiment_name][var_name][time_idx_range[str(experiment_name)][var_name]['start_idx'][0]:time_idx_range[str(experiment_name)][var_name]['end_idx'][0]]
             print('experiment_val:', experiment_val[experiment_name].keys())
         
-            if 'HCLIM 12km' in experiment_name:
+            #if 'HCLIM 12km' in experiment_name:
+            if '12km' in experiment_name:
                 experiment_val[experiment_name][var_name] = stats_tools.upsample_2d_array(experiment_val[experiment_name][var_name], upscale_factor = 4)
 
 
@@ -84,11 +94,14 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
 
         #print('experiment_val 12:', experiment_val['HCLIM 12km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
         #print('experiment_val 3:', experiment_val['HCLIM 3km']) #, var_name, experiment_val[experiment_name][var_name].shape, experiment_val[experiment_name][var_name])
-        if 'HCLIM 12km' in experiment_name:
-            low_res_shape, high_res_shape = experiment_val['HCLIM 12km'][variables[0]].shape, experiment_val['HCLIM 3km'][variables[0]].shape
+        #if 'HCLIM 12km' in experiment_name:
+
+        if '12km' in experiment_name:
+            low_res_shape, high_res_shape = experiment_val[experiment_name][variables[0]].shape, experiment_val[key_3km][variables[0]].shape
 
         #for key_hr, values_hr in var_high_res_adjusted_dict.items():
-        if 'HCLIM 12km' in experiment_name:
+        #if 'HCLIM 12km' in experiment_name:
+        if '12km' in experiment_name:
           for var_name in variables:
             residue_geo = []
             for i in range(len(low_res_shape)):
@@ -97,7 +110,10 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
                 if residue_geo[i] != 0:
                     print('Not divisible:', high_res_shape[i], low_res_shape[i], i, residue_geo[i])
                     if i == 2 and residue_geo[i] == 2:
-                        experiment_val['HCLIM 3km'][var_name] = experiment_val['HCLIM 3km'][var_name][:, :, 1:-1] # remove the 1st and last elements
+                        experiment_val[key_3km][var_name] = experiment_val[key_3km][var_name][:, :, 1:-1] # remove the 1st and last elements
+
+    lat = lat_dict[key_3km]
+    lon = lon_dict[key_3km]
 
     # Loop over nested dict
     #for experiment_name in experiment_val:

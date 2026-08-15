@@ -60,7 +60,7 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
         vmin = min([np.nanmin(stat) for stat in statistics])
     if vmax is None:
         vmax = max([np.nanmax(stat) for stat in statistics])
-    if not any('correlation' in s for s in titles):
+    if not any('correlation' in s for s in titles) and vmin > 1 and vmax > 1:
         vmin = math.floor(vmin)
         vmax = math.ceil(vmax)
     #if any('Abs Value' in s for s in titles):
@@ -99,6 +99,8 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
 
         letter = chr(97 + plot_counter) 
         if '99th Percentile' in title:
+            letter = chr(97 + plot_counter + 4) 
+        elif 'Difference' in title:
             letter = chr(97 + plot_counter + 4) 
         new_title = f"({letter}) {title}"
         axes[i].set_title(new_title, fontsize=fontsize_def)

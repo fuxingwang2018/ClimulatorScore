@@ -18,6 +18,7 @@ def main():
     # get config
     config = get_config.get_config(args.config)
     experiment = config['experiment']
+    reference_experiment = config['reference_experiment']
     variables = config['variables']
     abs_value_max_scale = config['abs_value_max_scale']
     min_max_scale = config['min_max_scale']
@@ -31,14 +32,16 @@ def main():
     print('fig_parameters', fig_parameters)
     print('time_range', time_range)
 
-    time_idx_range = get_time_index.get_time_index(time_range)
+    time_idx_range = get_time_index.get_time_index_v2(time_range)
+    print('time_idx_range:', time_idx_range)
     os.makedirs(output_dir, exist_ok=True)
 
     [experiment_val, lat, lon] = \
         get_data.get_data(experiment_files, variables, unit_convert, time_idx_range)
 
     all_statistics = get_statistics.get_statistics(experiment_val, \
-        min_max_scale, abs_value_max_scale, variables, selected_statistics)
+        min_max_scale, abs_value_max_scale, variables, \
+        reference_experiment, selected_statistics)
 
 
     # Plot and save each statistics set
@@ -47,9 +50,15 @@ def main():
         #plot_tools.plot_and_save_maps(stats, \
         #    [f'{title} {exp_name[i]}' for i in range(len(stats))], \
         #    output_path, vmin=vmin, vmax=vmax, cmap=cmap)
+        #print('stats', stats)
+        #print('exp_name', exp_name)
+        if 'bias' in filename:
+            full_title = [f'{title} {exp_name[i]} - {reference_experiment[exp_name[i]]}' for i in range(len(stats))]
+        else:
+            full_title = [f'{title} {exp_name[i]}' for i in range(len(stats))]
+
         plot_tools.plot_and_save_maps_latlon(stats, lat, lon,\
-            [f'{title} {exp_name[i]}' for i in range(len(stats))],\
-            #[f'{exp_name[i]}' for i in range(len(stats))],\
+            full_title,\
             output_path, vmin=vmin, vmax=vmax, cmap=cmap, \
             fig_parameters=fig_parameters)
         if 'Correlation' in title:

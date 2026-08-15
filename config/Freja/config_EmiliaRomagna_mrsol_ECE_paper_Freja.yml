@@ -1,0 +1,120 @@
+base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/"
+#ECE, HIST
+GCM: "ICHEC-EC-EARTH_HIST"
+FIRST_YEAR_12km: "1995"
+LAST_YEAR_12km: "2005"
+FIRST_YEAR_3km: "1995"
+LAST_YEAR_3km: "2005"
+#ECE, MC
+#GCM: "ICHEC-EC-EARTH_RCP85_MC"
+#FIRST_YEAR_12km: "2040"
+#LAST_YEAR_12km: "2050"
+#FIRST_YEAR_3km: "2040"
+#LAST_YEAR_3km: "2050"
+#ERAI
+#GCM: "ECMWF-ERAINT"
+#FIRST_YEAR_12km: "2000"
+#LAST_YEAR_12km: "2009"
+#FIRST_YEAR_3km: "2000"
+#LAST_YEAR_3km: "2009"
+
+variables: 
+  - "mrsol"
+
+#experiment: "ECEHist_2005"
+#experiment: "ECEFutMC_2050"
+#experiment: "ECEFutMC_Hist_2049_2005"
+experiment: "ECEFutMC_Hist_2050_2005"
+MLEXP: ''
+
+FREQUENCY: '6hr'
+
+data_path:
+  HCLIM_HI 3km mrsol: "${base_dir}/cropped/${GCM}/3km/${FREQUENCY}/mrsol/mrsol_3km_${FREQUENCY}_${FIRST_YEAR_3km}01010000-${LAST_YEAR_3km}12311800.nc"
+  HCLIM_HI 12km mrsol: "${base_dir}/cropped/${GCM}/12km/${FREQUENCY}/mrsol/mrsol_12km_${FREQUENCY}_${FIRST_YEAR_12km}01010000-${LAST_YEAR_12km}12311800.nc"
+  HCLIM_MC 3km mrsol: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/3km/${FREQUENCY}/mrsol/mrsol_3km_${FREQUENCY}_204001010000-205012311800.nc"
+  HCLIM_MC 12km mrsol: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/12km/${FREQUENCY}/mrsol/mrsol_12km_${FREQUENCY}_204001010000-205012311800.nc"
+
+reference_experiment:
+  HCLIM_HI 3km:
+  HCLIM_HI 12km:
+  HCLIM_MC 3km: 'HCLIM_HI 3km'
+  HCLIM_MC 12km: 'HCLIM_HI 12km'
+ 
+time_range:
+  HCLIM_HI 3km: {'mrsol': {'start_date': ["1996-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, 
+              'target': {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, }
+  HCLIM_HI 12km: {'mrsol': {'start_date': ["1996-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, 
+              'target': {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, }
+  HCLIM_MC 3km: {'mrsol': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
+              'target': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
+  HCLIM_MC 12km: {'mrsol': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
+              'target': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
+
+  #HCLIM 12km: {'mrsol': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
+  #            'snd': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
+  #HCLIM 3km: {'mrsol': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
+  #           'snd': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
+  #target: {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}
+
+  #HCLIM 12km: {'mrsol': {'start_date': ["2090-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 24}, 
+  #            'snd': {'start_date': ["2089-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 24}, }
+  #HCLIM 3km: {'mrsol': {'start_date': ["2089-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 24}, 
+  #           'snd': {'start_date': ["2089-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 24}, }
+  #target: {'start_date': ["2099-01-01 00:00"], 'end_date': ["2099-12-31 24:00"], 'step_hours': 24}
+
+output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/snow_sm" 
+
+statistics:
+  #- rmse
+  #- cpl_corr
+  #- correlation
+  #- mean_bias
+  #- percentile_99_bias
+  #- variance_ratio
+  #- wasserstein
+  #- percentile_99
+  - mean_value
+  #- abs_value
+  #- std
+
+min_max_scale:
+  #'rmse': 
+  #'correlation': [0.88, 1.00]
+  #'cpl_corr':
+  #'correlation':
+  #'mean_bias': [-0.2, 0.2]
+  #'percentile_99_bias':
+  #'variance_ratio':
+  #'wasserstein':
+  #'percentile_99': 
+  'mean_value': [0, 0.5]
+  #'abs_value':
+  #'std':
+
+abs_value_max_scale:
+  'pr': 0.5
+  'tas': 1.0
+  'mrsol': 0.5
+  'hfls': 1.0
+  'snc': 1.0
+
+unit_convert:
+  'pr': 86400.0
+  'tas': 1.0
+  'mrsol': 0.1
+  'hfls': 1.0
+  'snc': 1.0
+
+fig_parameters:
+  'nrows_def': 2 #mean_value
+  'ncols_def': 2
+  'figsize_def': [22,15]
+  'extend_def': 'neither'
+  #'nrows_def': 1  #mean_bias
+  #'ncols_def': 2
+  #'figsize_def': [22,8]
+  #'extend_def': 'both'
+  'fontsize_def': 26
+  'nlevels_def': 11
+

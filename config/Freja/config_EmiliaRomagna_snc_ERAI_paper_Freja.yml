@@ -1,0 +1,79 @@
+base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/"
+#GCM: "ICHEC-EC-EARTH_HIST"
+#FIRST_YEAR: "1995"
+#LAST_YEAR: "2005"
+GCM: "ECMWF-ERAINT"
+FIRST_YEAR_12km: "2000"
+LAST_YEAR_12km: "2009"
+FIRST_YEAR_3km: "2000"
+LAST_YEAR_3km: "2009"
+
+variables: 
+  - "snc"
+
+experiment: "ERAI_2009"
+MLEXP: ''
+
+data_path:
+  #HCLIM 3km snc: "${base_dir}/CORDEX-FPSCONV/output/ALP-3/HCLIMcom/${GCM}/evaluation/r1i1p1/HCLIMcom-HCLIM38-AROME/fpsconv-x2yn2-v1/day/snc/snc_ALP-3_ECMWF-ERAINT_evaluation_r1i1p1_HCLIMcom-HCLIM38-AROME_fpsconv-x2yn2-v1_day_${FIRST_YEAR_3km}0101-${LAST_YEAR_3km}1231.nc"
+  #HCLIM 12km snc: "${base_dir}/netcdf/HCLIM38-ALADIN/ALP-12/${GCM}/evaluation/day/snc/snc_ALP-12_ECMWF-ERAINT_evaluation_r1i1p1_HCLIMcom-HCLIM38-ALADIN_v1_day_${FIRST_YEAR_12km}0101-${LAST_YEAR_12km}1231.nc"
+  HCLIM 3km snc: "${base_dir}/cropped/${GCM}/3km/day/snc/snc_3km_day_${FIRST_YEAR_3km}0101-${LAST_YEAR_3km}1231.nc"
+  HCLIM 12km snc: "${base_dir}/cropped/${GCM}/12km/day/snc/snc_12km_day_${FIRST_YEAR_12km}0101-${LAST_YEAR_12km}1231.nc"
+
+time_range:
+  HCLIM 12km: {'snc': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 24}, 
+              'snd': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 24}, }
+  HCLIM 3km: {'snc': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 24}, 
+             'snd': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 24}, }
+  target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 24}
+
+output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/2009" 
+
+statistics:
+  #- rmse
+  #- cpl_corr
+  #- correlation
+  #- mean_bias
+  #- percentile_99_bias
+  #- variance_ratio
+  #- wasserstein
+  #- percentile_99
+  - mean_value
+  #- abs_value
+  #- std
+
+min_max_scale:
+  #'rmse': 
+  #'correlation': [0.88, 1.00]
+  #'cpl_corr':
+  #'correlation':
+  #'mean_bias':
+  #'percentile_99_bias':
+  #'variance_ratio':
+  #'wasserstein':
+  #'percentile_99': 
+  'mean_value':
+  #'abs_value':
+  #'std':
+
+abs_value_max_scale:
+  'pr': 0.5
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+  'snc': 1.0
+
+unit_convert:
+  'pr': 86400.0
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+  'snc': 1.0
+
+fig_parameters:
+  'nrows_def': 1
+  'ncols_def': 2
+  'figsize_def': [22,8]
+  'fontsize_def': 26
+  'nlevels_def': 11
+  'extend_def': 'neither'
