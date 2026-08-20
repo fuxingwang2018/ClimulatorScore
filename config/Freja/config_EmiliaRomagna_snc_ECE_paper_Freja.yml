@@ -24,7 +24,8 @@ variables:
 #experiment: "ECEHist_2005"
 #experiment: "ECEFutMC_2050"
 #experiment: "ECEFutMC_Hist_2049_2005"
-experiment: "ECEFutMC_Hist_2050_2005"
+#experiment: "ECEFutMC_Hist_2050_2005"
+experiment: "ECEFutMC_Hist_2050_2005_JJA"
 MLEXP: ''
 
 FREQUENCY: 'day'
@@ -32,24 +33,26 @@ FREQUENCY: 'day'
 data_path:
   HCLIM_HI 3km snc: "${base_dir}/cropped/${GCM}/3km/${FREQUENCY}/snc/snc_3km_${FREQUENCY}_${FIRST_YEAR_3km}0101-${LAST_YEAR_3km}1231.nc"
   HCLIM_HI 12km snc: "${base_dir}/cropped/${GCM}/12km/${FREQUENCY}/snc/snc_12km_${FREQUENCY}_${FIRST_YEAR_12km}0101-${LAST_YEAR_12km}1231.nc"
-  HCLIM_MC 3km snc: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/3km/${FREQUENCY}/snc/snc_3km_${FREQUENCY}_20400101-20501231.nc"
-  HCLIM_MC 12km snc: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/12km/${FREQUENCY}/snc/snc_12km_${FREQUENCY}_20400101-20501231.nc"
+  #HCLIM_MC 3km snc: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/3km/${FREQUENCY}/snc/snc_3km_${FREQUENCY}_20400101-20501231.nc"
+  #HCLIM_MC 12km snc: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/12km/${FREQUENCY}/snc/snc_12km_${FREQUENCY}_20400101-20501231.nc"
 
 reference_experiment:
   HCLIM_HI 3km:
   HCLIM_HI 12km:
-  HCLIM_MC 3km: 'HCLIM_HI 3km'
-  HCLIM_MC 12km: 'HCLIM_HI 12km'
+  #HCLIM_MC 3km: 'HCLIM_HI 3km'
+  #HCLIM_MC 12km: 'HCLIM_HI 12km'
  
 time_range:
   HCLIM_HI 3km: {'snc': {'start_date': ["1996-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, 
-              'target': {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, }
+              'target': {'start_date': ["2003-06-01 00:00"], 'end_date': ["2003-08-31 24:00"], 'step_hours': 24}, }
+              #'target': {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, }
   HCLIM_HI 12km: {'snc': {'start_date': ["1996-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, 
-              'target': {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, }
-  HCLIM_MC 3km: {'snc': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
-              'target': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
-  HCLIM_MC 12km: {'snc': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
-              'target': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
+              'target': {'start_date': ["2003-06-01 00:00"], 'end_date': ["2003-08-31 24:00"], 'step_hours': 24}, }
+              #'target': {'start_date': ["2005-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 24}, }
+  #HCLIM_MC 3km: {'snc': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
+  #            'target': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
+  #HCLIM_MC 12km: {'snc': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
+  #            'target': {'start_date': ["2050-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
 
   #HCLIM 12km: {'snc': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, 
   #            'snd': {'start_date': ["2040-01-01 00:00"], 'end_date': ["2050-12-31 24:00"], 'step_hours': 24}, }
@@ -107,13 +110,13 @@ unit_convert:
   'snc': 1.0
 
 fig_parameters:
-  'nrows_def': 2
-  'ncols_def': 2
-  'figsize_def': [22,15]
-  'extend_def': 'neither'
-  #'nrows_def': 1
+  #'nrows_def': 2
   #'ncols_def': 2
-  #'figsize_def': [22,8]
+  #'figsize_def': [22,15]
+  'extend_def': 'neither'
+  'nrows_def': 1
+  'ncols_def': 2
+  'figsize_def': [22,8]
   #'extend_def': 'both'
   'fontsize_def': 26
   'nlevels_def': 11
