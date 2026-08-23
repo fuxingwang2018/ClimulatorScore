@@ -1,6 +1,6 @@
 #!/bin/bash 
 #SBATCH -N 1 
-#SBATCH -t 10:00:00 
+#SBATCH -t 01:00:00 
 ###SBATCH -n 1  ##ntasks 
 ###SBATCH --mem=16G
 #SBATCH -J ale 
@@ -37,7 +37,9 @@ set -exu
 
 cd $HOME/Script/ClimulatorScore/src
 
-python ale_${MLMODEL}_smalldomain.py
+#python ale_${MLMODEL}_smalldomain.py
+#python comp_temp_scatter_v2.py
+python bias_stratification.py
 
 current_date_time="`date`";
 echo The run ends at $current_date_time
