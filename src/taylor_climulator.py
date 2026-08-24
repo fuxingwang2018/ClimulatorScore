@@ -17,7 +17,7 @@ import numpy as NP
 import matplotlib.pyplot as PLT
 import sys
 
-outpath = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/TaylorDiagram/'
+outpath = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/TaylorDiagram/paper_revision/'
 variable = 'tas' #"pr"  #tas
 outfile = 'TaylorDiagram_ECE_wt_worog_' + str(variable) + '.png'
 
@@ -54,18 +54,18 @@ if variable == 'tas':
                ECEMC2MC=[[6.84, 0.98, "HCLIM12"],
                        [6.55, 0.97, "CNN"],
                        [6.71, 0.99, "SRGAN"]],
-               ECEHM2HI=[[6.82, 0.98, "HCLIM12"],
-                       [6.32, 0.97, "CNN"],
-                       [6.29, 0.98, "SRGAN"]],
-               ECEHM2MC=[[6.84, 0.98, "HCLIM12"],
-                       [6.59, 0.98, "CNN"],
-                       [6.25, 0.99, "SRGAN"]],
                ECEHI2MC=[[6.84, 0.98, "HCLIM12"],
                        [6.59, 0.97, "CNN"],
                        [6.00, 0.90, "SRGAN"]],
                ECEMC2HI=[[6.82, 0.98, "HCLIM12"],
                        [6.57, 0.98, "CNN"],
                        [6.84, 0.84, "SRGAN"]],
+               ECEHM2HI=[[6.82, 0.98, "HCLIM12"],
+                       [6.32, 0.97, "CNN"],
+                       [6.29, 0.98, "SRGAN"]],
+               ECEHM2MC=[[6.84, 0.98, "HCLIM12"],
+                       [6.59, 0.98, "CNN"],
+                       [6.25, 0.99, "SRGAN"]],
                )
 if variable == 'pr':
     fig_suptitle = '' #precipitation'
@@ -95,23 +95,23 @@ if variable == 'pr':
     #           )
     # LNOISE1.0 (default) WP WOROG
     samples = dict(ECEHI2HI=[[7.36, 0.53, "HCLIM12"],
-                       [, , "CNN"],
+                       [5.07, 0.50, "CNN"],
                        [6.29, 0.56, "SRGAN"]],
                ECEMC2MC=[[8.41, 0.54, "HCLIM12"],
-                       [, , "CNN"],
+                       [5.78, 0.52, "CNN"],
                        [8.23, 0.54, "SRGAN"]],
-               ECEHM2HI=[[7.36, 0.45, "HCLIM12"],
-                       [, , "CNN"],
-                       [5.35, 0.58, "SRGAN"]],
-               ECEHM2MC=[[8.41, 0.54, "HCLIM12"],
-                       [, , "CNN"],
-                       [5.75, 0.59, "SRGAN"]],
                ECEHI2MC=[[8.41, 0.54, "HCLIM12"],
-                       [, , "CNN"],
+                       [5.79, 0.52, "CNN"],
                        [6.72, 0.57, "SRGAN"]],
                ECEMC2HI=[[7.36, 0.45, "HCLIM12"],
-                       [, , "CNN"],
+                       [5.12, 0.49, "CNN"],
                        [7.09, 0.55, "SRGAN"]],
+               ECEHM2HI=[[7.36, 0.45, "HCLIM12"],
+                       [5.08, 0.49, "CNN"],
+                       [5.35, 0.58, "SRGAN"]],
+               ECEHM2MC=[[8.41, 0.54, "HCLIM12"],
+                       [5.79, 0.51, "CNN"],
+                       [5.75, 0.59, "SRGAN"]],
                )
 
 #samples = {'ECEHist':  {'CNN': {'MBE': 1.2, 'RMSE': 1.56, 'CORR': 0.97}},
@@ -149,10 +149,10 @@ y99 = [0.0, 70.0]  # [0.0, 3.45]
 
 rects = {'ECEHI2HI':231,
          'ECEMC2MC':232,
-         'ECEHM2HI':233,
-         'ECEHM2MC':234,
-         'ECEHI2MC':235,
-         'ECEMC2HI':236,
+         'ECEHI2MC':233,
+         'ECEMC2HI':234,
+         'ECEHM2HI':235,
+         'ECEHM2MC':236,
         }
 
 fontsize_def = 26

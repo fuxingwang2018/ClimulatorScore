@@ -24,7 +24,8 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
         'tas': {'CNN': 'test'}, \
         'hfls': {'CNN': 'test'}, \
         'mrsol': {'CNN': 'test'}, \
-        'pr': {'CNN': 'test'}, \
+        'pr': {'CNN': 'pr'}, \
+        #'pr': {'CNN': 'test'}, \
         'snc': {'CNN': 'test'}, \
         }
 

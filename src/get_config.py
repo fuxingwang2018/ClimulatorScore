@@ -21,6 +21,8 @@ def get_config(config_path):
             replace("${FIRST_YEAR_12km}", config["FIRST_YEAR_12km"]).\
             replace("${LAST_YEAR_12km}", config["LAST_YEAR_12km"]).\
             replace("${MLEXP}", config["MLEXP"]).\
+            replace("${CNNEXP}", config["CNNEXP"]).\
+            replace("${SRGANEXP}", config["SRGANEXP"]).\
             replace("${FREQUENCY}", config["FREQUENCY"]) #.\
             #replace("${variables}", config["variables"])
     config["output_dir"] = config["output_dir"].\
