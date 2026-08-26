@@ -24,8 +24,8 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
         'tas': {'CNN': 'test'}, \
         'hfls': {'CNN': 'test'}, \
         'mrsol': {'CNN': 'test'}, \
-        'pr': {'CNN': 'pr'}, \
-        #'pr': {'CNN': 'test'}, \
+        #'pr': {'CNN': 'pr'}, \
+        'pr': {'CNN': 'test'}, \
         'snc': {'CNN': 'test'}, \
         }
 
@@ -84,11 +84,14 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
             print('experiment_val:', experiment_val[experiment_name].keys())
         
             #if 'HCLIM 12km' in experiment_name:
-            if '12km' in experiment_name:
-                experiment_val[experiment_name][var_name] = stats_tools.upsample_2d_array(experiment_val[experiment_name][var_name], upscale_factor = 4)
+            #if '12km' in experiment_name:
+            #    experiment_val[experiment_name][var_name] = stats_tools.upsample_2d_array(experiment_val[experiment_name][var_name], upscale_factor = 4)
 
 
         experiment_val[experiment_name][var_name] = np.array(experiment_val[experiment_name][var_name]) 
+        #if var_name == 'pr':
+        #    arr = np.array(experiment_val[experiment_name][var_name], dtype=float)
+        #    experiment_val[experiment_name][var_name] = np.where(arr >= 0, arr, np.nan)
 
         print('experiment_name:', experiment_name, var_name, experiment_val[experiment_name][var_name].shape) #, experiment_val[experiment_name][var_name])
         #print('experiment_name index:', experiment_val[experiment_name][var_name][0].shape)

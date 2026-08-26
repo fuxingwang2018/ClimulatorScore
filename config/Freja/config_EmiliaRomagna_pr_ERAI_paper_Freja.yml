@@ -13,8 +13,13 @@ variables:
 #   - "mrsol"
 
 #experiment: "SRGAN_TOROGSENS_CNN_ERAI_SCSTD_GPU_paper"
-experiment: "SRGAN_WTWOROG_CNN_ERAI_SCSTD_GPU_paper"
+#experiment: "SRGAN_WTWOROG_CNN_ERAI_SCSTD_GPU_paper"
+experiment: "SRGAN_WTWOROG_CNN_ERAI_PSD_paper"
 MLEXP: ''
+CNNEXP: ''
+SRGANEXP: ''
+
+FREQUENCY: '6hr'
 
 data_path:
   # pr
@@ -23,6 +28,7 @@ data_path:
   # With P With OROG
   CNN 3km pr: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_pr_2009.nc"
   SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+  ####SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_worog_wp_bs60_ERAI_alvis/predictant_ypred_1.nc"
   ###SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
   # No P No OROG
   #SRGANNPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
@@ -31,53 +37,70 @@ data_path:
   ##SRGANNPNOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
   ##SRGANWPWOROG 3km pr: "${base_dir}/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
 
+reference_experiment:
+  HCLIM_HI 3km:
+  HCLIM_HI 12km: 'HCLIM 3km'
+  CNN 3km: 'HCLIM 3km'
+  SRGAN 3km: 'HCLIM 3km'
+
 time_range:
   HCLIM 12km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
-              'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+              'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6} }
   HCLIM 3km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
-             'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+             'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6} }
   SRGAN 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
-              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6} }
   SRGANWPWOROG 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
-              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6} }
   SRGANNPNOROG 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
-              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6} }
   SRGANNPWOROG 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
-              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6} }
   SRGANWPNOROG 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
-              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+              'pr':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6} }
   CNN 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
-           'pr': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
-  target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
+           'pr': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+           'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6} }
+  #target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
 
 #output_dir: "${base_dir}/statistic_figs/1var/paper" 
-output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/2009" 
+#output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/2009" 
+output_dir: "${base_dir}/statistic_figs/psd/" 
 
 statistics:
-  - rmse
+  #- rmse
   #- cpl_corr
   #- correlation
-  - mean_bias
-  - percentile_99_bias
-  - variance_ratio
+  #- mean_bias
+  #- percentile_99_bias
+  #- variance_ratio
   #- wasserstein
-  - percentile_99
-  - mean_value
-  - abs_value
+  #- percentile_99
+  #- mean_value
+  #- abs_value
   #- std
+  - psd
 
 min_max_scale:
-  'rmse': 
+  #'rmse': 
   #'correlation': [0.88, 1.00]
   #'cpl_corr':
-  'mean_bias':
-  'percentile_99_bias':
-  'variance_ratio':
+  #'mean_bias':
+  #'percentile_99_bias':
+  #'variance_ratio':
   #'wasserstein':
-  'percentile_99': [0, 120] 
-  'mean_value':
-  'abs_value':
+  #'percentile_99': [0, 120] 
+  #'mean_value':
+  #'abs_value':
   #'std':
+  'psd':
 
 abs_value_max_scale:
   'pr': 0.5

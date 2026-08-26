@@ -57,16 +57,29 @@ def main():
         else:
             full_title = [f'{title} {exp_name[i]}' for i in range(len(stats))]
 
-        plot_tools.plot_and_save_maps_latlon(stats, lat, lon,\
-            full_title,\
-            output_path, vmin=vmin, vmax=vmax, cmap=cmap, \
-            fig_parameters=fig_parameters)
+        if 'Correlation' not in title and 'Power Spectral Density' not in title:
+            plot_tools.plot_and_save_maps_latlon(stats, lat, lon,\
+                full_title,\
+                output_path, vmin=vmin, vmax=vmax, cmap=cmap, \
+                fig_parameters=fig_parameters)
+
         if 'Correlation' in title:
             output_path = os.path.join(str(output_dir), f"Boxplot_{filename}_{GCM}_{'_'.join(variables)}.png")
             plot_tools.plot_and_save_boxplot(stats, \
                 [f'{exp_name[i]}' for i in range(len(stats))],\
                 GCM, output_path, \
                 fig_parameters=fig_parameters)
+
+        if 'Power Spectral Density' in title:
+            output_path_psd = os.path.join(str(output_dir), f"PSD_{filename}_{GCM}_{'_'.join(variables)}.png")
+            plot_tools.plot_psd_comparison(stats, \
+                [f'{exp_name[i]}' for i in range(len(stats))],\
+                output_path_psd, variables)
+
+            output_path_psd_ratio = os.path.join(str(output_dir), f"PSD_ratio_{filename}_{GCM}_{'_'.join(variables)}.png")
+            plot_tools.plot_psd_ratio(stats, \
+                [f'{exp_name[i]}' for i in range(len(stats))],  \
+                'HCLIM 3km', output_path_psd_ratio)
 
 if __name__ == "__main__":
     main()

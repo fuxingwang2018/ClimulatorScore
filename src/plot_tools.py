@@ -208,3 +208,141 @@ def plot_and_save_boxplot(statistics, titles, GCM, output_file, \
     plt.savefig(f"{output_file}", dpi=300, bbox_inches='tight')
     plt.close()
 
+
+# Plot Power Spectral Density (PSD) comparison 
+def plot_psd_comparison(psd_list, exp_names, output_path, variables):
+    """
+    #psd_dict : dict of {label: (wavenumber, wavelength, psd_mean)}
+    #           e.g. {'AROME (3km)': (k1, wl1, psd1),
+    #                 'SRGAN (3km)': (k2, wl2, psd2),
+    #                 'CNN (3km)':   (k3, wl3, psd3),
+    #                 'ALADIN (12km)': (k4, wl4, psd4)}
+    psd_list  : list of [wavenumber, wavelength, psd_mean] arrays, one per experiment
+                e.g. [psd_arome, psd_aladin, psd_cnn, psd_srgan]
+                where each psd_xxx = [wavenumber, wavelength, psd_mean]
+    exp_names : list of experiment names, same order as psd_list
+                e.g. ['AROME (3km)', 'ALADIN (12km)', 'CNN (3km)', 'SRGAN (3km)']
+    output_path : path to save the PNG file
+    """
+    colors = {
+        'HCLIM 3km': 'black',
+        'HCLIM 12km': 'tab:red',
+        'CNN': 'tab:orange',
+        'SRGAN': 'tab:blue',
+    }
+    linestyles = {
+        'HCLIM 3km': '-',
+        'HCLIM 12km': ':',
+        'CNN': '--',
+        'SRGAN': '-.',
+    }
+    title_dict = { 'tas': '(a) Power spectral density for 2-m air temperature', \
+        'pr': '(b) Power spectral density for precipitation' }
+    fontsize_def = 18
+    variable = ''.join(variables)
+
+    fig, ax = plt.subplots(figsize=(7, 6))
+
+    #for label, (wavenumber, wavelength, psd_mean) in psd_dict.items():
+    for label, (wavenumber, wavelength, psd_mean) in zip(exp_names, psd_list):
+        # pick color/linestyle by matching a keyword in the label, default otherwise
+        color = next((c for key, c in colors.items() if key in label), None)
+        ls = next((s for key, s in linestyles.items() if key in label), '-')
+
+        # mask invalid values so log-log plot doesn't break
+        valid = np.isfinite(wavelength) & np.isfinite(psd_mean) & (psd_mean > 0)
+
+        ax.loglog(
+            wavelength[valid],
+            psd_mean[valid],
+            label=label,
+            color=color,
+            linestyle=ls,
+            linewidth=2,
+        )
+
+    ax.set_xlabel('Wavelength (km)', fontsize = int(fontsize_def-4) )
+    ax.set_ylabel('Power Spectral Density', fontsize = int(fontsize_def-4) )
+    ax.set_title(f'{title_dict[variable]}', fontsize = int(fontsize_def-2) )
+
+    # invert x-axis so large scales (long wavelength) are on the left, small scales on the right
+    ax.invert_xaxis()
+
+    ax.grid(True, which='both', linestyle='--', alpha=0.4)
+    ax.legend(fontsize= int(fontsize_def - 4), loc='best')
+    fig.tight_layout()
+
+    fig.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.close(fig)
+
+    print(f'Saved PSD comparison plot to {output_path}')
+
+
+
+# Define function to plot normalized PSD ratio (model / reference) vs wavelength
+def plot_psd_ratio(psd_list, exp_names, ref_name, output_path='psd_ratio.png'):
+    """
+    psd_list  : list of [wavenumber, wavelength, psd_mean], one per experiment (including reference)
+    exp_names : list of experiment names, same order/length as psd_list
+    ref_name  : name of the reference experiment (must match an entry in exp_names)
+    output_path : path to save the PNG file
+    """
+    #colors = {'SRGAN': 'tab:blue', 'CNN': 'tab:orange', 'ALADIN': 'tab:red', '12km': 'tab:red'}
+    #linestyles = {'SRGAN': '-.', 'CNN': '--', 'ALADIN': ':', '12km': ':'}
+    colors = {
+        'HCLIM 3km': 'black',
+        'HCLIM 12km': 'tab:red',
+        'CNN': 'tab:orange',
+        'SRGAN': 'tab:blue',
+    }
+    linestyles = {
+        'HCLIM 3km': '-',
+        'HCLIM 12km': ':',
+        'CNN': '--',
+        'SRGAN': '-.',
+    }
+
+    # find reference PSD
+    ref_idx = exp_names.index(ref_name)
+    ref_wavelength = psd_list[ref_idx][1]
+    ref_psd = psd_list[ref_idx][2]
+
+    fig, ax = plt.subplots(figsize=(7, 6))
+
+    for label, (wavenumber, wavelength, psd_mean) in zip(exp_names, psd_list):
+        if label == ref_name:
+            continue  # skip plotting reference against itself
+
+        # assumes wavelength bins are aligned/comparable across datasets;
+        # if not (e.g. different grid spacing), interpolate onto ref_wavelength first
+        #if not np.allclose(wavelength, ref_wavelength, equal_nan=True):
+        #    ratio_psd = np.interp(ref_wavelength, wavelength[::-1], psd_mean[::-1])
+        #else:
+        #    ratio_psd = psd_mean
+
+        same_shape = (wavelength.shape == ref_wavelength.shape)
+        if same_shape and np.allclose(wavelength, ref_wavelength, equal_nan=True):
+            ratio_psd = psd_mean
+        else:
+            ratio_psd = np.interp(ref_wavelength, wavelength[::-1], psd_mean[::-1])
+
+
+        ratio = ratio_psd / ref_psd
+
+        color = next((c for key, c in colors.items() if key in label), None)
+        ls = next((s for key, s in linestyles.items() if key in label), '-')
+
+        valid = np.isfinite(ref_wavelength) & np.isfinite(ratio)
+        ax.semilogx(ref_wavelength[valid], ratio[valid], label=label, color=color, linestyle=ls, linewidth=2)
+
+    ax.axhline(1.0, color='gray', linestyle='-', linewidth=1)
+    ax.set_xlabel('Wavelength (km)', fontsize=12)
+    ax.set_ylabel(f'PSD ratio (model / {ref_name})', fontsize=12)
+    ax.set_title('Normalized Power Spectral Density Ratio', fontsize=13)
+    ax.invert_xaxis()
+    ax.grid(True, which='both', linestyle='--', alpha=0.4)
+    ax.legend(fontsize=10, loc='best')
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.close(fig)
+    print(f'Saved PSD ratio plot to {output_path}')

@@ -340,7 +340,8 @@ def plot_main(var_x_dict, var_y_dict, label_def_dict, title_def_dict, \
             out_figname_slope_ci = out_figname_slope_ci_dict[experiment][model]
 
             highlight_point = False
-            if 'HCLIM' in model and '20030815' in experiment:
+            #if 'HCLIM' in model and '20030815' in experiment:
+            if '20030815' in experiment:
                 highlight_point = 0 # 15 Aug 2003, 12 UTC
             else:
                 highlight_point = 303 - 1 # 15 Aug 2003, 12 UTC
@@ -537,11 +538,11 @@ def main():
                 plot_scatter.get_file(model, experiment)
             print('basedir, x_file, y_file', basedir, x_file, y_file)
 
-            if 'HCLIM' in model and '20030815' in experiment:
-                var_x_dict[experiment][model], var_y_dict[experiment][model] = \
-                    plot_scatter.get_data_predefined()
-            else:
-                var_x_dict[experiment][model], var_y_dict[experiment][model] = \
+            #if 'HCLIM' in model and '20030815' in experiment:
+            #    var_x_dict[experiment][model], var_y_dict[experiment][model] = \
+            #        plot_scatter.get_data_predefined()
+            #else:
+            var_x_dict[experiment][model], var_y_dict[experiment][model] = \
                     plot_scatter.get_data_by_file(basedir, x_file, y_file, var_names_dict[experiment][model], lat_min, lat_max, lon_min, lon_max, model, experiment)
             var_x_dict[experiment][model] = var_x_dict[experiment][model] * unit_convert
 

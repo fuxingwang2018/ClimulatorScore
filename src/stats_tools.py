@@ -171,6 +171,78 @@ def upsample_2d_array_new(low_res_array, upscale_factor):
 
     return high_res_array
 
+# calculate radially-averaged Power Spectral Density
+def calculate_psd(field, resolution): #dx):
+    """
+    field : 3D array (time, y, x) — e.g. reference or comparison precipitation field
+    dx    : grid spacing in km (e.g. 3 for 3km grid, 12 for 12km grid)
+
+    Returns:
+        wavenumber : 1D array of radial wavenumbers (cycles/km)
+        wavelength : 1D array of corresponding wavelengths (km)
+        psd_mean   : 1D array of PSD averaged over all timesteps
+    """
+    dx_dict = {'3km': 3, '12km': 12}
+    dx = dx_dict[resolution] #3 or 12
+    print('dx:', dx)
+    field = field.copy()
+    field[field > 1e5] = np.nan
+
+    ny, nx = field.shape[1:]
+    # radial wavenumber bins (based on the smaller dimension for simplicity)
+    n_bins = min(ny, nx) // 2
+
+    # frequency grids (cycles per km)
+    ky = np.fft.fftfreq(ny, d=dx)
+    kx = np.fft.fftfreq(nx, d=dx)
+    kx_grid, ky_grid = np.meshgrid(kx, ky)
+    k_radial = np.sqrt(kx_grid**2 + ky_grid**2)
+
+    # radial bin edges (linear spacing from 0 to Nyquist)
+    k_max = np.min([kx.max(), ky.max()])
+    k_bins = np.linspace(0, k_max, n_bins + 1)
+    k_bin_centers = 0.5 * (k_bins[1:] + k_bins[:-1])
+
+    psd_all = np.full((field.shape[0], n_bins), np.nan)
+
+    for t in range(field.shape[0]):
+        frame = field[t, :, :]
+        mask = np.isfinite(frame)
+        if np.sum(mask) < frame.size * 0.5:
+            # too many missing values in this frame, skip
+            continue
+        try:
+            # fill remaining NaNs with the frame mean so FFT doesn't break
+            frame_filled = np.where(mask, frame, np.nanmean(frame))
+            # remove mean (detrend) before FFT to avoid a huge DC spike
+            frame_filled = frame_filled - np.nanmean(frame_filled)
+
+            fft2d = np.fft.fft2(frame_filled)
+            psd2d = np.abs(fft2d) ** 2 / (nx * ny)
+
+            # radially average into bins
+            for b in range(n_bins):
+                bin_mask = (k_radial >= k_bins[b]) & (k_radial < k_bins[b + 1])
+                if np.any(bin_mask):
+                    psd_all[t, b] = np.mean(psd2d[bin_mask])
+        except Exception:
+            continue
+
+    psd_mean = np.nanmean(psd_all, axis=0)
+
+    wavenumber = k_bin_centers
+    with np.errstate(divide='ignore'):
+        wavelength = np.where(wavenumber > 0, 1.0 / wavenumber, np.inf)
+
+    print('psd_mean', np.nanmax(psd_mean), np.nanmin(psd_mean))
+    print('wavelength range (km)', np.nanmin(wavelength[wavelength < np.inf]),
+          np.nanmax(wavelength[wavelength < np.inf]))
+
+    print('wavenumber,', wavenumber.shape)
+    print('wavenlength,', wavelength.shape)
+    print('psd_mean,', psd_mean.shape)
+    return [wavenumber, wavelength, psd_mean]
+
 
 def compute_metrics(ground_truth, predictions_list, threshold=0.5):
     """

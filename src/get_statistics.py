@@ -4,9 +4,6 @@ import sys
 import significance_test
 from matplotlib.colors import LinearSegmentedColormap
 
-
-
-
 def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables, \
     reference_experiment, selected_statistics=None):
 
@@ -33,10 +30,6 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
             'percentile_99_bias', 'significance_pvalue']
     selected_statistics = selected_statistics or all_stats
 
-    #if 'significance_pvalue' in selected_statistics and len(selected_statistics) == 1:
-    #    reference_experiment = 'HCLIM 12km'
-    #else:
-    #    reference_experiment = 'HCLIM 3km'
     print('reference_experiment is:', reference_experiment)
 
     experiment_name_with_ref = list(experiment_val.keys())
@@ -132,9 +125,22 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
             for stat, func in {'percentile_99': stats_tools.calculate_99th_percentile,
                                'mean_value': stats_tools.calculate_mean_value,
                                'abs_value': stats_tools.calculate_abs_value,
+                               #'psd': stats_tools.calculate_psd,
                                'std': stats_tools.calculate_std}.items():
                 if stat in selected_statistics:
                     statistics[stat] = [func(data) for data in all_exp_data]
+
+            #for stat, func in {'psd': stats_tools.calculate_psd,
+            #                  }.items():
+            #    if stat in selected_statistics:
+            #        statistics[stat] = [func(data, ) for data in all_exp_data]
+
+            for stat, func in {'psd': stats_tools.calculate_psd}.items():
+                if stat in selected_statistics:
+                    statistics[stat] = [
+                        func(vals[var_name], exp_name.split()[-1])
+                        for exp_name, vals in experiment_val.items()
+                    ]
 
     # Compute global color scale ranges
     #vmin_vmax = {stat: (np.nanmin(vals), np.nanmax(vals)) for stat, vals in statistics.items()}
@@ -143,7 +149,11 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     #    np.nanmax(np.where((np.array(vals) > 1e10) | (np.array(vals) < -1e10), np.nan, np.array(vals)))) \
     #    for stat, vals in statistics.items()}
     vmin_vmax = {}
+    """
     for stat, vals in statistics.items():
+        # Insert a temporary print statement before line 153 to find the mismatch:
+        for i, v in enumerate(vals):
+            print(f"Item {i} shape:", np.shape(v))
         arr = np.array(vals)
         arr_clean = np.where((arr > 1e10) | (arr < -1e10), np.nan, arr)
         vmin = np.nanmin(arr_clean)
@@ -152,13 +162,37 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         if 'bias' in stat: 
             abs_max = min(abs(vmin), abs(vmax))   
             vmin_vmax[stat] = (-abs_max, abs_max) 
+    """
+    for stat, vals in statistics.items():
+
+        # 1. Clean non-finite / extreme values individually for each item
+        arr_clean_list = []
+        for v in vals:
+            v_arr = np.array(v, dtype=float)
+            # Mask values outside bounds (-1e10 to 1e10) with NaN
+            v_clean = np.where((v_arr > 1e10) | (v_arr < -1e10), np.nan, v_arr)
+            arr_clean_list.append(v_clean)
+
+        # 2. Compute vmin and vmax across all cleaned items individually
+        vmin = np.nanmin([np.nanmin(item) for item in arr_clean_list])
+        vmax = np.nanmax([np.nanmax(item) for item in arr_clean_list])
+
+        vmin_vmax[stat] = (vmin, vmax)
+
+        # 3. Handle symmetric limits for bias statistics
+        if "bias" in stat:
+            abs_max = max(
+                abs(vmin), abs(vmax)
+            )  # Note: max() is standard for full bias coverage
+            vmin_vmax[stat] = (-abs_max, abs_max)
+
+
 
     print('vmin_vmax 1', type(vmin_vmax), vmin_vmax)
     vmin_vmax = {k: tuple(v) if v else vmin_vmax[k] for k, v in min_max_scale.items()}
     print('vmin_vmax 2', type(vmin_vmax), vmin_vmax)
     #if 'abs_value' in vmin_vmax:
     #    vmin_vmax['abs_value'] = (vmin_vmax['abs_value'][0], vmin_vmax['abs_value'][1] * abs_value_max_scale[var_name])
-
     
     # Metadata for visualization
     stat_meta = {
@@ -175,6 +209,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
         'mean_value': ('Mean Value', 'mean_value_maps', cmap_dict[variables[0]]['mean_value']), #tas
         'abs_value': ('Abs Value', 'abs_value_maps', cmap_dict[variables[0]]['mean_value']),
         'std': ('Standard Deviation', 'standard_deviation_maps', 'Reds'),
+        'psd': ('Power Spectral Density', 'power_spectral_density', 'Reds'),
     }
 
     #all_statistics = [(statistics[stat], *stat_meta[stat], vmin_vmax[stat][0], vmin_vmax[stat][1])
@@ -182,7 +217,7 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
 
     all_statistics = [
         (statistics[stat], title, filename, *vmin_vmax[stat], cmap, 
-         experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std'} or len(variables) > 1 else experiment_name_without_ref)
+         experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std', 'psd'} or len(variables) > 1 else experiment_name_without_ref)
         for stat, (title, filename, cmap) in stat_meta.items() if stat in statistics
     ]
 

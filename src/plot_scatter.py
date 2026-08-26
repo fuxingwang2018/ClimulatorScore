@@ -16,9 +16,9 @@ def main():
     #test_date = 'JJA 2005'
     test_date = 'JJA 2003'
     #test_date = '20030815T1200' 
-    model = 'HCLIM'
+    #model = 'HCLIM'
     #model = 'CNN'
-    #model = 'SRGAN'
+    model = 'SRGAN'
     #model = 'SRGAN_TAS_WSM_SCALETIME_GPUFIX_NSTD0.03_BS50_ERAI'
     #model = 'SRGAN_TAS_WSM_SCALETIMESAVED_GPUFIX_BS50_DLR1E-5_ERAI'
     #model = 'SRGAN_T_WSMT_SCALETIME_BS50_LAMB01_ERAI_pred_2009_v2'
@@ -42,9 +42,12 @@ def get_file(model, test_date):
     ##basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_scale_time_presaved_bs50_val0.1_ERAI_pred_atos/"
 
     if 'JJA' in test_date:
-        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_lnoise0.1_bs50_2003_ERAI_atos/"
+        #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_lnoise0.1_bs50_2003_ERAI_atos/"
+        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_scale_time_stdscaler_gpufix_bs50_ERAI_atos/"
     elif '20030815' in test_date:
-        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_lnoise0.1_bs50_ERAI_pred_atos/"
+        #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_lnoise0.1_bs50_ERAI_pred_atos/"
+        # paper revision Aug 2026
+        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_bs50_ERAI_pred_paper_r1_atos/"
 
     # other tests
     #basedir = f"/nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/01-rampal2021-unet/Emulator_ECEARTH_T_withSM_whus/"
@@ -120,7 +123,7 @@ def get_file(model, test_date):
     #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_nstd0.03_bs50_ERAI_pred_atos/"
 
     if 'HCLIM12' in model:
-        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmto_ERAI_2003_arrhenius/"
+        #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmto_ERAI_2003_arrhenius/"
         y_file = f"predictor_1.nc"
     elif 'HCLIM3' in model:
         y_file = f"predictant_ytest_1.nc"
