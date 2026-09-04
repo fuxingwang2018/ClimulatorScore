@@ -211,7 +211,7 @@ def main():
     #srgan_out = reference + np.random.normal(0.2, 0.5, (time, nx, ny))
     #cnn_out   = reference + np.random.normal(0.4, 0.7, (time, nx, ny))
 
-    n_bootstrap = 500
+    n_bootstrap = 1000
     var_name = 'pr' #'tas'
     hpc_name = hpc.get_hpc_name()
     reference, srgan_out, cnn_out, lon_ref, lat_ref, outdir_fig = get_data(hpc_name, var_name)
@@ -286,6 +286,7 @@ def get_data(hpc_name, var_name):
 
     var_names = {'var1': var_name}
     var_names_to_read = {'var1': var_name}
+    unit_convert = { 'pr': {'SRGAN': 86400, 'CNN': 1, 'HCLIM3': 86400, 'HCLIM12': 86400 }}
 
     GCM = 'ECMWF-ERAINT'
     #GCM = "ICHEC-EC-EARTH_HIST"
@@ -355,9 +356,9 @@ def get_data(hpc_name, var_name):
         if exp == reference_experiment:
             lon_ref, lat_ref = ds_var['lon'].to_numpy(), ds_var['lat'].to_numpy()
 
-    reference = var_dict[reference_experiment]
-    srgan_out = var_dict[model1_experiment]
-    cnn_out   = var_dict[model2_experiment]
+    reference = var_dict[reference_experiment] * unit_convert[var_name]['HCLIM3']
+    srgan_out = var_dict[model1_experiment] * unit_convert[var_name]['SRGAN']
+    cnn_out   = var_dict[model2_experiment] * unit_convert[var_name]['CNN']
 
     return reference, srgan_out, cnn_out, lon_ref, lat_ref, outdir_fig
 

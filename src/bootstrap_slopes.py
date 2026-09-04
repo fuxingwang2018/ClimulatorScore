@@ -4,6 +4,7 @@ from scipy import stats
 from matplotlib.lines import Line2D
 from collections import defaultdict
 import plot_scatter
+import os
 
 def create_nested_dict():
     """Creates an infinitely nested dictionary structure."""
@@ -187,7 +188,11 @@ def plot_scatter_with_ci_slopes(x, y, results, title='', xlabel='', ylabel='',
                #f'slope = {lin_slope:.3f}  [{results["lin_slope_ci"][0]:.3f}, {results["lin_slope_ci"][1]:.3f}]\n'
                #f'$n$ = {results["n"]}')
     props = dict(boxstyle='round', facecolor='white', alpha=0.8, edgecolor='grey')
-    ax.text(0.97, 0.02, textstr, transform=ax.transAxes,
+    if 'DJF' in title:
+        ypos_def = 0.23
+    else:
+        ypos_def = 0.02
+    ax.text(0.97, ypos_def, textstr, transform=ax.transAxes,
             fontsize=fontsize_def, verticalalignment='bottom', horizontalalignment='right',
             bbox=props)
 
@@ -196,14 +201,24 @@ def plot_scatter_with_ci_slopes(x, y, results, title='', xlabel='', ylabel='',
     plt.xticks(fontsize=int(fontsize_def + 2))
     plt.yticks(fontsize=int(fontsize_def + 2))
     ax.set_title(title, fontsize=int(fontsize_def + 2))
-    ax.legend(fontsize=fontsize_def, loc='upper right')
+    if 'DJF' in title:
+        ax.legend(fontsize=fontsize_def, loc='lower right')
+    else:
+        ax.legend(fontsize=fontsize_def, loc='upper right')
     ax.grid(True, linestyle='--', alpha=0.4)
 
     if xlim is not None:
         ax.set_xlim(xlim)
-    if ylim is not None:
+    #if ylim is not None:
+    #    ax.set_ylim(ylim)
+    if ylim is not None and not np.any(np.isnan(ylim)) and not np.any(np.isinf(ylim)):
         ax.set_ylim(ylim)
-    
+    else:
+        print(f"Warning: Invalid ylim {ylim} encountered. Falling back to auto-scaling.")
+        # Optional: manual fallback if auto-scaling fails on all-NaN data
+    #    if np.all(np.isnan(var_y)):
+    #        ax.set_ylim(0, 1)  # Temporary default bounds   
+ 
     plt.tight_layout()
     if save_path:
         plt.savefig(save_path, dpi=150, bbox_inches='tight')
@@ -343,7 +358,7 @@ def plot_main(var_x_dict, var_y_dict, label_def_dict, title_def_dict, \
             #if 'HCLIM' in model and '20030815' in experiment:
             if '20030815' in experiment:
                 highlight_point = 0 # 15 Aug 2003, 12 UTC
-            else:
+            elif 'ERAI 2003 Season JJA' in experiment:
                 highlight_point = 303 - 1 # 15 Aug 2003, 12 UTC
 
             res_model[experiment][model] = plot_scatter_main(var_x, var_y, \
@@ -465,7 +480,22 @@ def get_parameters(experiment, model):
         var_names_dict = {'var1':'mrsol', 'var2':'test'}
 
     MODEL_OFFSETS = {'HCLIM12': 0, 'HCLIM3': 1, 'CNN': 2, 'SRGAN': 3}
-    exp_offset = 0 if 'JJA' in experiment else 4
+    #exp_offset = 0 if 'Season' in experiment else len(MODEL_OFFSETS.keys())
+    n_models = len(MODEL_OFFSETS.keys())
+    exp_offset_dict = {\
+        'ECE 2005 Season JJA': n_models * 0, \
+        'ECE 2050 Season JJA': n_models * 1, \
+        'ECE 2005 Season DJF': n_models * 2, \
+        'ECE 2050 Season DJF': n_models * 3, \
+        'ERAI 2003 Season JJA': n_models * 0, \
+        'ERAI 2003 Season DJF': n_models * 1, \
+        'ERAI 2003 Day 20030815T1200': n_models * 0, \
+    }
+    exp_offset = exp_offset_dict[experiment]
+    season = experiment.split()[-1]
+    year = experiment.split()[1]
+    gcm = experiment.split()[0]
+
     for key, model_offset in MODEL_OFFSETS.items():
         if key in model:
             letter = chr(ord('a') + exp_offset + model_offset)
@@ -474,22 +504,39 @@ def get_parameters(experiment, model):
 
     label_def = {'xlabel': "Soil Moisture at Top 1cm (m³/m³)", 'ylabel': "2-m Air Temperature (K)"}
     #title_def = f"{number_def} {model} {var_names['var2']} vs. {var_names['var1']} ({test_date})"
-    title_def = f"{number_def} {model}"
+    title_def = f"{number_def} {model} {season} {year}"
 
     return label_def, title_def, var_names_dict
+
 
 def get_parameters_moddiff(experiment, model_diff):
 
     MODEL_DIFF_OFFSETS = {'HCLIM3 - HCLIM12': 0, 'CNN - HCLIM3': 1, 'SRGAN - HCLIM3': 2}
     #print('model_diff', model_diff)
-    exp_offset = 0 if 'JJA' in experiment else 3
+    n_models = len(MODEL_DIFF_OFFSETS.keys())
+    exp_offset_dict = {\
+        'ECE 2005 Season JJA': n_models * 0, \
+        'ECE 2050 Season JJA': n_models * 1, \
+        'ECE 2005 Season DJF': n_models * 2, \
+        'ECE 2050 Season DJF': n_models * 3, \
+        'ERAI 2003 Season JJA': n_models * 0, \
+        'ERAI 2003 Season DJF': n_models * 1, \
+        'ERAI 2003 Day 20030815T1200': n_models * 0, \
+    }
+
+    #exp_offset = 0 if 'Season' in experiment else len(MODEL_DIFF_OFFSETS.keys())
+    exp_offset = exp_offset_dict[experiment]
+    season = experiment.split()[-1]
+    year = experiment.split()[1]
+    gcm = experiment.split()[0]
+
     for key, model_diff_offset in MODEL_DIFF_OFFSETS.items():
         #print('key', key)
         if key in model_diff:
             letter = chr(ord('a') + exp_offset + model_diff_offset)
             number_moddiff_def = f'({letter})'
             break
-    title_moddiff_def_dict = f"{number_moddiff_def} {model_diff}"
+    title_moddiff_def_dict = f"{number_moddiff_def} {model_diff} {season} {year}"
 
     return title_moddiff_def_dict
 
@@ -497,20 +544,31 @@ def get_parameters_moddiff(experiment, model_diff):
 def main():
 
     n_bootstrap = 1000
-    experiments = ['JJA 2003', '20030815T1200']
+    GCM = 'ERAI' # ERAI
+    domain = 'EmiliaRomagna' #'EmiliaRomagna' #'Alps'
+    #experiments = ['ERAI 2003 Season JJA', 'ERAI 2003 Day 20030815T1200']
+    experiments = { \
+        'EmiliaRomagna': {'ECE': ['ECE 2005 Season JJA', 'ECE 2050 Season JJA'], \
+                         'ERAI': ['ERAI 2003 Season JJA', 'ERAI 2003 Day 20030815T1200'] }, \
+        'Alps': {'ECE': ['ECE 2005 Season DJF', 'ECE 2050 Season DJF'], \
+                 'ERAI': ['ERAI 2003 Season DJF'] }, \
+         }
+    #experiments = ['ECE 2005 Season DJF', 'ECE 2050 Season DJF']
     models = ['HCLIM12', 'HCLIM3', 'CNN', 'SRGAN']
     compared_models = [['HCLIM12', 'HCLIM3'], ['HCLIM3', 'CNN'], ['HCLIM3', 'SRGAN']]
     models_diff = [f"{pair[1]} - {pair[0]}" for pair in compared_models]
     #print('models_diff', models_diff)
     #variable_names = ['mrsol', 'tas']
-    outdir_fig = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/bootstrap/"
+    outdir_fig = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/bootstrap/{domain}/{GCM}/"
     output_summary_file = f'{outdir_fig}/Bootstrap_scatter_slope_summary_results.txt'
 
+    os.makedirs(outdir_fig, exist_ok=True)
+
     # --- Define the bounding box (Northern Italy) ---
-    lat_min = 44.0
-    lat_max = 45.5
-    lon_min = 7.0
-    lon_max = 12.0
+    bounding_box = {'EmiliaRomagna': {'lat_min': 44.0, 'lat_max': 45.5, 'lon_min': 7.0, 'lon_max': 12.0 }, \
+        #'Alps': {'lat_min': 45.8, 'lat_max': 47.5, 'lon_min': 6.5, 'lon_max':  14.0 } \
+        'Alps': {'lat_min': 46.5, 'lat_max': 47.5, 'lon_min': 8.5, 'lon_max':  12.5 } \
+        }
 
     unit_convert = 0.1 # from kg/m2 to m3/m3
 
@@ -523,7 +581,7 @@ def main():
     var_x_dict = create_nested_dict()
     var_y_dict = create_nested_dict()
 
-    for experiment in experiments:
+    for experiment in experiments[domain][GCM]:
         combined_experiment = '_'.join(experiment.split()) if " " in experiment else experiment
         for model in models:
             #for variable_name in variable_names:
@@ -543,25 +601,29 @@ def main():
             #        plot_scatter.get_data_predefined()
             #else:
             var_x_dict[experiment][model], var_y_dict[experiment][model] = \
-                    plot_scatter.get_data_by_file(basedir, x_file, y_file, var_names_dict[experiment][model], lat_min, lat_max, lon_min, lon_max, model, experiment)
+                    plot_scatter.get_data_by_file(basedir, x_file, y_file, var_names_dict[experiment][model], \
+                    bounding_box[domain]['lat_min'], bounding_box[domain]['lat_max'], \
+                    bounding_box[domain]['lon_min'], bounding_box[domain]['lon_max'], \
+                    model, experiment)
             var_x_dict[experiment][model] = var_x_dict[experiment][model] * unit_convert
 
             out_figname_slope_ci_dict[experiment][model] = \
-                f"{outdir_fig}/Bootstrap_scatter_slope_ci_{combined_experiment}_{model}_{var_names_dict[experiment][model]['var1']}_{var_names_dict[experiment][model]['var2']}.png"
+                f"{outdir_fig}/Bootstrap_scatter_slope_ci_{combined_experiment}_{model}_{var_names_dict[experiment][model]['var1']}_{var_names_dict[experiment][model]['var2']}_{domain}.png"
             print('out_figname_slope_ci_dict[experiment][model]:', out_figname_slope_ci_dict[experiment][model])
 
         for i in range(len(compared_models)):
             title_moddiff_def_dict[experiment][i] = \
                 get_parameters_moddiff(experiment, models_diff[i])
             out_figname_slope_diff_dict[experiment][i] = \
-                f"{outdir_fig}/Bootstrap_scatter_slope_diff_{combined_experiment}_{compared_models[i][0]}_{compared_models[i][1]}.png"
+                f"{outdir_fig}/Bootstrap_scatter_slope_diff_{combined_experiment}_{compared_models[i][0]}_{compared_models[i][1]}_{domain}.png"
             print('out_figname_slope_diff_dict[experiment][i]:', out_figname_slope_diff_dict[experiment][i])
 
     res_model = plot_main(var_x_dict, var_y_dict, label_def_dict, title_def_dict, \
           title_moddiff_def_dict, \
           out_figname_slope_ci_dict, out_figname_slope_diff_dict, \
           n_bootstrap, \
-          experiments, models, compared_models)
+          experiments[domain][GCM], models, compared_models)
+    print('res_model, CNN:', res_model['CNN']['20030815T1200'] )
 
 
     with open(output_summary_file, 'w') as f:
@@ -572,7 +634,7 @@ def main():
         )
         print('-' * 65, file=f)
 
-        for experiment in experiments:
+        for experiment in experiments[domain][GCM]:
             for model in models:
                 res = res_model[experiment][model]
                 print(

@@ -46,6 +46,8 @@ def plot_and_save_maps(statistics, titles, output_file, vmin=None, vmax=None, cm
 def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
     vmin=None, vmax=None, cmap='coolwarm', fig_parameters=None):
 
+    print([type(x) for x in statistics])
+    print([np.shape(x) for x in statistics])
     if np.isfinite(statistics).any():
         statistics = np.nan_to_num(statistics, nan=0.0, posinf=0.0, neginf=0.0)
     nrows_def = fig_parameters['nrows_def']
@@ -79,6 +81,7 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
     lat_flat = lat2d.flatten()
 
 
+    n_subplot = len(titles)
     plot_counter = 0 
     for i, (stat, title) in enumerate(zip(statistics, titles)):
         #im = axes[i].imshow(stat, cmap=cmap, vmin=vmin, vmax=vmax)
@@ -96,12 +99,11 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
                     vmin=vmin, vmax=vmax,
                     extend=extend_def)
 
-
         letter = chr(97 + plot_counter) 
         if '99th Percentile' in title:
-            letter = chr(97 + plot_counter + 4) 
+            letter = chr(97 + plot_counter + n_subplot) #4) 
         elif 'Difference' in title:
-            letter = chr(97 + plot_counter + 4) 
+            letter = chr(97 + plot_counter + n_subplot) #4) 
         new_title = f"({letter}) {title}"
         axes[i].set_title(new_title, fontsize=fontsize_def)
         # Add coastlines and other features

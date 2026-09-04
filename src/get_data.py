@@ -21,18 +21,20 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
     """
 
     var_name_modify = {\
-        'tas': {'CNN': 'test'}, \
+        'tas': {'CNN': 'test', 'CNN_WT': 'test', 'CNN_NT': 'test',}, \
+        #'tas': {'CNN': 'tas'}, \
         'hfls': {'CNN': 'test'}, \
         'mrsol': {'CNN': 'test'}, \
         #'pr': {'CNN': 'pr'}, \
-        'pr': {'CNN': 'test'}, \
+        'pr': {'CNN': 'test', 'CNN_WT': 'test', 'CNN_NT': 'test'}, \
         'snc': {'CNN': 'test'}, \
         }
 
     key_3km  =  " ".join(next(k for k in experiment_dict if '3km' in str(k)).split()[:2])
-    key_12km =  " ".join(next(k for k in experiment_dict if '12km' in str(k)).split()[:2])
     print('key_3km:', key_3km) 
-    print('key_12km:', key_12km) 
+    if '12km' in experiment_dict.items():
+        key_12km =  " ".join(next(k for k in experiment_dict if '12km' in str(k)).split()[:2])
+        print('key_12km:', key_12km) 
 
     experiment_val = {}
     lon_dict, lat_dict = {}, {}
@@ -84,8 +86,8 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
             print('experiment_val:', experiment_val[experiment_name].keys())
         
             #if 'HCLIM 12km' in experiment_name:
-            #if '12km' in experiment_name:
-            #    experiment_val[experiment_name][var_name] = stats_tools.upsample_2d_array(experiment_val[experiment_name][var_name], upscale_factor = 4)
+            if '12km' in experiment_name:
+                experiment_val[experiment_name][var_name] = stats_tools.upsample_2d_array(experiment_val[experiment_name][var_name], upscale_factor = 4)
 
 
         experiment_val[experiment_name][var_name] = np.array(experiment_val[experiment_name][var_name]) 

@@ -13,9 +13,9 @@ def main():
     #test_date = "20050801T1200"
     #test_date = "20050601T0000"
     #test_date = "20050601"
-    #test_date = 'JJA 2005'
-    test_date = 'JJA 2003'
-    #test_date = '20030815T1200' 
+    #test_date = 'Season 2005 JJA'
+    test_date = 'Season 2003 JJA'
+    #test_date = 'Day 20030815T1200' 
     #model = 'HCLIM'
     #model = 'CNN'
     model = 'SRGAN'
@@ -41,13 +41,71 @@ def get_file(model, test_date):
     ##basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_scale_time_save_bs50_val0.1_ERAI_atos/"
     ##basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_scale_time_presaved_bs50_val0.1_ERAI_pred_atos/"
 
-    if 'JJA' in test_date:
-        #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_lnoise0.1_bs50_2003_ERAI_atos/"
-        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_scale_time_stdscaler_gpufix_bs50_ERAI_atos/"
+    if 'Season' in test_date and '2003' in test_date:
+        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_lnoise0.1_bs50_2003_ERAI_atos/"
+        #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_scale_time_stdscaler_gpufix_bs50_ERAI_atos/"
+        x_file = f"predictor_1.nc"
+        if 'HCLIM12' in model:
+            basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmto_ERAI_2003_arrhenius/"
+            #y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_scale_time_stdscaler_gpufix_bs50_ERAI_atos/predictor_1.nc"
+            #y_file = f"predictant_ytest_1.nc"
+            y_file = f"predictor_1.nc"
+        elif 'HCLIM3' in model:
+            y_file = f"predictant_ytest_1.nc"
+        elif 'SRGAN' in model:
+            y_file = f"predictant_ypred_1.nc"
+
+    elif 'Season' in test_date and '2005' in test_date:
+        basedir = ''
+        if 'HCLIM12' in model:
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEHis_atos/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEHist_atos/predictor_1.nc"
+        elif 'HCLIM3' in model:
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEHis_atos/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEHist_atos/predictant_ytest_1.nc"
+        elif 'SRGAN' in model:
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEHis_atos/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEHist_atos/predictant_ypred_1.nc"
+
+    elif 'Season' in test_date and '2050' in test_date:
+        basedir = ''
+        if 'HCLIM12' in model:
+            x_file="/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEFutMC_atos/predictor_1.nc"
+        elif 'HCLIM3' in model:
+            x_file="/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEFutMC_atos/predictant_ytest_1.nc"
+        elif 'SRGAN' in model:
+            x_file="/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEFutMC_atos/predictant_ypred_1.nc"
+
     elif '20030815' in test_date:
         #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_lnoise0.1_bs50_ERAI_pred_atos/"
         # paper revision Aug 2026
-        basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_bs50_ERAI_pred_paper_r1_atos/"
+        if 'HCLIM12' in model:
+            basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/12km/6hr/"
+            x_file = f"mrsol_12km_PDP_6hr_200306010000-200306050600.nc"
+            y_file = f"tas_12km_PDP_6hr_200306010000-200306050600.nc"
+        elif 'HCLIM3' in model:
+            basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/3km/6hr/"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/12km/6hr/mrsol_12km_PDP_6hr_200306010000-200306050600.nc"
+            #x_file = f"mrsol_3km_PDP_6hr_200306010000-200306050600.nc"
+            y_file = f"tas_3km_PDP_6hr_200306010000-200306050600.nc"
+        elif 'SRGAN' in model:
+            # used in submitted manuscript, EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_lnoise0.1_bs50_ERAI_pred_atos
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_lnoise0.1_bs50_ERAI_pred_atos/"
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_bs50_ERAI_pred_paper_r1_atos/"
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmt_bs50_ERAI_pred_paper_r1_v3_atos/"
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmto_ERAI_2003_predonly_arrhenius/"
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmo_tile_lnoise0.1_ERAI_2003_predonly_arrhenius/"
+            basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmo_tile_lnoise0.1_v2_ERAI_2003_predonly_arrhenius/" # OK 2026 Aug 30
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmo_tile_v2_ERAI_2003_predonly_arrhenius/"
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmo_tile_v3_ERAI_2003_predonly_arrhenius/"
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmo_lnoise0.1_ERAI_2003_predonly_arrhenius/" 
+            #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmo_lnoise0.1_v2_ERAI_2003_predonly_arrhenius/" #OK 2026 Aug 30
+            x_file = f"predictor_1.nc"
+            y_file = f"predictant_ypred_1.nc"
+            #x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/12km/6hr/mrsol_12km_PDP_6hr_200306010000-200306050600.nc"
 
     # other tests
     #basedir = f"/nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/01-rampal2021-unet/Emulator_ECEARTH_T_withSM_whus/"
@@ -122,26 +180,38 @@ def get_file(model, test_date):
     #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_nstd0.03_bs50_2003_ERAI_atos/"
     #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_nstd0.03_bs50_ERAI_pred_atos/"
 
-    if 'HCLIM12' in model:
-        #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmto_ERAI_2003_arrhenius/"
-        y_file = f"predictor_1.nc"
-    elif 'HCLIM3' in model:
-        y_file = f"predictant_ytest_1.nc"
-    elif 'SRGAN' in model:
-        y_file = f"predictant_ypred_1.nc"
-    x_file = f"predictor_1.nc"
+    #if 'HCLIM12' in model:
+    #    #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmto_ERAI_2003_arrhenius/"
+    #    y_file = f"predictor_1.nc"
+    #elif 'HCLIM3' in model:
+    #    y_file = f"predictant_ytest_1.nc"
+    #elif 'SRGAN' in model:
+    #    y_file = f"predictant_ypred_1.nc"
+    #x_file = f"predictor_1.nc"
 
     # CNN
     if 'CNN' in model:
         basedir = f"/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_withSM_whus/"
-        if 'JJA' in test_date:
+        if 'Season' in test_date and '2003' in test_date:
             #y_file = f"{basedir}simple_cnn_prediction_normalized_normal2009.nc"
             y_file = f"{basedir}simple_cnn_prediction_normalized.nc"
             x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_stdscaler_gpufix_nstd0.03_bs50_2003_ERAI_atos/predictor_1.nc"
+        elif 'Season' in test_date and '2005' in test_date:
+            #y_file = f"{basedir}simple_cnn_prediction_normalized_normal2009.nc"
+            y_file = f"/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_ECEARTH_T_withSM_whus/simple_cnn_prediction_normalized.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEHis_atos/predictor_1.nc"
+        elif 'Season' in test_date and '2050' in test_date:
+            #y_file = f"{basedir}simple_cnn_prediction_normalized_normal2009.nc"
+            y_file = f"/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_ECEARTH_T_withSM_whus/simple_cnn_prediction_normalized_2050.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos/predictor_1.nc"
         else:
-            y_file = f"{basedir}simple_cnn_prediction_normalized_20030815T1200.nc"
-            x_file = f"{basedir}training_singleday/JJA2003_20030815T1200_mrsol_whus_time.nc"
-
+            #y_file = f"{basedir}simple_cnn_prediction_normalized_20030815T1200.nc"
+            #x_file = f"{basedir}training_singleday/JJA2003_20030815T1200_mrsol_whus_time.nc"
+            y_file = f"/nobackup/rossby27/users/sm_yicwa/DATA_shared/AIES_revision_aug2026/TAS_pdp_r1/simple_cnn_prediction_normalized_20030815T1200_r1_v2.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/12km/6hr/mrsol_12km_PDP_6hr_200306010000-200306050600.nc"
+            #y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/CNN/simple_cnn_prediction_normalized_20030815T1200_r1_19_steps.nc"
+            #x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/CNN/mrsol_simple_cnn_prediction_normalized_20030815T1200_r1_19_steps.nc"
+            basedir = ''
     #dir_fuxing_org = f'/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/ICHEC-EC-EARTH/3km/6hr/mrsol/'
     #y_file = f"mrsol_3km_6hr_199501010000-200512311800.nc"
     #y_file = f'training_data_fuxing_ecearth_withSM/combined_12km_6hr_199501010000-200512311800_withmrsol.nc'
@@ -155,7 +225,7 @@ def get_parameters(model, test_date):
     elif 'CNN' in model:
         var_names = {'var1':'mrsol', 'var2':'test'}
 
-    if 'JJA' in test_date:
+    if 'Season' in test_date:
         if 'HCLIM' in model:
             number_def = '(a)'
         elif 'SRGAN' in model:
@@ -212,6 +282,18 @@ def get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_m
     if 'CNN' in model:
         var1_ds = xr.open_dataset(x_file) 
         var2_ds = xr.open_dataset(y_file)
+        if '20030815' in test_date:
+            var2_ds = var2_ds.isel(time=slice(0, 19))
+
+    #elif 'HCLIM12' in model and 'JJA' in test_date:
+    #    var1_ds = xr.open_dataset(basedir + x_file) 
+    #    var2_ds = xr.open_dataset(y_file)
+    #elif 'HCLIM3' in model and '20030815' in test_date:
+    #    var1_ds = xr.open_dataset(x_file) 
+    #    var2_ds = xr.open_dataset(basedir + y_file)
+    #elif 'SRGAN' in model and '20030815' in test_date:
+    #    var1_ds = xr.open_dataset(x_file) 
+    #    var2_ds = xr.open_dataset(basedir + y_file)
     else:
         var1_ds = xr.open_dataset(basedir + x_file) 
         var2_ds = xr.open_dataset(basedir + y_file)
@@ -295,12 +377,15 @@ def get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_m
     # Ensure spatial dimensions match
     print('var1 all ', var1.shape, np.max(var1), np.min(var1))
     print('var2 all ', var2.shape, np.max(var2), np.min(var2))
-    if 'JJA' in test_date:
-        var2 = var2.where(var2['time'].dt.season == "JJA", drop=True)
-        var1 = var1.where(var1['time'].dt.season == "JJA", drop=True)
+    if 'Season' in test_date:
+        season = test_date.split()[-1]
+        var1 = var1.where(var1['time'].dt.season == season, drop=True)
+        var2 = var2.where(var2['time'].dt.season == season, drop=True)
         if 'CNN' not in model:
             var2, var1 = xr.align(var2, var1, join='inner')
 
+    print('var1 ', var1)
+    print('var2 ', var2)
     print('var1 3d', var1.shape, np.max(var1), np.min(var1))
     print('var2 3d', var2.shape, np.max(var2), np.min(var2))
     print('var1 3d time', var1['time'])
@@ -320,6 +405,16 @@ def get_data_by_file(basedir, x_file, y_file, var_names, lat_min, lat_max, lon_m
     print('var2_flat:', np.shape(var2_flat), np.max(var2_flat), np.min(var2_flat))
     print('var1_flat:', np.shape(var1_flat), np.max(var1_flat), np.min(var1_flat))
 
+    has_nan = np.isnan(var2_flat).any()
+    print("Contains NaN:", has_nan)
+
+    # 2. Count how many NaN values exist
+    nan_count = np.isnan(var2_flat).sum()
+    print(f"Total NaN count: {nan_count} out of {len(var2_flat)}")
+
+    # 3. Find the exact indices where NaNs are located
+    nan_indices = np.where(np.isnan(var2_flat))[0]
+    print("NaN timestep indices:", nan_indices)
 
     return var1_flat, var2_flat
 
@@ -383,5 +478,6 @@ def plot_scat(var1_flat, var2_flat, model, test_date, label_def, title_def, outd
     combined_test_date = '_'.join(test_date.split()) if " " in test_date else test_date
     plt.savefig(f"{outdir_fig}/Scatter_{model}_{var_names['var1']}_{var_names['var2']}_{combined_test_date}.png", dpi=300, bbox_inches='tight')
 
-if __name__ == "__main__":
-    main()
+
+#if __name__ == "__main__":
+#    main()

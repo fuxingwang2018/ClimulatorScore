@@ -13,8 +13,9 @@ variables:
 #"tas" "hfls" "mrsol"
 
 #experiment: "SRGAN_NTNOROGSENS_CNN_ERAI_SCSTD_GPU_paper"
-#experiment: "SRGAN_WTWOROG_CNN_ERAI_SCSTD_GPU_paper"
-experiment: "SRGAN_WTWOROG_CNN_ERAI_PSD_paper"
+experiment: "SRGAN_WTWOROG_CNN_WT_ERAI_SCSTD_GPU_paper"
+#experiment: "WT_NT_CNN_ERAI_SCSTD_GPU_paper"
+#experiment: "SRGAN_WTWOROG_CNN_ERAI_PSD_paper"
 MLEXP: ''
 CNNEXP: ''
 SRGANEXP: ''
@@ -25,8 +26,14 @@ data_path:
   HCLIM 3km tas: "${base_dir}/cropped/${GCM}/3km/${FREQUENCY}/tas/tas_3km_${FREQUENCY}_${FIRST_YEAR_3km}01010000-${LAST_YEAR_3km}12311800.nc"
   HCLIM 12km tas: "${base_dir}/cropped/${GCM}/12km/${FREQUENCY}/tas/tas_12km_${FREQUENCY}_${FIRST_YEAR_12km}01010000-${LAST_YEAR_12km}12311800.nc"
   # Fig 3 & 4, with tas with orog as input
-  CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc"
+  #CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc"
+  CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/AIES_revision_aug2026/TAS_withT/simple_cnn_prediction_normalized_normal2009_withT.nc"
   SRGAN 3km tas:  "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_scale_time_stdscaler_wt_worog_gpufix_bs50_ERAI_atos/predictant_ypred_1.nc"
+
+  # CNN with tas as input
+  #CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc"
+  #CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc"
+  #CNN_WT 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/AIES_revision_aug2026/TAS_withT/simple_cnn_prediction_normalized_normal2009_withT.nc"
 
   # Fig on sensitivity test on tas and orog as input
   #SRGAN_NTNOROG 3km tas: "${base_dir}/SG/SRGAN_OUT/EPOCH100_tas_scale_time_stdscaler_norog_gpufix_lnoise0.1_bs50_ERAI_atos_v2/predictant_ypred_1.nc"
@@ -46,6 +53,7 @@ reference_experiment:
   HCLIM_HI 12km: 'HCLIM 3km'
   CNN 3km: 'HCLIM 3km'
   SRGAN 3km: 'HCLIM 3km'
+  CNN_WT 3km: 'HCLIM 3km'
 
 time_range:
   HCLIM 12km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
@@ -81,11 +89,17 @@ time_range:
   CNN 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
            'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
            'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}}
+  CNN_WT 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+           'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+           'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}}
+  CNN_NT 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+           'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+           'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}}
   #target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
 
 #output_dir: "${base_dir}/statistic_figs/1var/paper" 
-#output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/2009" 
-output_dir: "${base_dir}/statistic_figs/psd/" 
+output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/2009/CNN_WT/" 
+#output_dir: "${base_dir}/statistic_figs/psd/" 
 #output_dir: "/nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/statistic_figs"
 
 statistics:
@@ -95,11 +109,11 @@ statistics:
   #- percentile_99_bias
   #- variance_ratio
   #- wasserstein
-  #- percentile_99
-  #- mean_value
+  - percentile_99
+  - mean_value
   #- abs_value
   #- std
-  - psd
+  #- psd
 
 min_max_scale:
   #'rmse': 
@@ -108,11 +122,11 @@ min_max_scale:
   #'percentile_99_bias':
   #'variance_ratio':
   #'wasserstein':
-  #'percentile_99': 
-  #'mean_value':
+  'percentile_99': 
+  'mean_value':
   #'abs_value':
   #'std':
-  'psd':
+  #'psd':
 
 abs_value_max_scale:
   'pr': 0.5
@@ -130,9 +144,12 @@ fig_parameters:
   'nrows_def': 2
   'ncols_def': 2
   'figsize_def': [22,15]
-  #'nrows_def': 2
+  'nrows_def': 2
   #'ncols_def': 3
   #'figsize_def': [20,10]
+  #'nrows_def': 3
+  #'ncols_def': 1
+  #'figsize_def': [16,30]
   'fontsize_def': 26
   'nlevels_def': 11
   'extend_def': 'neither'

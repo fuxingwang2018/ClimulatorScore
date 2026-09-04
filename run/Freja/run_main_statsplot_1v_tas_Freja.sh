@@ -39,7 +39,7 @@ cd $HOME/Script/ClimulatorScore/src
 #python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_test_Freja.yml
 python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_paper_Freja.yml
 #python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
-#python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_2003_Freja.yml
+#python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_2003_Freja.yml
 
 #python taylor_climulator.py
 #python plot_scatter.py

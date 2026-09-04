@@ -243,10 +243,11 @@ def cut_domain(ds_ypred, ds_pred):
 
 def main():
 
-    MLMODEL = "SRGAN" #'SRGAN' #CNN
+    MLMODEL = "CNN" #'SRGAN' #CNN
     FILL       = -9999.9
     FIXED_BS   = 50          # must match model's fixed batch size
     MRSOL_IDX  = 20         # index of mrsol in your 22 channels — verify this!
+    unit_convert = {'mrsol': 0.1 }
 
     PREDICTOR_VARS = [
         "phi500","phi700","phi850","phi950",
@@ -429,6 +430,7 @@ def main():
 
     # ── ADD THIS to diagnose empty mrsol_sub_valid ────────────────────────────────
     mrsol_data = X_lowres[..., MRSOL_IDX]              # (1460, 88, 106)
+    mrsol_data = mrsol_data * unit_convert['mrsol']
     #mrsol_sub  = mrsol_data[:, lr_r0:lr_r1, lr_c0:lr_c1]   # (1460, 15, 33)
 
     """
@@ -530,13 +532,13 @@ def main():
              marker="o", ms=4, label="ALE")
     ax1.fill_between(bin_centres, ale_accumulated, alpha=0.15, color="steelblue")
     ax1.axhline(0, color="black", lw=0.8, ls="--")
-    ax1.set_xlabel("Surface Soil Moisture (kg m⁻²)", fontsize=12)
+    ax1.set_xlabel("Surface Soil Moisture (m$^3$/m$^3$)", fontsize=12) # (kg m⁻²)
     ax1.set_ylabel("ALE of 2-m air temperature (K)", fontsize=12)
     #ax1.set_title("ALE: Effect of mrsol on SRGAN-predicted Near-Surface Air Temperature",
     #              fontsize=12)
     ax1.set_title(                                         # ← CHANGED: add period to title
         #f"ALE: mrsol → tas  ({TIME_START} to {TIME_END})", # ← CHANGED
-        f"{title_number[MLMODEL]} ALE for ${MLMODEL} ({TIME_START} to {TIME_END})", # ← CHANGED
+        f"{title_number[MLMODEL]} ALE for {MLMODEL} ({TIME_START} to {TIME_END})", # ← CHANGED
         fontsize=12) 
 
     ax1.legend(fontsize=11)

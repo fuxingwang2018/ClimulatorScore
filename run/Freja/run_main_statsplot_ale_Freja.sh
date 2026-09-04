@@ -37,9 +37,9 @@ set -exu
 
 cd $HOME/Script/ClimulatorScore/src
 
-#python ale_${MLMODEL}_smalldomain.py
+python ale_smalldomain.py
 #python comp_temp_scatter_v2.py
-python bias_stratification.py
+#python bias_stratification.py
 
 current_date_time="`date`";
 echo The run ends at $current_date_time
