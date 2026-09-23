@@ -1,6 +1,6 @@
 #!/bin/bash 
 #SBATCH -N 1 
-#SBATCH -t 01:00:00 
+#SBATCH -t 12:00:00 
 ###SBATCH -n 1  ##ntasks 
 ###SBATCH --mem=16G
 ###SBATCH -J scatayl 
@@ -39,9 +39,10 @@ cd $HOME/Script/ClimulatorScore/src
 #python taylor_climulator.py
 #python plot_scatter.py
 #python plot_boxplot.py
-#python bootstrap_confidence_interval.py
+#python bootstrap_metrics.py
 #python bootstrap_slopes.py
-python pdp_analysis.py
+#python pdp_analysis.py
+python plot_synoptic_aug15.py
 
 current_date_time="`date`";
 echo The run ends at $current_date_time

@@ -1,0 +1,125 @@
+base_dir: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna"
+#GCM: "ICHEC-EC-EARTH_HIST"
+#FIRST_YEAR: "1995"
+#LAST_YEAR: "2005"
+GCM: "ECMWF-ERAINT"
+FIRST_YEAR_12km: "2000"
+LAST_YEAR_12km: "2009"
+FIRST_YEAR_3km: "2000"
+LAST_YEAR_3km: "2009"
+
+variables: 
+  - "pr"
+
+#experiment: "HCLIM_ERAI_2003"
+experiment: "SRGAN_WTWOROG_CNN_ERAI_test2y_2003"
+MLEXP: ''
+CNNEXP: ''
+SRGANEXP: ''
+FREQUENCY: '6hr'
+
+data_path:
+  # pr
+  HCLIM 3km pr: "${base_dir}/cropped/ECMWF-ERAINT/3km/6hr/pr/pr_3km_6hr_200001010300-200912312100.nc"
+  HCLIM 12km pr: "${base_dir}/cropped/ECMWF-ERAINT/12km/6hr/pr/pr_12km_6hr_200001010300-200912312100.nc"
+  SRGAN_NPNOROG 3km pr:  "${base_dir}/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsm_ERAI_2003_2009_arrhenius/predictant_ypred_1.nc"
+  SRGAN_NPNOROG_TILE 3km pr:  "${base_dir}/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsm_tile_ERAI_2003_2009_arrhenius/predictant_ypred_1.nc"
+  SRGAN_NPNOROG_LNOISE 3km pr:  "${base_dir}/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsm_lnoise0.1_ERAI_2003_2009_arrhenius/predictant_ypred_1.nc"
+  SRGAN_NPWOROG 3km pr:  "${base_dir}/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsmo_ERAI_2003_2009_arrhenius/predictant_ypred_1.nc"
+  SRGAN_WPWOROG 3km pr:  "${base_dir}/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsmpo_ERAI_2003_2009_arrhenius/predictant_ypred_1.nc"
+  SRGAN_WPWOROG_TILE 3km pr:  "${base_dir}/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsmpo_tile_ERAI_2003_2009_arrhenius/predictant_ypred_1.nc"
+
+
+reference_experiment:
+  HCLIM_HI 3km:
+  HCLIM_HI 12km: 'HCLIM 3km'
+  CNN 3km: 'HCLIM 3km'
+  SRGAN 3km: 'HCLIM 3km'
+  SRGAN_NPNOROG 3km: 'HCLIM 3km'
+  SRGAN_NPWOROG 3km: 'HCLIM 3km'
+  SRGAN_NPNOROG_LNOISE 3km: 'HCLIM 3km'
+  SRGAN_NPNOROG_TILE 3km: 'HCLIM 3km'
+  SRGAN_WPWOROG 3km: 'HCLIM 3km'
+  SRGAN_WPWOROG_TILE 3km: 'HCLIM 3km'
+
+time_range:
+  HCLIM 12km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6} }
+  HCLIM 3km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+             'pr': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6} }
+  SRGAN_NPNOROG 3km: {'mrsol':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6} }
+  SRGAN_NPWOROG 3km: {'mrsol':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6} }
+  SRGAN_NPNOROG_TILE 3km: {'mrsol':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6} }
+  SRGAN_NPNOROG_LNOISE 3km: {'mrsol':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6} }
+  SRGAN_WPWOROG 3km: {'mrsol':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6} }
+  SRGAN_WPWOROG_TILE 3km: {'mrsol':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6, }, 
+              'pr':{'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2003-01-01 00:00"], 'end_date': ["2003-12-31 24:00"], 'step_hours': 6} }
+ 
+
+#output_dir: "${base_dir}/statistic_figs/1var/pr_test/" 
+#output_dir: "${base_dir}/statistic_figs/ECE/paper_revision1/" 
+output_dir: "${base_dir}/statistic_figs/1var/paper_revision1/2003/SRGAN_NPNOROG/" 
+
+statistics:
+  - rmse
+  #- cpl_corr
+  #- correlation
+  #- mean_bias
+  #- variance_ratio
+  #- wasserstein
+  - percentile_99
+  - mean_value
+  #- abs_value
+  #- std
+
+min_max_scale:
+  'rmse': 
+  #'correlation': [0.88, 1.00]
+  #'cpl_corr':
+  #'correlation':
+  #'mean_bias':
+  #'variance_ratio':
+  #'wasserstein':
+  'percentile_99': [0, 120] 
+  'mean_value': [0, 15]
+  #'abs_value':
+  #'std':
+
+abs_value_max_scale:
+  'pr': 0.5
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+unit_convert:
+  'pr': 86400.0
+  'tas': 1.0
+  'mrsol': 1.0
+  'hfls': 1.0
+
+fig_parameters:
+  'nrows_def': 4
+  'ncols_def': 5
+  'figsize_def': [50,35]
+  #'nrows_def': 1
+  #'ncols_def': 2
+  #'figsize_def': [21,7]
+  #'nrows_def': 2
+  #'ncols_def': 2
+  #'figsize_def': [22,15]
+  'fontsize_def': 24
+  'nlevels_def': 11
+  'extend_def': 'max'

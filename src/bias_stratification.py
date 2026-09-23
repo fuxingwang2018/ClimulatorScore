@@ -11,11 +11,16 @@ from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 
 #  bias stratification plot with temperature
 MLMODEL = 'SRGAN' #'SRGAN' #-'CNN'
-VARIABLE =  'pr' #'tas'
+VARIABLE =  'pr' #'pr', 'tas'
 YEAR = '2009'
 title_number = {'SRGAN': ['(c)', '(d)'], 'CNN': ['(a)', '(b)']}
 step_bin = {'tas': 5, 'pr': 50}
 unit = {'tas': 'K', 'pr': 'mm/day'}
+#SRGAN_SETUP='WTWPWOROG_TEST2YR' #'WTWPWOROG_TEST2YR' #'NTNPNOROG'  #'WTWPWOROG'
+#ML_SETUP='WTWPNOROG' #'WTWPWOROG_TEST2YR' #'NTNPNOROG'  #'WTWPWOROG'
+#ML_SETUP='NTNPNOROG_TEST2YR' 
+#ML_SETUP='WTWPNOROG_TEST2YR' 
+ML_SETUP='WTNPNOROG_TEST2YR' 
 
 fontsize_def = 18
 xlabel_def = {'tas': {'a': 'HCLIM3 temperature (K)', 'b': 'HCLIM3 temperature bin (K)'}, \
@@ -28,7 +33,8 @@ threshold = {'tas': {'min': 200, 'max': 350}, \
 # 1. Define Paths
 
 VARNAME = {'tas': {'HCLIM': 'tas', 'CNN': 'test', 'SRGAN': 'tas'}, \
-    'pr': {'HCLIM': 'pr', 'CNN': 'test', 'SRGAN': 'pr'}}
+    'pr': {'HCLIM': 'pr', 'CNN': 'pr', 'SRGAN': 'pr'}}
+#    'pr': {'HCLIM': 'pr', 'CNN': 'test', 'SRGAN': 'pr'}}
 path_ref = {'tas' : '/nobackup/rossby27/users/sm_fuxwa/AI_data/Emilia_Romagna/3km/6hr/tas/', \
     'pr': '/nobackup/rossby27/users/sm_fuxwa/AI_data/Emilia_Romagna/3km/6hr/pr/'}
 file_ref = {'tas': 'tas_3km_6hr_200001010000-200912311800.nc', \
@@ -37,21 +43,58 @@ unit_convert = {'tas': {'HCLIM': 1, 'CNN': 1, 'SRGAN': 1}, \
     'pr': {'HCLIM': 86400, 'CNN': 1, 'SRGAN': 86400} }
 
 if MLMODEL == 'CNN':
-    path_ml = {'tas': '/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_withSM_whus/', \
-        'pr': '/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/'}
-    file_ml = {'tas': 'simple_cnn_prediction_normalized_normal2009.nc', \
-        'pr': 'cnn_prediction_pr_2009.nc'}
+    if ML_SETUP == 'NTNPNOROG':
+        path_ml = {'tas': '/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_withSM_whus/', \
+            'pr': '/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/'}
+        file_ml = {'tas': 'simple_cnn_prediction_normalized_normal2009.nc', \
+            'pr': 'cnn_prediction_pr_2009.nc'}
+    elif ML_SETUP == 'WTWPNOROG':
+        path_ml = {'tas': '/nobackup/rossby27/users/sm_yicwa/DATA_shared/AIES_revision_aug2026/TAS_withT/', \
+            'pr': '/nobackup/rossby27/users/sm_yicwa/DATA_shared/AIES_revision_aug2026/PR_ERAINT/'}
+        file_ml = {'tas': 'simple_cnn_prediction_normalized_normal2009_withT.nc', \
+            'pr': 'simple_cnn_prediction_withP.nc'}
+
 elif MLMODEL == 'SRGAN':
-    path_ml = {'tas': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_scale_time_stdscaler_wt_worog_gpufix_bs50_ERAI_atos/', \
-        'pr': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/'}
     file_ml = {'tas': 'predictant_ypred_1.nc', \
         'pr': 'predictant_ypred_1.nc'}
+    if ML_SETUP == 'NTNPNOROG':
+        path_ml = {'tas': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_scale_time_stdscaler_norog_gpufix_lnoise0.1_bs50_ERAI_atos_v2/', \
+            'pr': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_np_norog_gpufix_bs50_ERAI_atos_v2/'}
+    elif ML_SETUP == 'WTWPWOROG':
+        path_ml = {'tas': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_scale_time_stdscaler_wt_worog_gpufix_bs50_ERAI_atos/', \
+            'pr': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_pr_scale_time_stdscaler_wp_worog_gpufix_bs50_ERAI_atos/'}
+    elif ML_SETUP == 'WTWPWOROG_TEST2YR':
+        path_ml = {'tas': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna//SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmto_ERAI_2003_2009_arrhenius/', \
+            'pr': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsmpo_v2_ERAI_2003_2009_arrhenius/'}
+        file_ml = {'tas': 'predictant_ypred_2009.nc', \
+            'pr': 'predictant_ypred_2009.nc'}
+    elif ML_SETUP == 'WTWPWOROG_TILE_TEST2YR':
+        path_ml = {'tas': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna//SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmto_tile_ERAI_2003_2009_arrhenius/', \
+            'pr': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsmpo_tile_ERAI_2003_2009_arrhenius/'}
+        file_ml = {'tas': 'predictant_ypred_2009.nc', \
+            'pr': 'predictant_ypred_2009.nc'}
+    elif ML_SETUP == 'NTNPNOROG_TEST2YR':
+        path_ml = {'tas': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna//SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsm_ERAI_2003_2009_arrhenius/', \
+            'pr': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsm_tile_ERAI_2003_2009_arrhenius/'}
+        file_ml = {'tas': 'predictant_ypred_2.nc', \
+            'pr': 'predictant_ypred_2009.nc'}
+    elif ML_SETUP == 'WTWPNOROG_TEST2YR':
+        path_ml = {'tas': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna//SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmt_ERAI_2003_2009_arrhenius/', \
+            'pr': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsmp_tile_ERAI_2003_2009_arrhenius/'}
+        file_ml = {'tas': 'predictant_ypred_2.nc', \
+            'pr': 'predictant_ypred_2009.nc'}
+    elif ML_SETUP == 'WTNPNOROG_TEST2YR':
+        path_ml = {'tas': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna//SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmt_ERAI_2003_2009_arrhenius/', \
+            'pr': '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_pr_wsm_corr_ERAI_2003_2009_arrhenius/'}
+        file_ml = {'tas': 'predictant_ypred_2.nc', \
+            'pr': 'predictant_ypred_2.nc'}
 
 
 # 2. Load Datasets
 ds_ref_full = xr.open_dataset(f'{path_ref[VARIABLE]}/{file_ref[VARIABLE]}')
 ds_comp_full = xr.open_dataset(f'{path_ml[VARIABLE]}/{file_ml[VARIABLE]}')
 
+print(ds_comp_full.time.min().values, ds_comp_full.time.max().values)
 
 # 3. Filter for 2009
 # Reference file has 10 years; we extract only 2009 to match the prediction file
@@ -95,10 +138,10 @@ ref_vals = ds_ref[VARNAME[VARIABLE]['HCLIM']].values.flatten() * unit_convert[VA
 comp_vals = ds_comp[VARNAME[VARIABLE][MLMODEL]].values.flatten() * unit_convert[VARIABLE][MLMODEL]
 
 mask = ~np.isnan(ref_vals) & ~np.isnan(comp_vals) #& \
-    #(ref_vals > threshold[VARIABLE]['min']) & \
-    #(ref_vals < threshold[VARIABLE]['max']) & \
-    #(comp_vals > threshold[VARIABLE]['min']) & \
-    #(comp_vals < threshold[VARIABLE]['max'])
+#    (ref_vals > threshold[VARIABLE]['min']) & \
+#    (ref_vals < threshold[VARIABLE]['max']) & \
+#    (comp_vals > threshold[VARIABLE]['min']) & \
+#    (comp_vals < threshold[VARIABLE]['max'])
 
 ref_vals, comp_vals = ref_vals[mask], comp_vals[mask]
 
@@ -260,7 +303,9 @@ ax2.tick_params(axis='y', which='major', labelsize=int(fontsize_def-4)) #
 plt.setp(ax2.get_xticklabels(), rotation=25)
 ax2.grid(axis='y', alpha=0.3)
 
+fig_name = f'bias_stratification_{VARIABLE}_{MLMODEL}_{ML_SETUP}_{YEAR}.png'
+
 plt.tight_layout()
 fig_outdir = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/bias_stratification/'
-plt.savefig(f'{fig_outdir}/bias_stratification_{VARIABLE}_{MLMODEL}_2009.png', dpi=300)
+plt.savefig(f'{fig_outdir}/{fig_name}', dpi=300) #bias_stratification_SRGAN_NTNOROG_{VARIABLE}_{MLMODEL}_2009.png', dpi=300)
 print(f"Analysis complete. Figure saved as 'bias_stratification_2009.pn10'")

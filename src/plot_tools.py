@@ -46,6 +46,7 @@ def plot_and_save_maps(statistics, titles, output_file, vmin=None, vmax=None, cm
 def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
     vmin=None, vmax=None, cmap='coolwarm', fig_parameters=None):
 
+
     print([type(x) for x in statistics])
     print([np.shape(x) for x in statistics])
     if np.isfinite(statistics).any():
@@ -82,10 +83,11 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
 
 
     n_subplot = len(titles)
-    plot_counter = 0 
+    plot_counter = 0
     for i, (stat, title) in enumerate(zip(statistics, titles)):
         #im = axes[i].imshow(stat, cmap=cmap, vmin=vmin, vmax=vmax)
         stat_flat= stat.flatten()  # Flattened to match the irregular structure
+        print("i, title:", i, title)
         print("lat_flat:", len(lat_flat))
         print("lon_flat:", len(lon_flat))
         print("stat_flat:", len(stat_flat))
@@ -99,10 +101,8 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
                     vmin=vmin, vmax=vmax,
                     extend=extend_def)
 
-        letter = chr(97 + plot_counter) 
-        if '99th Percentile' in title:
-            letter = chr(97 + plot_counter + n_subplot) #4) 
-        elif 'Difference' in title:
+        letter = chr(97 + plot_counter + 0) 
+        if '99th Percentile' in title or 'Difference' in title or 'Correlation' in title:
             letter = chr(97 + plot_counter + n_subplot) #4) 
         new_title = f"({letter}) {title}"
         axes[i].set_title(new_title, fontsize=fontsize_def)
@@ -123,18 +123,96 @@ def plot_and_save_maps_latlon(statistics, lat2d, lon2d, titles, output_file, \
         stat = np.where((stat > 1e10) | (stat < -1e10), np.nan, stat)
         stat_domain_ave = np.nanmean(stat)
         # Add the statistics value to the lower right
-        #text_x = stat.shape[1] - 2  # Right-most position
-        #text_y = stat.shape[0] - 1  # Bottom position (because origin='lower')
         text_x = lon2d[10, -2]  # near bottom-right
         text_y = lat2d[5, -2]
-        #text_x = lon2d[-1, -2]  # near bottom-right
-        #text_y = lat2d[-1, -1]
+        text_rmse_x = lon2d[5, 50] #[-1, -2]  # near bottom-right
+        text_rmse_y = lat2d[5, 50] #[-1, -1]
+        text_bias_x = lon2d[35, 50] # stat.shape[1] - 2  # Right-most position
+        text_bias_y = lat2d[35, 50] # stat.shape[0] - 1  # Bottom position (because origin='lower')
         #text_y = 0  # Bottom position
         # no texts for correlation coefficient
-        if not any('correlation' in s for s in titles):
+        # for evaluation_exp, order of values: HCLIM12, CNN, SRGAN
+        # TEST 2009
+        """
+        stats_pre_define = {\
+            'evaluation_exp': {'tas': {'rmse': [1.89, 1.63, 1.29], \
+            'mean_bias': [-0.57, -0.03, 0.02] }, \
+            'pr': {'rmse': [8.74, 8.82, 7.85], \
+            'mean_bias': [0.40, -1.15, 0.08] } }, \
+            }
+        """
+        # TEST 2003
+        """
+        stats_pre_define = {\
+            'evaluation_exp': {'tas': {'rmse': [1.94, 1.56, 1.29], \
+            'mean_bias': [-0.64, -0.13, 0.14] }, \
+            'pr': {'rmse': [8.74, 8.82, 7.85], \
+            'mean_bias': [0.40, -1.15, 0.08] } }, \
+            }
+        """
+        # TEST 2003 and 2009, ststistics for 2003
+        """
+        stats_pre_define = {\
+            # WTWOROG
+            #'evaluation_exp': {'tas': {'rmse': [1.94, 1.56, 1.21], \
+            #'mean_bias': [-0.64, -0.13, -0.07] }, \
+            # WTNOROG
+            'evaluation_exp': {'tas': {'rmse': [1.94, 1.56, 1.31], \
+            'mean_bias': [-0.64, -0.13, 0.09] }, \
+            'pr': {'rmse': [8.74, 8.82, 7.70], \
+            'mean_bias': [0.40, -1.15, 0.05] } }, \
+            }
+        """
+        # TEST 2003 and 2009, ststistics for 2009
+        stats_pre_define = {\
+            # WTWOROG
+            #'evaluation_exp': {'tas': {'rmse': [1.89, 1.63, 1.22], \
+            #'mean_bias': [-0.57, -0.03, -0.01] }, \
+            #'pr': {'rmse': [8.74, 8.82, 7.85], \
+            #'mean_bias': [0.40, -1.15, 0.37] } }, \
+            # WTNOROG, NPNOROG
+            'evaluation_exp': {'tas': {'rmse': [1.89, 1.63, 1.25], \
+            'mean_bias': [-0.57, -0.03, 0.12] }, \
+            'pr': {'rmse': [8.74, 8.82, 8.38], \
+            'mean_bias': [0.40, -1.15, 0.51] } }, \
+            }
+        # for SRGAN
+        # for sensitivity_exp, order of values: NTNOROG, NTWOROG, WTNOROG, WTWOROG
+        """
+        stats_pre_define = {\
+            'sensitivity_exp': {'tas': {'rmse': [2.68, 2.88, 1.28, 1.29], \
+            'mean_bias': [-1.17, -0.91, 0.06, 0.02] }, \
+            'pr': {'rmse': [8.79, 8.53, 7.69, 7.58], \
+            'mean_bias': [-0.05, -0.10, -0.33, 0.08] } }, \
+            }
+        """ 
+        # for CNN
+        # for sensitivity_exp, order of values: NTNOROG, WTNOROG
+        """ 
+        stats_pre_define = {\
+            'sensitivity_exp': {'tas': {'rmse': [1.63, 1.28], \
+            'mean_bias': [-0.03, 0.00] }, \
+            'pr': {'rmse': [8.82, 8.03], \
+            'mean_bias': [-1.15, -0.06] } }, \
+            } 
+        """ 
+        #text_experiment, text_variable = 'sensitivity_exp', 'tas'
+        #text_experiment, text_variable = 'sensitivity_exp', 'pr'
+        text_experiment, text_variable = 'evaluation_exp', 'pr'
+        #text_experiment, text_variable = 'evaluation_exp', 'tas'
+        if not any('Correlation' in s for s in titles):
             axes[i].text(text_x, text_y, f"{stat_domain_ave:.2f}",
                 color='white', fontsize=fontsize_def, ha='right', va='bottom',
                 bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
+            if i > 0 and 'Mean Value' in title:
+                axes[i].text(text_rmse_x, text_rmse_y, f"RMSE: {stats_pre_define[text_experiment][text_variable]['rmse'][i-1]:.2f}",
+                #axes[i].text(text_rmse_x, text_rmse_y, f"RMSE: {stats_pre_define['evaluation_exp']['tas']['rmse'][i-1]:.2f}",
+                    color='white', fontsize=fontsize_def, ha='right', va='bottom',
+                    bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
+                axes[i].text(text_bias_x, text_bias_y, f"Bias: {stats_pre_define[text_experiment][text_variable]['mean_bias'][i-1]:.2f}",
+                #axes[i].text(text_bias_x, text_bias_y, f"Bias: {stats_pre_define['evaluation_exp']['tas']['mean_bias'][i-1]:.2f}",
+                    color='white', fontsize=fontsize_def, ha='right', va='bottom',
+                    bbox=dict(facecolor='black', alpha=0.5, edgecolor='none'))
         plot_counter += 1
 
     #cbar = fig.colorbar(contour, ax=axes, orientation="horizontal", shrink=0.7, aspect=40, pad=0.02)
@@ -169,11 +247,11 @@ def plot_and_save_boxplot(statistics, titles, GCM, output_file, \
     fig_parameters=None):
 
     if GCM == 'ECMWF-ERAINT':
-        title_def = '(a) ERAI-HI2HI'
+        title_def = '(e) ERAI-HI2HI'
     elif GCM == "ICHEC-EC-EARTH_HIST":
-        title_def = '(b) ECE-HI2HI'
+        title_def = '(g) ECE-HI2HI'
     elif GCM == "ICHEC-EC-EARTH_RCP85_MC":
-        title_def = '(c) ECE-MC2MC'
+        title_def = '(h) ECE-MC2MC'
     elif GCM == "ICHEC-EC-EARTH_RCP85_LC":
         FIRST_YEAR_12km, LAST_YEAR_12km, FIRST_YEAR_3km, LAST_YEAR_3km = 2090, 2099, 2089, 2099
         title_def = '(d) ECE-LC2LC'

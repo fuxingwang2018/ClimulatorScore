@@ -20,7 +20,9 @@ DOMAIN='EmiliaRomagna'
 #VARIABLE='tas_mrsol' #'pr' #tas
 VARIABLE='tas' #'pr' #tas
 #GCM='ECE'
-GCM='ERAI'
+#GCM='ERAI'
+GCM='ERAI_2009'
+#GCM='ERAI_2003'
 
 current_date_time="`date`";
 echo The run starts from $current_date_time
@@ -36,10 +38,7 @@ cd $HOME/Script/ClimulatorScore/src
 #cd /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/src
 #python main.py -c /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/config/config_${DOMAIN}_Freja.yml
 
-#python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_test_Freja.yml
-python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_paper_Freja.yml
-#python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
-#python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_2003_Freja.yml
+python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
 
 #python taylor_climulator.py
 #python plot_scatter.py

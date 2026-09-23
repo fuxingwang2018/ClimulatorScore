@@ -215,6 +215,24 @@ def get_statistics(experiment_val, min_max_scale, abs_value_max_scale, variables
     #all_statistics = [(statistics[stat], *stat_meta[stat], vmin_vmax[stat][0], vmin_vmax[stat][1])
     #        for stat in selected_statistics if stat in statistics]
 
+    """
+    statistics_pre_define = {\
+        'rmse': [2.68, 2.88, 1.28], \
+        'correlation': [], \
+        'cpl_corr': [], \
+        'mean_bias': [-1-17, -0.91, 0.06], \
+        'percentile_99_bias': [], \
+        'variance_ratio': [], \
+        'wasserstein': [], \
+        'significance_pvalue': [], \
+        'percentile_99': [], \
+        'mean_value': [], \
+        'abs_value': [], \
+        'std': [], \
+        'psd': [], \
+        } 
+    """
+
     all_statistics = [
         (statistics[stat], title, filename, *vmin_vmax[stat], cmap, 
          experiment_name_with_ref if stat in {'percentile_99', 'mean_value', 'abs_value', 'std', 'psd'} or len(variables) > 1 else experiment_name_without_ref)

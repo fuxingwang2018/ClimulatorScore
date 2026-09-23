@@ -263,7 +263,7 @@ def main():
     TIME_START = "2003-06-01"                               # ← NEW
     TIME_END   = "2003-08-31"                               # ← NEW
 
-    basedir = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmto_ERAI_2003_arrhenius'
+    basedir = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmto_ERAI_2003_arrhenius'
 
     fig_outdir = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/statistic_figs/ALE/'
 
@@ -347,6 +347,7 @@ def main():
             [ds_pred[v].values.astype(np.float32) for v in PREDICTOR_VARS],
             axis=-1
         )                                           # (1460, 88, 106, 22)
+
         # ── CHANGED: compute normalisation from X_lowres_full ─────────────────────────
         print("Computing normalisation stats...")
         chan_means = np.array([np.nanmean(X_lowres_full_clim[..., c])
@@ -368,8 +369,6 @@ def main():
           f"mean={X_lowres_full_norm[..., MRSOL_IDX].mean():.4f}, "
           f"std={X_lowres_full_norm[..., MRSOL_IDX].std():.4f}")
         # Should print mean≈0, std≈1
-
-
 
 
     # ── CHANGED: crop to subdomain ────────────────────────────────────────────────
@@ -404,11 +403,13 @@ def main():
 
     # ── 4. Load generator ──────────────────────────────────────────────────────────
     if MLMODEL == 'SRGAN':
-        basedir_generator = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsmto_ERAI_2003_arrhenius'
+        basedir_generator = '/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ARRHENIUS/EPOCH100_tas_wsmto_ERAI_2003_arrhenius'
         file_generator = 'model_1_generator.h5'
     elif MLMODEL == 'CNN':
         basedir_generator = '/nobackup/rossby27/users/sm_yicwa/DATA_shared/AIES_revision_aug2026/CNN_models_ERAI/'
         file_generator = 'cnn_mse_model_with_new_training_period_20032009.h5'
+        #file_generator = 'cnn_mse_model_with_new_training_period_normal2009.h5'
+        #file_generator = 'cnn_mse_model_with_new_training_period_normal2009_nosm.h5'
 
     generator = tf.keras.models.load_model(basedir_generator + '/' + file_generator, compile=False)
     print("Generator loaded.")
@@ -430,7 +431,7 @@ def main():
 
     # ── ADD THIS to diagnose empty mrsol_sub_valid ────────────────────────────────
     mrsol_data = X_lowres[..., MRSOL_IDX]              # (1460, 88, 106)
-    mrsol_data = mrsol_data * unit_convert['mrsol']
+    #mrsol_data = mrsol_data * unit_convert['mrsol']
     #mrsol_sub  = mrsol_data[:, lr_r0:lr_r1, lr_c0:lr_c1]   # (1460, 15, 33)
 
     """
@@ -522,6 +523,9 @@ def main():
     # Accumulate and centre
     ale_accumulated = np.cumsum(ale_effects)
     ale_accumulated -= np.mean(ale_accumulated)             # centre around 0
+
+    ale_accumulated *= unit_convert['mrsol']  # ← NEW
+    bin_centres *= unit_convert['mrsol']  # ← NEW
 
     title_number = {'CNN':'(a)', 'SRGAN':'(b)'}
 

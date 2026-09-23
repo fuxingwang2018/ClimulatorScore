@@ -16,6 +16,10 @@ variables:
 
 experiment: "SRGAN_CNN_bs50_stdscaler_gpufix_lnoise0.1_ERAI"
 MLEXP: ''
+CNNEXP: ''
+SRGANEXP: ''
+
+FREQUENCY: '6hr'
 
 data_path:
   #tas
@@ -80,22 +84,34 @@ data_path:
   #CNN 3km mrsol: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_mrsol_2009.nc"
   #CNN 3km tas: "/nobackup/rossby27/users/sm_yicwa/DATA_shared/Climulator/Emulator_HCLIM_CRM_T_SM/cnn_prediction_tas_2009.nc"
 
+reference_experiment:
+  HCLIM 3km:
+  HCLIM 12km: 'HCLIM 3km'
+  CNN 3km: 'HCLIM 3km'
+  SRGAN 3km: 'HCLIM 3km'
+  ERA5 3km: 'HCLIM 3km'
+
 time_range:
   HCLIM 12km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
-              'tas': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+              'tas': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}}
   HCLIM 3km: {'mrsol': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
-             'tas': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+             'tas': {'start_date': ["2000-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}}
   #OBS 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 24}, 
   #           'tas': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2010-12-31 24:00"], 'step_hours': 24}, }
   ERA5 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
-             'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+             'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+             'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}}
   SRGAN 3km: {'mrsol':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6, }, 
-              'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
+              'tas':{'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+              'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}}
   CNN 3km: {'mrsol': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
-           'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, }
-  target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
+           'tas': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}, 
+           'target': {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}}
+#  target: {'start_date': ["2009-01-01 00:00"], 'end_date': ["2009-12-31 24:00"], 'step_hours': 6}
 
-output_dir: "${base_dir}/statistic_figs/2var/" 
+output_dir: "${base_dir}/statistic_figs/2var/paper_revision1/" 
 
 statistics:
   #- rmse
@@ -136,10 +152,13 @@ unit_convert:
   'hfls': 1.0
 
 fig_parameters:
-  'nrows_def': 1 #2
-  'ncols_def': 4 #3
-  #'figsize_def': [30,15]
-  'figsize_def': [55,10]
+  #'nrows_def': 1 #2
+  #'ncols_def': 4 #3
+  ##'figsize_def': [30,15]
+  #'figsize_def': [55,10]
+  'nrows_def': 2
+  'ncols_def': 2
+  'figsize_def': [22,15]
   'fontsize_def': 24
   'nlevels_def': 9 # 11
   'extend_def': 'both' #'neither'

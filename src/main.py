@@ -43,6 +43,13 @@ def main():
         min_max_scale, abs_value_max_scale, variables, \
         reference_experiment, selected_statistics)
 
+    GCM_experiment = {\
+        'ECMWF-ERAINT': 'ERAI-HI2HI', \
+        "ICHEC-EC-EARTH_HIST": 'ECE-HI2HI', \
+        "ICHEC-EC-EARTH_RCP85_MC": 'ECE-MC2MC', \
+        "ICHEC-EC-EARTH_RCP85_LC": 'ECE-LC2LC', \
+    }
+
 
     # Plot and save each statistics set
     for stats, title, filename, vmin, vmax, cmap, exp_name in all_statistics:
@@ -53,30 +60,35 @@ def main():
         #print('stats', stats)
         #print('exp_name', exp_name)
         if 'bias' in filename:
-            full_title = [f'{title} {exp_name[i]} - {reference_experiment[exp_name[i]]}' for i in range(len(stats))]
+            full_title = [f'{title} {exp_name[i]} - {reference_experiment[exp_name[i]]}' \
+            #full_title = [f'{title} ({GCM_experiment[GCM]}) {exp_name[i]} - {reference_experiment[exp_name[i]]}' \
+            for i in range(len(stats))]
         else:
-            full_title = [f'{title} {exp_name[i]}' for i in range(len(stats))]
+            #full_title = [f'{title} {GCM_experiment[GCM]} {exp_name[i]}' \
+            full_title = [f'{title} {exp_name[i]}' \
+            for i in range(len(stats))]
 
-        if 'Correlation' not in title and 'Power Spectral Density' not in title:
+        #if 'Correlation' not in title and 'Power Spectral Density' not in title:
+        if 'Power Spectral Density' not in title:
             plot_tools.plot_and_save_maps_latlon(stats, lat, lon,\
-                full_title,\
+                full_title, \
                 output_path, vmin=vmin, vmax=vmax, cmap=cmap, \
                 fig_parameters=fig_parameters)
 
         if 'Correlation' in title:
-            output_path = os.path.join(str(output_dir), f"Boxplot_{filename}_{GCM}_{'_'.join(variables)}.png")
+            output_path = os.path.join(str(output_dir), f"Boxplot_{filename}_{experiment}_{'_'.join(variables)}.png")
             plot_tools.plot_and_save_boxplot(stats, \
                 [f'{exp_name[i]}' for i in range(len(stats))],\
                 GCM, output_path, \
                 fig_parameters=fig_parameters)
 
         if 'Power Spectral Density' in title:
-            output_path_psd = os.path.join(str(output_dir), f"PSD_{filename}_{GCM}_{'_'.join(variables)}.png")
+            output_path_psd = os.path.join(str(output_dir), f"PSD_{filename}_{experiment}_{'_'.join(variables)}.png")
             plot_tools.plot_psd_comparison(stats, \
                 [f'{exp_name[i]}' for i in range(len(stats))],\
                 output_path_psd, variables)
 
-            output_path_psd_ratio = os.path.join(str(output_dir), f"PSD_ratio_{filename}_{GCM}_{'_'.join(variables)}.png")
+            output_path_psd_ratio = os.path.join(str(output_dir), f"PSD_ratio_{filename}_{experiment}_{'_'.join(variables)}.png")
             plot_tools.plot_psd_ratio(stats, \
                 [f'{exp_name[i]}' for i in range(len(stats))],  \
                 'HCLIM 3km', output_path_psd_ratio)

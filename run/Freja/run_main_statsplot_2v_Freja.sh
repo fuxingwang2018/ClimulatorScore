@@ -38,7 +38,7 @@ cd $HOME/Script/ClimulatorScore/src
 #python main.py -c /nobackup/rossby27/users/sm_yicwa/PROJECTS/01-PROJ_emulator/04-evaluation_fuxing/ClimulatorScore/config/config_${DOMAIN}_Freja.yml
 
 #python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_Freja.yml
-python main.py -c $HOME/Script/ClimulatorScore/config/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
+python main.py -c $HOME/Script/ClimulatorScore/config/Freja/config_${DOMAIN}_${VARIABLE}_${GCM}_Freja.yml
 
 #python taylor_climulator.py
 #python plot_scatter.py

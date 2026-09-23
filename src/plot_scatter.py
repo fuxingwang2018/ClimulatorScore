@@ -57,27 +57,34 @@ def get_file(model, test_date):
 
     elif 'Season' in test_date and '2005' in test_date:
         basedir = ''
+        SM_FILE = "EPOCH100_tas_wsm_lnoise0.1_ECEHis_atos"
+        SRGAN_EXP = "EPOCH100_tas_wt_worog_ECEHist_atos"
+        #SRGAN_EXP = "EPOCH100_tas_wsmto_ECEHist_arrhenius"
+
         if 'HCLIM12' in model:
-            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEHis_atos/predictor_1.nc"
-            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEHist_atos/predictor_1.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SM_FILE}/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SRGAN_EXP}/predictor_1.nc"
         elif 'HCLIM3' in model:
-            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEHis_atos/predictor_1.nc"
-            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEHist_atos/predictant_ytest_1.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SM_FILE}/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SRGAN_EXP}/predictant_ytest_1.nc"
         elif 'SRGAN' in model:
-            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEHis_atos/predictor_1.nc"
-            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEHist_atos/predictant_ypred_1.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SM_FILE}/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SRGAN_EXP}/predictant_ypred_1.nc"
 
     elif 'Season' in test_date and '2050' in test_date:
         basedir = ''
+        SM_FILE = 'EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos'
+        SRGAN_EXP = 'EPOCH100_tas_wt_worog_ECEFutMC_atos'
+        #SRGAN_EXP = 'EPOCH100_tas_wsmto_ECEFutMC_arrhenius'
         if 'HCLIM12' in model:
-            x_file="/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos/predictor_1.nc"
-            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEFutMC_atos/predictor_1.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SM_FILE}/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SRGAN_EXP}/predictor_1.nc"
         elif 'HCLIM3' in model:
-            x_file="/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos/predictor_1.nc"
-            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEFutMC_atos/predictant_ytest_1.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SM_FILE}/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SRGAN_EXP}/predictant_ytest_1.nc"
         elif 'SRGAN' in model:
-            x_file="/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wsm_lnoise0.1_ECEFutMC_atos/predictor_1.nc"
-            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/EPOCH100_tas_wt_worog_ECEFutMC_atos/predictant_ypred_1.nc"
+            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SM_FILE}/predictor_1.nc"
+            y_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/ECE/{SRGAN_EXP}/predictant_ypred_1.nc"
 
     elif '20030815' in test_date:
         #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_lnoise0.1_bs50_ERAI_pred_atos/"
@@ -88,9 +95,9 @@ def get_file(model, test_date):
             y_file = f"tas_12km_PDP_6hr_200306010000-200306050600.nc"
         elif 'HCLIM3' in model:
             basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/3km/6hr/"
-            x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/12km/6hr/mrsol_12km_PDP_6hr_200306010000-200306050600.nc"
-            #x_file = f"mrsol_3km_PDP_6hr_200306010000-200306050600.nc"
-            y_file = f"tas_3km_PDP_6hr_200306010000-200306050600.nc"
+            #x_file = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/cropped/Emulator_HCLIM_Experiment_r1/12km/6hr/mrsol_12km_PDP_6hr_200306010000-200306050600.nc"
+            x_file = f"mrsol_3km_PDP_6hr_200306010000-200306050600.nc"
+            y_file = f"tas_ALP3_3km_PDP_6hr_200306010000-200306050600.nc"
         elif 'SRGAN' in model:
             # used in submitted manuscript, EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_lnoise0.1_bs50_ERAI_pred_atos
             #basedir = f"/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/SG/SRGAN_OUT/EPOCH100_tas_wsm_scale_time_presaved_stdscaler_gpufix_lnoise0.1_bs50_ERAI_pred_atos/"

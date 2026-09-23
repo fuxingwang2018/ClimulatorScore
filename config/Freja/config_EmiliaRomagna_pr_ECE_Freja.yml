@@ -12,7 +12,6 @@ LAST_YEAR_3km: "2005"
 
 variables: 
   - "pr"
-#"tas" "hfls" "mrsol"
 
 #experiment: "SRGAN_pr_wpr_lnoise0.1_ECEHistFutMC_2050"
 #experiment: "SRGAN_pr_lnoise0.1_ECEHist_2005"
@@ -42,14 +41,19 @@ variables:
 #CNNEXP: 'ECE-HM2HM_mc_2050_prediction.nc'
 
 #HI2MC
-experiment: "SRGAN_pr_wpr_worog_ECEHis_predFutMC_2050"
-SRGANEXP: "EPOCH100_EPOCH100_pr_wpr_worog_ECEHist_predFutMC_atos"
-CNNEXP: 'ECE-HI2MC_mc_2050_prediction.nc'
+#experiment: "SRGAN_pr_wpr_worog_ECEHis_predFutMC_2050"
+#SRGANEXP: "EPOCH100_EPOCH100_pr_wpr_worog_ECEHist_predFutMC_atos"
+#CNNEXP: 'ECE-HI2MC_mc_2050_prediction.nc'
 
 #MC2HI
 #experiment: "SRGAN_pr_wpr_worog_ECEFutMC_predHist_2005"
 #SRGANEXP: "EPOCH100_EPOCH100_pr_wpr_worog_ECEFutMC_predHist_atos"
 #CNNEXP: 'ECE-MC2HI_hist_2005_prediction.nc'
+
+# HCLIM only 
+experiment: "HCLIM_ECE_2005"
+SRGANEXP: ""
+CNNEXP: ''
 
 MLEXP: ''
 
@@ -74,10 +78,14 @@ data_path:
   #SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/ECE/${SRGANEXP}/predictant_ypred_1.nc"
 
   #ECE, MC 2041-2050
-  HCLIM 3km pr: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/3km/${FREQUENCY}/pr/pr_3km_${FREQUENCY}_204001010300-205012312100.nc"
-  HCLIM 12km pr: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/12km/${FREQUENCY}/pr/pr_12km_${FREQUENCY}_204001010300-205012312100.nc"
-  CNN 3km pr: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/CNN/${CNNEXP}"
-  SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/ECE/${SRGANEXP}/predictant_ypred_1.nc"
+  #HCLIM 3km pr: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/3km/${FREQUENCY}/pr/pr_3km_${FREQUENCY}_204001010300-205012312100.nc"
+  #HCLIM 12km pr: "${base_dir}/cropped/ICHEC-EC-EARTH_RCP85_MC/12km/${FREQUENCY}/pr/pr_12km_${FREQUENCY}_204001010300-205012312100.nc"
+  #CNN 3km pr: "/nobackup/rossby26/users/sm_fuxwa/AI/Emilia_Romagna/CNN/${CNNEXP}"
+  #SRGAN 3km pr: "${base_dir}/SG/SRGAN_OUT/ECE/${SRGANEXP}/predictant_ypred_1.nc"
+
+  #ECE, HCLIM only over Hist 1996-2005
+  HCLIM 3km pr: "${base_dir}/cropped/ICHEC-EC-EARTH_HIST/3km/${FREQUENCY}/pr/pr_3km_${FREQUENCY}_199501010300-200512312100.nc"
+  HCLIM 12km pr: "${base_dir}/cropped/ICHEC-EC-EARTH_HIST/12km/${FREQUENCY}/pr/pr_12km_${FREQUENCY}_199501010300-200512312100.nc"
 
 time_range:
   #HCLIM 12km: {'mrsol': {'start_date': ["1995-01-01 00:00"], 'end_date': ["2005-12-31 24:00"], 'step_hours': 6}, 
@@ -124,32 +132,33 @@ reference_experiment:
   SRGAN 3km: 'HCLIM 3km'
   CNN 3km: 'HCLIM 3km'
 
-output_dir: "${base_dir}/statistic_figs/ECE/pr/paper_revision/" 
+#output_dir: "${base_dir}/statistic_figs/ECE/pr/paper_revision/" 
+output_dir: "${base_dir}/statistic_figs/ECE/paper_revision1/" 
 
 statistics:
-  - rmse
+  #- rmse
   ##- cpl_corr
-  - correlation
-  - mean_bias
-  - variance_ratio
+  #- correlation
+  #- mean_bias
+  #- variance_ratio
   #- wasserstein
-  - percentile_99
+  #- percentile_99
   - mean_value
   #- abs_value
-  - std
+  #- std
 
 min_max_scale:
-  'rmse': 
+  #'rmse': 
   ##'correlation': [0.88, 1.00]
   ##'cpl_corr':
-  'correlation':
-  'mean_bias':
-  'variance_ratio':
+  #'correlation':
+  #'mean_bias':
+  #'variance_ratio':
   #'wasserstein':
-  'percentile_99': 
-  'mean_value':
+  #'percentile_99': 
+  'mean_value': [0, 15]
   #'abs_value':
-  'std':
+  #'std':
 
 abs_value_max_scale:
   'pr': 0.5
@@ -164,9 +173,12 @@ unit_convert:
   'hfls': 1.0
 
 fig_parameters:
-  'nrows_def': 5
-  'ncols_def': 5
-  'figsize_def': [30,20]
+  #'nrows_def': 5
+  #'ncols_def': 5
+  #'figsize_def': [30,20]
+  'nrows_def': 1
+  'ncols_def': 2
+  'figsize_def': [21,7]
   'fontsize_def': 24
   'nlevels_def': 11
   'extend_def': 'max'

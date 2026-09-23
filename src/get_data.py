@@ -21,12 +21,12 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
     """
 
     var_name_modify = {\
-        'tas': {'CNN': 'test', 'CNN_WT': 'test', 'CNN_NT': 'test',}, \
-        #'tas': {'CNN': 'tas'}, \
+        #'tas': {'CNN': 'test', 'CNN_WTNOROG': 'test', 'CNN_NTNOROG': 'test',}, \
+        'tas': {'CNN': 'tas'}, \
         'hfls': {'CNN': 'test'}, \
         'mrsol': {'CNN': 'test'}, \
         #'pr': {'CNN': 'pr'}, \
-        'pr': {'CNN': 'test', 'CNN_WT': 'test', 'CNN_NT': 'test'}, \
+        'pr': {'CNN': 'test', 'CNN_WT': 'test', 'CNN_NT': 'test', 'CNN_NPNOROG': 'test', 'CNN_WPNOROG': 'pr',}, \
         'snc': {'CNN': 'test'}, \
         }
 
@@ -86,11 +86,13 @@ def get_data(experiment_dict, variables, unit_convert, time_idx_range):
             print('experiment_val:', experiment_val[experiment_name].keys())
         
             #if 'HCLIM 12km' in experiment_name:
+            #for psd, keep original 12km, comment the following line
             if '12km' in experiment_name:
                 experiment_val[experiment_name][var_name] = stats_tools.upsample_2d_array(experiment_val[experiment_name][var_name], upscale_factor = 4)
 
 
         experiment_val[experiment_name][var_name] = np.array(experiment_val[experiment_name][var_name]) 
+        # for psd, convert negative precipitaiton to nan
         #if var_name == 'pr':
         #    arr = np.array(experiment_val[experiment_name][var_name], dtype=float)
         #    experiment_val[experiment_name][var_name] = np.where(arr >= 0, arr, np.nan)

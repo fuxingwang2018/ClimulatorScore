@@ -127,7 +127,7 @@ plt.ylabel('Regional average air temperature ($T_{2m}$) [K]', fontsize=11)
 plt.grid(True, linestyle='--', alpha=0.6)
 plt.legend(frameon=True, fontsize=10)
 plt.tight_layout()
-plt.savefig(f'{outdir_fig}/PDP_1D_MultiModel_EmiliaRomagna.png', dpi=300)
+plt.savefig(f'{outdir_fig}/PDP_1D_MultiModel_EmiliaRomagna_v2.png', dpi=300)
 plt.close()
 
 # -------------------------------------------------------------
@@ -176,7 +176,7 @@ cbar.set_label(r'$\Delta T_{as}$ [K] ($\theta_{max} - \theta_{min}$)', fontsize=
 
 #plt.suptitle('Spatial sensitivity ($\Delta T_{2m}$ to soil moisture perturbation)', fontsize=14, fontweight='bold', y=0.98)
 plt.subplots_adjust(right=0.9, hspace=0.1, wspace=0.05)
-plt.savefig(f'{outdir_fig}/PDP_2D_MultiModel_Comparison.png', dpi=300, bbox_inches='tight')
+plt.savefig(f'{outdir_fig}/PDP_2D_MultiModel_Comparison_v2.png', dpi=300, bbox_inches='tight')
 plt.close()
 
 print("Processing complete! Figures 'PDP_1D_MultiModel_EmiliaRomagna.png' and 'PDP_2D_MultiModel_Comparison.png' saved.")
