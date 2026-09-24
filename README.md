@@ -1,3 +1,6 @@
+<br>
+<img src="docs/Logo_ClimulatorScore_v1.jpg" alt="ClimulatorScore Logo" width="250" align="right">
+
 # ClimulatorScore  
 **Machine Learning-Based Climate Emulator Evaluation Score**  
 
