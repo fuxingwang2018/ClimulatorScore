@@ -117,3 +117,12 @@ It provides tools to load experimental data, calculate statistics, and generate 
 - **stats_tools.py** — Contains helper functions for statistical calculations.-   
 </details>
 
+## References
+
+<details close>
+<summary> $\textcolor{Blue}{\textsf{<u> References </u>}}$ </summary>
+
+Wang F., Wang Y-C., Aldama-Campino A., Krus K., Nikulin G., Döscher R., Lind P., Eivazi Kourabbaslou H., Mirjalili S., Lennard C., and Schenk F. 2026. Emulating soil moisture – air temperature coupling in convection-permitting regional climate models using machine learning. Artificial Intelligence for the Earth Systems. Revision under review.
+
+</details>
+
